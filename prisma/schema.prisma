@@ -43,6 +43,7 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  role          String? @default("member")
   accounts      Account[]
   sessions      Session[]
   posts         Post[]
@@ -51,8 +52,6 @@ model User {
   bookmarks     Bookmark[]
   savecodes     SaveCode[]
   savebookmarks SaveBookmark[]
-  roleId        String
-  role          Role @relation(fields: [roleId], references: [id])          
 }
 
 model VerificationToken {
@@ -63,11 +62,7 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Role {
-  id    String @id @default(cuid())
-  name  String 
-  users User[]
-}
+ 
 
 model Topic {
   id          String @id @default(cuid())
