@@ -48,10 +48,7 @@ model User {
   sessions      Session[]
   posts         Post[]
   comments      Comment[]
-  codes         Code[]
-  bookmarks     Bookmark[]
-  savecodes     SaveCode[]
-  savebookmarks SaveBookmark[]
+  saves         Save[]
 }
 
 model VerificationToken {
@@ -61,8 +58,6 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
-
- 
 
 model Topic {
   id          String @id @default(cuid())
@@ -75,11 +70,15 @@ model Topic {
 }
 
 model Post {
-  id      String @id @default(cuid())
-  title   String
-  content String
-  userId  String
-  topicId String
+  id        String @id @default(cuid())
+  title     String
+  content   String
+  type      String
+  note      String?
+  link      String?
+  linkType  String?
+  userId    String
+  topicId   String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -87,6 +86,7 @@ model Post {
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   topic    Topic     @relation(fields: [topicId], references: [id])
   comments Comment[]
+  saves    Save[]
 }
 
 model Comment {
@@ -105,50 +105,9 @@ model Comment {
   children Comment[] @relation("Comments")
 }
 
-model Language {
+model Save {
   id          String @id @default(cuid())
-  language    String @unique
-  description String?
-  codes       Code[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Code {
-  id          String  @id @default(cuid())
-  title       String
-  description String?
-  body        String
-  userId      String
-  languageId  String
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  language    Language @relation(fields: [languageId], references: [id], onDelete: Cascade)
-  saves       SaveCode[]
-}
-
-model Bookmark {
-  id          String @id @default(cuid())
-  title       String 
-  link        String 
-  type        String?
-  description String?
-  userId      String
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  savemarks   SaveBookmark[]
-
-}
-
-model SaveCode {
-  id          String @id @default(cuid())
+  type        String @default("save")
   codeId      String 
   userId      String 
 
@@ -156,17 +115,5 @@ model SaveCode {
   updatedAt   DateTime @updatedAt
 
   user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  code        Code @relation(fields: [codeId], references: [id], onDelete: Cascade)
-}
-
-model SaveBookmark {
-  id          String @id @default(cuid())
-  bookmarkId  String 
-  userId      String 
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  bookmark    Bookmark @relation(fields: [bookmarkId], references: [id], onDelete: Cascade)
+  post        Post @relation(fields: [codeId], references: [id], onDelete: Cascade)
 }
