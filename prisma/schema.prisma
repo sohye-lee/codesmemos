@@ -62,7 +62,7 @@ model VerificationToken {
 model Topic {
   id          String @id @default(cuid())
   slug        String @unique
-  description String
+  description String?
   posts       Post[]
 
   createdAt DateTime @default(now())

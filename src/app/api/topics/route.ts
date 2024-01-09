@@ -1,19 +1,17 @@
+import { accountType } from './../../../lib/types';
 import { db } from '@/db';
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { message } from '@/lib/strings';
 
 export async function GET(req: NextRequest, context: any) {
-  const posts = await db.post.findMany({
+  const topics = await db.topic.findMany({
     include: {
-      user: true,
-      topic: true,
-      comments: true,
-      saves: true,
+      posts: true,
     },
   });
 
-  if (!posts) {
+  if (!topics) {
     return NextResponse.json({
       ok: false,
       message: message.error.post,
@@ -23,39 +21,26 @@ export async function GET(req: NextRequest, context: any) {
   return NextResponse.json({
     ok: true,
     message: message.success.post,
-    posts,
+    topics,
   });
 }
 
 export async function POST(req: NextRequest, res: NextResponse, context: any) {
   const data = await req.json();
-  const { title, content, type, note, link, linkType, userId, topicId } = data;
+  const { slug, description } = data;
   const session = await auth();
 
-  const post = await db.post.create({
+  if (!session?.user) {
+  }
+
+  const topic = await db.topic.create({
     data: {
-      userId,
-      topicId,
-      title,
-      content,
-      type,
-      note,
-      link,
-      linkType,
-      user: {
-        connect: {
-          id: userId,
-        },
-      },
-      topic: {
-        connect: {
-          id: topicId,
-        },
-      },
+      slug,
+      description,
     },
   });
 
-  if (!post) {
+  if (!topic) {
     return NextResponse.json({
       ok: false,
       message: message.error.post,
@@ -65,6 +50,6 @@ export async function POST(req: NextRequest, res: NextResponse, context: any) {
   return NextResponse.json({
     ok: true,
     message: message.success.post,
-    post,
+    topic,
   });
 }
