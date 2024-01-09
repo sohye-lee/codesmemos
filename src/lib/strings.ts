@@ -12,22 +12,62 @@ export const message = {
 };
 
 export const paths = {
-  home() {
-    return '/';
+ 
+  client: {
+    home() {
+      return '/';
+    },
+    topics() {
+      return '/topics'
+    },
+    topic(slug: string) {
+      return `/topics/${slug}`
+    },
+    posts() {
+      return '/posts'
+    },
+    postInTopic(slug:string) {
+      return `/topics/${slug}/posts`
+    },
+    post(slug: string, postId: string) {
+      return `/topics/${slug}/posts/${postId}`
+    },
+    users() {
+      return '/users'
+    },
+    user(userId: string) {
+      return `/users/${userId}`
+    }
   },
-  topicShowPath(slug: string) {
-    return `/topics/slug`;
-  },
-  topicPostPath() {
-    return '/topics';
-  },
-  postShowAllPath() {
-    return '/posts';
-  },
-  postShowBySlugPath(slug: string) {
-    return `/topics/${slug}/posts`;
-  },
-  postPostPath(slug: string) {
-    return `/topics/${slug}/posts`;
+  server: {
+    get: {
+      topics() {
+        return '/api/topics'
+      },
+      posts() {
+        return '/api/posts'
+      },
+      users() {
+        return '/api/users'
+      },
+      topic(slug: string) {
+        return `/api/topics/${slug}`
+      },
+      post(slug: string, postId: string) {
+        return `/api/topics/${slug}/posts/${postId}`
+      },
+      user(userId: string) {
+        return `/api/users/${userId}`
+      }
+    },
+    post: {
+      topic() {
+        return '/api/topics'
+      },
+      post(slug: string) {
+        return `/api/topics/${slug}/posts`
+      }
+    }
   },
 };
+
