@@ -1,43 +1,47 @@
 import { db } from '@/db';
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { message } from '@/lib/strings';
-import { Router } from 'next/router';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest, context: any) {
-  const posts = await db.post.findMany({
+export async function GET(req: NextRequest, res: NextResponse, context: any) {
+  const {
+    params: { slug, postId },
+  } = context;
+  const post = await db.post.findUnique({
+    where: {
+      id: postId,
+    },
     include: {
-      user: true,
       topic: true,
       comments: true,
       saves: true,
+      user: true,
     },
   });
 
-  if (!posts) {
+  if (!post) {
     return NextResponse.json({
       ok: false,
-      message: message.error.post,
+      message: message.error.get,
     });
   }
 
   return NextResponse.json({
     ok: true,
-    message: message.success.post,
-    posts,
+    message: message.success.get,
+    post,
   });
 }
 
-export async function POST(req: NextRequest, res: NextResponse, context: any) {
+export async function PUT(req: NextRequest, res: NextResponse, context: any) {
+  const {
+    params: { postId },
+  } = context;
   const data = await req.json();
   const { title, content, type, note, link, linkType, userId, slug } = data;
-  const session = await auth();
-
-  if (session?.user?.id !== userId) {
-    return NextResponse.redirect('/login');
-  }
-
-  const post = await db.post.create({
+  const post = await db.post.update({
+    where: {
+      id: postId,
+    },
     data: {
       title,
       content,
@@ -61,13 +65,13 @@ export async function POST(req: NextRequest, res: NextResponse, context: any) {
   if (!post) {
     return NextResponse.json({
       ok: false,
-      message: message.error.post,
+      message: message.error.update,
     });
   }
 
   return NextResponse.json({
     ok: true,
-    message: message.success.post,
+    message: message.success.update,
     post,
   });
 }

@@ -12,62 +12,89 @@ export const message = {
 };
 
 export const paths = {
- 
   client: {
-    home() {
-      return '/';
+    get: {
+      home() {
+        return '/';
+      },
+      topics() {
+        return '/topics';
+      },
+      topic(slug: string) {
+        return `/topics/${slug}`;
+      },
+      posts() {
+        return '/posts';
+      },
+      postInTopic(slug: string) {
+        return `/topics/${slug}/posts`;
+      },
+      post(slug: string, postId: string) {
+        return `/topics/${slug}/posts/${postId}`;
+      },
+      users() {
+        return '/users';
+      },
+      user(userId: string) {
+        return `/users/${userId}`;
+      },
     },
-    topics() {
-      return '/topics'
+    create: {
+      topicCreate() {
+        return '/topics/new';
+      },
+      postCreate() {
+        return '/create';
+      },
+      postCreateInTopic(slug: string) {
+        return `/topics/${slug}/posts/new`;
+      },
     },
-    topic(slug: string) {
-      return `/topics/${slug}`
+    update: {
+      topicUpdate(slug: string) {
+        return `/topics/${slug}`;
+      },
+      postUpdate(postId: string) {
+        return `/posts/${postId}`;
+      },
     },
-    posts() {
-      return '/posts'
-    },
-    postInTopic(slug:string) {
-      return `/topics/${slug}/posts`
-    },
-    post(slug: string, postId: string) {
-      return `/topics/${slug}/posts/${postId}`
-    },
-    users() {
-      return '/users'
-    },
-    user(userId: string) {
-      return `/users/${userId}`
-    }
   },
   server: {
     get: {
       topics() {
-        return '/api/topics'
+        return '/api/topics';
       },
       posts() {
-        return '/api/posts'
+        return '/api/posts';
       },
       users() {
-        return '/api/users'
+        return '/api/users';
       },
       topic(slug: string) {
-        return `/api/topics/${slug}`
+        return `/api/topics/${slug}`;
       },
       post(slug: string, postId: string) {
-        return `/api/topics/${slug}/posts/${postId}`
+        return `/api/topics/${slug}/posts/${postId}`;
       },
       user(userId: string) {
-        return `/api/users/${userId}`
-      }
+        return `/api/users/${userId}`;
+      },
     },
-    post: {
+    create: {
       topic() {
-        return '/api/topics'
+        return '/api/topics';
       },
       post(slug: string) {
-        return `/api/topics/${slug}/posts`
-      }
-    }
+        return `/api/topics/${slug}/posts`;
+      },
+    },
+    update: {
+      topic() {
+        return '/api/topics';
+      },
+      post(slug: string) {
+        return `/api/topics/${slug}/posts`;
+      },
+    },
   },
 };
-

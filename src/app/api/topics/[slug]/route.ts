@@ -1,17 +1,21 @@
-import { accountType } from './../../../lib/types';
 import { db } from '@/db';
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { message } from '@/lib/strings';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest, context: any) {
-  const topics = await db.topic.findMany({
+  const {
+    params: { slug },
+  } = context;
+  const topic = await db.topic.findUnique({
+    where: {
+      slug,
+    },
     include: {
       posts: true,
     },
   });
 
-  if (!topics) {
+  if (!topic) {
     return NextResponse.json({
       ok: false,
       message: message.error.get,
@@ -21,21 +25,22 @@ export async function GET(req: NextRequest, context: any) {
   return NextResponse.json({
     ok: true,
     message: message.success.get,
-    topics,
+    topic,
   });
 }
 
-export async function POST(req: NextRequest, res: NextResponse, context: any) {
+export async function PUT(req: NextRequest, res: NextResponse, context: any) {
+  const {
+    params: { slug },
+  } = context;
   const data = await req.json();
-  const { slug, description } = data;
-  const session = await auth();
-
-  if (!session?.user) {
-  }
-
-  const topic = await db.topic.create({
-    data: {
+  const { slug: newSlug, description } = data;
+  const topic = await db.topic.update({
+    where: {
       slug,
+    },
+    data: {
+      slug: newSlug,
       description,
     },
   });
@@ -43,13 +48,13 @@ export async function POST(req: NextRequest, res: NextResponse, context: any) {
   if (!topic) {
     return NextResponse.json({
       ok: false,
-      message: message.error.post,
+      message: message.error.update,
     });
   }
 
   return NextResponse.json({
     ok: true,
-    message: message.success.post,
+    message: message.success.update,
     topic,
   });
 }
