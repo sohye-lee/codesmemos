@@ -1,0 +1,1 @@
+Dynamic breadcrumb in nav bar: https://medium.com/@kcabading/creating-a-breadcrumb-component-in-a-next-js-app-router-a0ea24cdb91a

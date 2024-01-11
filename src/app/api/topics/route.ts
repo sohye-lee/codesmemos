@@ -33,9 +33,22 @@ export async function POST(req: NextRequest, res: NextResponse, context: any) {
   if (!session?.user) {
   }
 
+  const topicExisting = await db.topic.findFirst({
+    where: {
+      slug: slug.toLowerCase(),
+    },
+  });
+
+  if (topicExisting) {
+    return NextResponse.json({
+      ok: false,
+      message: 'This topic already exists in database!',
+    });
+  }
+
   const topic = await db.topic.create({
     data: {
-      slug,
+      slug: slug.toLowerCase(),
       description,
     },
   });
