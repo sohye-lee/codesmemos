@@ -19,23 +19,23 @@ export default function Container({
     case 'full':
       containerWidth = 'w-full';
     case 'wide':
-      containerWidth = 'min-w-[1200px]';
+      containerWidth = 'w-[1200px] ';
     case 'medium':
-      containerWidth = 'min-w-[768px]';
+      containerWidth = 'w-[768px] ';
     case 'small':
-      containerWidth = 'min-w-[599px]';
+      containerWidth = 'w-[599px] ';
     default:
-      containerWidth = 'min-w-[599px]';
+      containerWidth = 'w-[599px] ';
   }
 
   return (
-    <div className={`w-screen flex flex-col items-center ${bgColor}`}>
-      <div className="pt-24 pb-12">
-        <div
-          className={`${containerWidth} max-x-[100vw] px-4 sm:px-5 ${addClass}`}
-        >
-          {children}
-        </div>
+    <div
+      className={`w-screen flex flex-col items-center pt-24 pb-12 ${bgColor}`}
+    >
+      <div
+        className={`${containerWidth} max-w-screen px-4 sm:px-5 ${addClass}`}
+      >
+        {children}
       </div>
     </div>
   );

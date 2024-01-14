@@ -10,11 +10,13 @@ import Button from './button';
 import { signIn, signOut } from '@/app/actions';
 import NavSubItem from './navSubitem';
 import { useEffect, useRef, useState } from 'react';
+import useStore from '@/app/store';
 
 export default function Header() {
   const { data: session } = useSession();
   const [openProfile, setOpenProfile] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
+  const { breadcrumb, setBreadcrumb } = useStore();
   const dropdownCreate = useRef<HTMLDivElement>(null);
   const dropdownProfile = useRef<HTMLDivElement>(null);
   const buttonCreate = useRef<HTMLDivElement>(null);
@@ -53,16 +55,17 @@ export default function Header() {
   }, [openProfile, openCreate]);
 
   return (
-    <div className="fixed top-0 left-0 w-full flex justify-center items-center">
+    <div className="fixed top-0 border-b  border-slate-400 left-0 w-full flex justify-center items-center">
       <div className="w-full max-w-[1600px] flex justify-between items-center   px-5 md:px-8">
         <div className="flex items-center gap-4 ">
           <Link href="/" id="logo" className="font-semibold text-sm ">
             <Image src={Logo} alt="logo" width={160} />
           </Link>
+          
           <div className="flex justify-center items-center ">
-            <NavItem link="/snippets">Snippets</NavItem>
-            <NavItem link="/questions">Questions</NavItem>
-            <NavItem link="/bookmarks">Bookmarks</NavItem>
+            <NavItem icon="search" link="#">
+              Search
+            </NavItem>
           </div>
         </div>
         <div className="flex justify-end items-center gap-3 py-2">

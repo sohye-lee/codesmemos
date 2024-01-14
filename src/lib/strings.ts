@@ -3,11 +3,13 @@ export const message = {
     get: 'Successfully loaded!',
     post: 'Successfully created!',
     update: 'Successfully updated!',
+    delete: 'Successfully deleted!',
   },
   error: {
     get: 'Not found',
     post: 'Unsuccessful. Please try again.',
-    update: 'Unsuccessful. Plrease try again.',
+    update: 'Unsuccessful. Please try again.',
+    delete: 'Unsuccessful. Please try again.',
   },
 };
 
@@ -96,5 +98,12 @@ export const paths = {
         return `/api/topics/${slug}/posts`;
       },
     },
+  },
+};
+
+const breadcrumbs = {
+  home: {},
+  snippets: {
+    default: '/snippets',
   },
 };

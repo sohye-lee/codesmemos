@@ -1,34 +1,36 @@
 import { useState } from 'react';
 
-interface UseCreateState<T> {
+interface UseDeleteState<T> {
   loading: Boolean;
   data?: T;
   error?: object;
 }
+type UseDeleteResult<T> = [() => void, UseDeleteState<T>];
 
-type UseCreateResult<T> = [(data: any) => void, UseCreateState<T>];
-
-export default function useCreate<T = any>(url: string): UseCreateResult<T> {
-  const [state, setState] = useState<UseCreateState<T>>({
+export default function useDelete<T = any>(
+  url: string,
+  identity: string
+): UseDeleteResult<T> {
+  const [state, setState] = useState<UseDeleteState<T>>({
     data: undefined,
     error: undefined,
     loading: false,
   });
-  const func = (data: any) => {
+
+  const func = () => {
     setState((prev) => ({ ...prev, loading: true }));
     fetch(url, {
-      method: 'POST',
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ identity }),
     })
       .then((res) => res.json())
       .then((data) => setState((prev) => ({ ...prev, data, loading: false })))
       .catch((error) =>
-        setState((prev) => ({ ...prev, loading: false, error }))
+        setState((prev) => ({ ...prev, error, loading: false }))
       );
   };
-
   return [func, { ...state }];
 }

@@ -1,5 +1,7 @@
 import { db } from '@/db';
 import { message } from '@/lib/strings';
+import { getStaticProps } from 'next/dist/build/templates/pages';
+import { useRouter } from 'next/router';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest, context: any) {
@@ -29,7 +31,7 @@ export async function GET(req: NextRequest, context: any) {
   });
 }
 
-export async function PUT(req: NextRequest, res: NextResponse, context: any) {
+export async function PUT(req: NextRequest, context: any) {
   const {
     params: { slug },
   } = context;
@@ -55,6 +57,39 @@ export async function PUT(req: NextRequest, res: NextResponse, context: any) {
   return NextResponse.json({
     ok: true,
     message: message.success.update,
+    topic,
+  });
+}
+
+export async function DELETE(
+  req: NextRequest,
+  res: NextResponse,
+  context: any
+) {
+  // const { slug } = useParams();
+  // const {
+  //   params: { slug },
+  // } = await context;
+
+  const data = await req.json();
+  const { identity } = data;
+
+  const topic = await db.topic.delete({
+    where: {
+      slug: identity,
+    },
+  });
+
+  if (!topic) {
+    return NextResponse.json({
+      ok: false,
+      message: message.error.delete,
+    });
+  }
+
+  return NextResponse.json({
+    ok: true,
+    message: message.success.delete,
     topic,
   });
 }

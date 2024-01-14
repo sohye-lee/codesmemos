@@ -8,7 +8,10 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
-import { IconPencil } from '@tabler/icons-react';
+import { IconPencil, IconTrash } from '@tabler/icons-react';
+import useDelete from '@/lib/useDelete';
+import DeleteButton from '@/components/ui/deleteButton';
+import EditTopicInput from '@/components/ui/editTopicInput';
 
 interface TopicCreateForm {
   slug: string;
@@ -19,6 +22,7 @@ export default function TopicCreatePage() {
   const { data: topicsData, error: topicsError } = useSWR('/api/topics');
   const [topics, setTopics] = useState<Topic[]>([]);
   const [createTopic, { data, error, loading }] = useCreate('/api/topics');
+
   const {
     register,
     formState: { errors },
@@ -36,30 +40,30 @@ export default function TopicCreatePage() {
     topics && topics.length > 0
       ? topics.map((topic) => {
           return (
-            <div
-              key={topic?.slug}
-              className="py-2 px-3 border border-gray-300 w-full rounded flex justify-between items-center"
-            >
-              <p className="text-sm">{topic?.slug}</p>
-              <Button
-                size="small"
-                mode="neutral"
-                button={false}
-                link={`/topics/${topic.slug}/edit`}
-              >
-                <IconPencil width="20" />
-              </Button>
-            </div>
+            // <div
+            //   key={topic?.slug}
+            //   className="py-2 px-3 border border-gray-300 w-full rounded flex justify-between items-center"
+            // >
+            //   <p className="text-sm">{topic?.slug}</p>
+            //   <div className="flex items-end gap-3">
+            //     <Button
+            //       size="small"
+            //       mode="neutral"
+            //       button={false}
+            //       link={`/topics/${topic.slug}/edit`}
+            //     >
+            //       <IconPencil width="20" />
+            //     </Button>
+            //     <DeleteButton topic={topic} />
+            //   </div>
+            // </div>
+            <EditTopicInput topic={topic} key={topic.id} />
           );
         })
       : null;
 
   useEffect(() => {
     topicsData && setTopics(topicsData.topics);
-    // if (data) {
-    //   router.push('/admin/topics/new');
-    //   reset();
-    // }
   }, [topicsData, errors, data, router, reset]);
 
   return (
@@ -119,10 +123,14 @@ export default function TopicCreatePage() {
               </div>
             </form>
           </div>
-          <div className="py-3 px-4 bg-gray-50 mt-8 rounded">
+          <div className="py-3 px-4 bg-gray-100 border border-gray-200 mt-8 rounded">
             <h3 className="text-md font-medium">Current Topics</h3>
             <div className="flex flex-col mt-3 gap-3">
-              {topics && topics.length > 0 ? renderTopics : null}
+              {topics && topics.length > 0 ? (
+                renderTopics
+              ) : (
+                <p>No topic yet.</p>
+              )}
             </div>
           </div>
         </Container>
