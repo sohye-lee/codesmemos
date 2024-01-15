@@ -1,9 +1,9 @@
 import { Topic } from '@prisma/client';
 import { IconPencil, IconCheck } from '@tabler/icons-react';
-import DeleteButton from './deleteButton';
-import Button from './button';
+import Button from '../ui/button';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import DeleteTopicButton from './deleteTopicButton';
 
 interface EditTopicInputProps {
   topic: Topic;
@@ -37,7 +37,7 @@ export default function EditTopicInput({ topic }: EditTopicInputProps) {
 
   useEffect(() => {
     setSlug(topic.slug);
-  }, [topic.slug]);
+  }, [topic.slug, setOpenEdit]);
 
   return (
     <>
@@ -79,7 +79,7 @@ export default function EditTopicInput({ topic }: EditTopicInputProps) {
             >
               <IconPencil width="20" />
             </Button>
-            <DeleteButton topic={topic} />
+            <DeleteTopicButton topic={topic} />
           </div>
         </div>
       )}

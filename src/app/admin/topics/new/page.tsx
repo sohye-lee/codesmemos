@@ -10,8 +10,8 @@ import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
 import { IconPencil, IconTrash } from '@tabler/icons-react';
 import useDelete from '@/lib/useDelete';
-import DeleteButton from '@/components/ui/deleteButton';
-import EditTopicInput from '@/components/ui/editTopicInput';
+import DeleteButton from '@/components/forms/deleteTopicButton';
+import EditTopicInput from '@/components/forms/editTopicInput';
 
 interface TopicCreateForm {
   slug: string;
@@ -107,7 +107,7 @@ export default function TopicCreatePage() {
                   </span>
                 ) : null}
               </div>
-              <div className="w-full flex flex-col">
+              {/* <div className="w-full flex flex-col">
                 <label htmlFor="name">Short Description or Note</label>
                 <input
                   {...register('description')}
@@ -115,7 +115,7 @@ export default function TopicCreatePage() {
                   placeholder="(optional)"
                   className="rounded border border-slate-400 py-2 px-3 placeholder:text-[14px]"
                 />
-              </div>
+              </div> */}
               <div className="flex justify-end pt-2">
                 <Button size="medium" mode="success" button={true}>
                   Create
@@ -123,9 +123,9 @@ export default function TopicCreatePage() {
               </div>
             </form>
           </div>
-          <div className="py-3 px-4 bg-gray-100 border border-gray-200 mt-8 rounded">
+          <div className="py-3 px-4 bg-gray-100 border border-gray-200 mt-8 rounded w-full">
             <h3 className="text-md font-medium">Current Topics</h3>
-            <div className="flex flex-col mt-3 gap-3">
+            <div className="flex w-full flex-col mt-3 gap-3">
               {topics && topics.length > 0 ? (
                 renderTopics
               ) : (

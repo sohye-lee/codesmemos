@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import Profile from './profile';
-import { IconPlus } from '@tabler/icons-react';
+import { IconPlus, IconSearch } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import Logo from 'public/images/logo.svg';
 import Image from 'next/image';
@@ -9,8 +9,10 @@ import NavItem from './navitem';
 import Button from './button';
 import { signIn, signOut } from '@/app/actions';
 import NavSubItem from './navSubitem';
-import { useEffect, useRef, useState } from 'react';
+import { FormEvent, Key, useEffect, useRef, useState } from 'react';
 import useStore from '@/app/store';
+import { breadcrumbs, paths } from '@/lib/strings';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
   const { data: session } = useSession();
@@ -21,7 +23,15 @@ export default function Header() {
   const dropdownProfile = useRef<HTMLDivElement>(null);
   const buttonCreate = useRef<HTMLDivElement>(null);
   const buttonProfile = useRef<HTMLDivElement>(null);
+  const [url, setUrl] = useState(breadcrumbs.home.url);
+  const router = useRouter();
 
+  const onChange = (e: FormEvent<HTMLSelectElement>) => {
+    // router.push(breadcrumbs[e.currentTarget.value])
+    router.push(breadcrumbs[e.currentTarget.value].url);
+    setUrl(breadcrumbs[e.currentTarget.value].url);
+    setBreadcrumb(breadcrumbs[e.currentTarget.value].name);
+  };
   function assertIsNode(e: EventTarget | null): asserts e is Node {
     if (!e || !('nodeType' in e)) {
       throw new Error(`Node expected`);
@@ -52,22 +62,47 @@ export default function Header() {
     if (typeof window !== 'undefined') {
       window.addEventListener('click', handleClick);
     }
-  }, [openProfile, openCreate]);
+  }, [openProfile, openCreate, breadcrumb, setUrl]);
 
   return (
-    <div className="fixed top-0 border-b  border-slate-400 left-0 w-full flex justify-center items-center">
+    <div className="fixed top-0 border-b  border-slate-400 left-0 w-full flex justify-center items-center bg-white">
       <div className="w-full max-w-[1600px] flex justify-between items-center   px-5 md:px-8">
         <div className="flex items-center gap-4 ">
           <Link href="/" id="logo" className="font-semibold text-sm ">
             <Image src={Logo} alt="logo" width={160} />
           </Link>
-          
-          <div className="flex justify-center items-center ">
-            <NavItem icon="search" link="#">
-              Search
-            </NavItem>
-          </div>
+          <select
+            name="breadcrumb"
+            id="breadcrumb"
+            className="rounded border border-slate-400 text-sm text-gray-600 py-2 px-3 "
+            onChange={onChange}
+          >
+            <option value={'home'}>Home</option>
+            <option value={'snippets'}>Snippets</option>
+            <option value={'questions'}>Questions</option>
+            <option value={'resources'}>Resources</option>
+            <option value={'hot'}>Hot</option>
+            <option value={'new'}>New</option>
+            <option value={'topics'}>By Topic</option>
+            <option value={'languages'}>By Language</option>
+          </select>
+          <NavItem
+            icon="search"
+            link="#"
+            addClass=" bg-gray-100 border border-gray-200 py-2 text-sm text-gray-700 hover:ring-2 hover:ring-blue-400"
+          >
+            Search
+          </NavItem>
         </div>
+        {/* <div className="flex justify-center items-center ">
+          <form className="border border-gray-200 roundedd bg-gray-100 py-2 px-3 text-gray-300 placeholder:text-sm placeholder:text-gray-600 flex items-center gap-3 w-full">
+            <IconSearch width={20} />
+            <input
+              className="border-none outline-none bg-transparent"
+              placeholder="search"
+            />
+          </form>
+        </div> */}
         <div className="flex justify-end items-center gap-3 py-2">
           <div className="relative">
             <div

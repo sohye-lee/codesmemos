@@ -1,3 +1,4 @@
+import { breadcrumbType } from './types';
 export const message = {
   success: {
     get: 'Successfully loaded!',
@@ -101,9 +102,49 @@ export const paths = {
   },
 };
 
-const breadcrumbs = {
-  home: {},
+export const breadcrumbs: {
+  [key: string]: {
+    url: string;
+    name: string;
+  };
+} = {
+  home: {
+    url: '/',
+    name: 'Home',
+  },
+  //   snippets: '/?filter=snippets',
+  //   questions: '/?filter=questions',
+  //   resources: '/?filter=resources',
+  //   new: '/?filter=new',
+  //   hot: '/?filter=hot',
+  //   languages: '/languages',
+  //   topics: '/topics',
   snippets: {
-    default: '/snippets',
+    url: '/?filter=snippets',
+    name: 'Snippets',
+  },
+  questions: {
+    url: '/?filter=questions',
+    name: 'Questions',
+  },
+  resources: {
+    url: '/?filter=resources',
+    name: 'Resources',
+  },
+  new: {
+    url: '/?filter=new',
+    name: 'Resources',
+  },
+  hot: {
+    url: '/?filter=hot',
+    name: 'Hot',
+  },
+  languages: {
+    url: '/languages',
+    name: 'By Language',
+  },
+  topics: {
+    url: '/topics',
+    name: 'By Topic',
   },
 };

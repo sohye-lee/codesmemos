@@ -39,10 +39,10 @@ export async function PUT(req: NextRequest, context: any) {
   const { slug: newSlug, description } = data;
   const topic = await db.topic.update({
     where: {
-      slug,
+      slug: slug.toLowerCase(),
     },
     data: {
-      slug: newSlug,
+      slug: newSlug.toLowerCase(),
       description,
     },
   });

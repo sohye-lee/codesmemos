@@ -24,6 +24,8 @@ interface NavItemProps {
     | 'like'
     | 'search';
   children: React.ReactNode;
+  addClass?: string;
+  [key: string]: any;
 }
 
 const iconDict = {
@@ -37,11 +39,16 @@ const iconDict = {
   like: <IconHeart width={14} />,
   search: <IconSearch width={14} />,
 };
-export default function NavItem({ link, icon, children }: NavItemProps) {
+export default function NavItem({
+  link,
+  icon,
+  children,
+  addClass,
+}: NavItemProps) {
   return (
     <Link
       href={link || '/'}
-      className="flex items-center gap-1 py-2 px-3 text-sm font-medium rounded-md hover:bg-blue-200 hover:text-blue-800  "
+      className={`flex items-center gap-1 py-2 px-3 text-sm font-medium rounded-md hover:bg-blue-200 hover:text-blue-800 ${addClass} `}
     >
       {iconDict[icon]}
       {children}

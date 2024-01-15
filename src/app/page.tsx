@@ -10,10 +10,8 @@ export default function Home() {
     setBreadcrumb('Home');
   }, [setBreadcrumb]);
   return (
-    <Container width="wide">
-      <SidebarContainer>
-        <p>Hi</p>
-      </SidebarContainer>
-    </Container>
+    <SidebarContainer>
+      <p>Hi</p>
+    </SidebarContainer>
   );
 }
