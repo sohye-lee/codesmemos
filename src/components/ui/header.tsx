@@ -144,7 +144,9 @@ export default function Header() {
                   ref={dropdownProfile}
                   className="absolute right-0 top-[105%] bg-white border border-slate-300 rounded-sm flex flex-col min-w-28"
                 >
-                  <NavSubItem link="/account/profile">Profile</NavSubItem>
+                  <NavSubItem link={`/users/${session?.user?.id}`}>
+                    Profile
+                  </NavSubItem>
                   <NavSubItem link="/account/mystuffs">My Stuffs</NavSubItem>
                   <form action={signOut}>
                     <button className="py-3 px-4 w-full text-left border-slate-200 border-b last:border-none text-sm hover:bg-blue-200 hover:text-blue-800 ">

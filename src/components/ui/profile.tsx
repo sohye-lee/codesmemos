@@ -7,8 +7,8 @@ export default function Profile() {
   const { data: session } = useSession();
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="w-10 h-10 rounded-full border border-blue-600 bg-blue-200 overflow-hidden">
+    <div className="flex items-center justify-center gap-2">
+      <div className="w-8 h-8 rounded-full border border-blue-600 bg-blue-200 overflow-hidden">
         {session?.user?.image ? (
           <>
             <Image

@@ -19,6 +19,7 @@ export default function Sidebar() {
       languages.map((language) => {
         return (
           <Link
+            key={language.id}
             href={`/languages/${language.name}`}
             className="text-sm group  hover:text-blue-600  py-1 flex items-center gap-2"
           >
@@ -39,6 +40,7 @@ export default function Sidebar() {
       ? topics.map((topic) => {
           return (
             <Link
+              key={topic.id}
               href={`/languages/${topic.slug}`}
               className="text-sm group  hover:text-blue-600   py-1 flex items-center gap-2"
             >
