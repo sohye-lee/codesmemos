@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -47,8 +44,11 @@ model User {
   accounts      Account[]
   sessions      Session[]
   posts         Post[]
+  questions     Question[]
   comments      Comment[]
+  answers       Answer[]
   saves         Save[]
+  votes         Vote[]
 }
 
 model VerificationToken {
@@ -63,7 +63,7 @@ model Topic {
   id          String @id @default(cuid())
   slug        String @unique
   description String?
-  posts       Post[]
+  questions   Question[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -78,7 +78,7 @@ model Language {
   updatedAt DateTime @updatedAt
 }
 
-
+// Snippets and Resources (posts) - comments - saves
 model Post {
   id        String @id @default(cuid())
   title     String
@@ -88,14 +88,12 @@ model Post {
   link      String?
   linkType  String?
   userId    String
-  topicSlug String?
-  languageName String?
+  languageName String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  topic    Topic?     @relation(fields: [topicSlug], references: [slug])
   language Language?  @relation(fields: [languageName], references: [name])
   comments Comment[]
   saves    Save[]
@@ -119,13 +117,62 @@ model Comment {
 
 model Save {
   id          String @id @default(cuid())
-  type        String @default("save")
-  codeId      String 
+  postId      String 
   userId      String 
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post        Post @relation(fields: [codeId], references: [id], onDelete: Cascade)
+  post        Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+
+// Questions - Answers - Votes
+model Question {
+  id        String @id @default(cuid())
+  title     String
+  content   String
+  type      String
+  note      String?
+  link      String?
+  linkType  String?
+  userId    String
+  topicSlug String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic Topic  @relation(fields: [topicSlug], references: [slug])
+  answers Answer[]
+  votes    Vote[]
+}
+
+model Answer {
+  id       String  @id @default(cuid())
+  content  String
+  questionId   String
+  userId   String
+  parentId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  parent   Answer?  @relation("Answers", fields: [parentId], references: [id], onDelete: Cascade)
+  question     Question      @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  children Answer[] @relation("Answers")
+}
+
+model Vote {
+  id          String @id @default(cuid())
+  questionId  String 
+  userId      String 
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }

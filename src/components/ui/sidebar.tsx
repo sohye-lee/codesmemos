@@ -64,8 +64,9 @@ export default function Sidebar() {
       <Button
         size="medium"
         mode="success"
-        button={true}
+        button={false}
         addClass="border border-gray-200 bg-gray-100 flex items-center gap-2"
+        link="/create"
       >
         <IconPencilCode width={16} />
         Write

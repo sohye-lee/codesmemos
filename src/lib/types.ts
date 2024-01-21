@@ -13,3 +13,15 @@ export type breadcrumbType =
   | 'Hot'
   | 'By Topic'
   | 'By Language';
+
+export interface CreatePostForm {
+  title: string;
+  content: string;
+  type: postType;
+  note?: string;
+  link?: string;
+  linkType?: string;
+  topicSlug?: string;
+  languageName?: string;
+  userId: string;
+}
