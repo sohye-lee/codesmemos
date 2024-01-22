@@ -90,7 +90,7 @@ export default function CreateSnippetForm() {
     // if (!session) {
     //   signIn();
     // }
-  }, [data]);
+  }, [setLanguages]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">

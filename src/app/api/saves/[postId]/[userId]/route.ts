@@ -1,4 +1,5 @@
 import { db } from '@/db';
+import { message } from '@/lib/strings';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest, context: any) {
@@ -7,7 +8,6 @@ export async function GET(req: NextRequest, context: any) {
   } = context;
   // const { userId } = await req.json();
 
-  console.log(userId, postId);
   const save = await db.save.findFirst({
     where: {
       postId,
@@ -25,5 +25,38 @@ export async function GET(req: NextRequest, context: any) {
   return NextResponse.json({
     ok: true,
     message: 'Saved',
+  });
+}
+
+export async function DELETE(req: NextRequest, context: any) {
+  const {
+    params: { postId, userId },
+  } = context;
+ 
+  const existingSave = await db.save.findFirst({
+    where: {
+      postId,
+      userId,
+    }
+  })
+
+  if (!existingSave) {
+    return NextResponse.json({
+      ok: false,
+      message: "You haven't saved this post",
+    })
+  }
+
+  const save = await db.save.delete({
+    where: {
+      id: existingSave.id,
+    },
+  });
+
+ 
+
+  return NextResponse.json({
+    ok: true,
+    message: message.success.delete
   });
 }

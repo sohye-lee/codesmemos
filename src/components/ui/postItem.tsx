@@ -5,6 +5,8 @@ import { IconHeart, IconHeartFilled } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import useSWR from 'swr';
 import { useEffect, useState } from 'react';
+import useCreate from '@/lib/useCreate';
+import { signIn } from '@/app/actions';
 
 interface PostItemProps {
   post: ExtendedPost;
@@ -17,6 +19,32 @@ export default function PostItem({ post }: PostItemProps) {
   );
   const [saves, setSaves] = useState(0);
   const [mySave, setMySave] = useState(false);
+  const [updateSave, {data:saveData, error:saveError, loading}] = useCreate(`/api/saves/${post?.id}`);
+
+  const clickSave = () => {
+    if (!session?.user) {
+      signIn();
+    }
+    if (!mySave) {
+      console.log(session?.user?.id)
+      // updateSave(session?.user?.id);
+    } else {
+      fetch(`/api/saves/${post.id}/${session?.user?.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok) {
+          setMySave(true)
+        }
+      })
+      
+    }
+
+  }
   useEffect(() => {
     if (savesData && savesData.saveCount) {
       setSaves(savesData.saveCount);
@@ -45,7 +73,7 @@ export default function PostItem({ post }: PostItemProps) {
         </pre>
       </div>
       <div className="flex items-center gap-3">
-        <div className="flex items-center text-xs gap-1">
+        <div className="flex items-center text-xs gap-1 cursor-pointer" onClick={clickSave}>
           {mySave ? <IconHeartFilled width={16} /> : <IconHeart width="16" />}
           {saves}
         </div>
