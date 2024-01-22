@@ -2,23 +2,17 @@ import { db } from '@/db';
 import { message } from '@/lib/strings';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest, res: NextResponse, context: any) {
+export async function GET(req: NextRequest, context: any) {
   const {
-    params: { slug, postId },
+    params: { slug },
   } = context;
-  const post = await db.post.findUnique({
+  const posts = await db.question.findMany({
     where: {
-      id: postId,
-    },
-    include: {
-      topic: true,
-      comments: true,
-      saves: true,
-      user: true,
+      topicSlug: slug,
     },
   });
 
-  if (!post) {
+  if (!posts) {
     return NextResponse.json({
       ok: false,
       message: message.error.get,
@@ -28,20 +22,18 @@ export async function GET(req: NextRequest, res: NextResponse, context: any) {
   return NextResponse.json({
     ok: true,
     message: message.success.get,
-    post,
+    posts,
   });
 }
 
-export async function PUT(req: NextRequest, res: NextResponse, context: any) {
+export async function POST(req: NextRequest, context: any) {
   const {
-    params: { postId },
+    params: { slug },
   } = context;
+
   const data = await req.json();
-  const { title, content, type, note, link, linkType, userId, slug } = data;
-  const post = await db.post.update({
-    where: {
-      id: postId,
-    },
+  const { title, content, type, note, link, linkType, userId } = data;
+  const question = await db.question.create({
     data: {
       title,
       content,
@@ -62,16 +54,16 @@ export async function PUT(req: NextRequest, res: NextResponse, context: any) {
     },
   });
 
-  if (!post) {
+  if (!question) {
     return NextResponse.json({
       ok: false,
-      message: message.error.update,
+      message: message.error.post,
     });
   }
 
   return NextResponse.json({
     ok: true,
-    message: message.success.update,
-    post,
+    message: message.success.post,
+    question,
   });
 }

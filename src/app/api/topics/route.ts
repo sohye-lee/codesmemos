@@ -7,7 +7,7 @@ import { message } from '@/lib/strings';
 export async function GET(req: NextRequest, context: any) {
   const topics = await db.topic.findMany({
     include: {
-      posts: true,
+      questions: true,
     },
   });
 

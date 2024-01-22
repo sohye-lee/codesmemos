@@ -14,6 +14,9 @@ type IModelContentChangedEvent = /*unresolved*/ any;
 
 export default function CreateSnippetForm() {
   const { data: session } = useSession();
+  if (!session) {
+    signIn();
+  }
   const router = useRouter();
   const [titleLength, setTitleLength] = useState(0);
   const { data, error } = useSWR('/api/languages');

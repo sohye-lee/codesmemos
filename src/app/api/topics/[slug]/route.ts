@@ -13,7 +13,7 @@ export async function GET(req: NextRequest, context: any) {
       slug,
     },
     include: {
-      posts: true,
+      questions: true,
     },
   });
 

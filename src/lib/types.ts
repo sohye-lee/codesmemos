@@ -1,3 +1,5 @@
+import { Language, Post, Save, Topic, User } from '@prisma/client';
+
 export type accountType = 'member' | 'admin';
 export type postType = 'snippet' | 'question' | 'resource';
 export type saveType = 'save' | 'vote';
@@ -24,4 +26,12 @@ export interface CreatePostForm {
   topicSlug?: string;
   languageName?: string;
   userId: string;
+}
+
+export interface ExtendedPost extends Post {
+  user: User;
+  topic?: Topic;
+  language?: Language;
+  saves: Save[];
+  comments: Comment[];
 }
