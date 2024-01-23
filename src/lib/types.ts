@@ -1,4 +1,4 @@
-import { Language, Post, Save, Topic, User } from '@prisma/client';
+import { Comment, Language, Post, Save, Topic, User } from '@prisma/client';
 
 export type accountType = 'member' | 'admin';
 export type postType = 'snippet' | 'question' | 'resource';
@@ -33,5 +33,12 @@ export interface ExtendedPost extends Post {
   topic?: Topic;
   language?: Language;
   saves: Save[];
-  comments: Comment[];
+  comments: ExtendedComment[];
+}
+
+export interface ExtendedComment extends Comment {
+  user: User;
+  children: Comment[];
+  post: Post;
+  parent: Comment;
 }

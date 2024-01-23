@@ -14,18 +14,11 @@ export async function GET(req: NextRequest, context: any) {
     },
   });
 
-  if (!saves) {
-    return NextResponse.json({
-      ok: false,
-      message: 'No saves',
-      saveCount: 0,
-    });
-  }
-
   return NextResponse.json({
     ok: true,
     message: message.success.get,
     saveCount: saves.length,
+    saves
   });
 }
 

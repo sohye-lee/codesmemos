@@ -3,7 +3,7 @@ import PostItem from '@/components/ui/postItem';
 import SidebarContainer from '@/components/ui/sidebarContainer';
 import { ExtendedPost } from '@/lib/types';
 import useCreate from '@/lib/useCreate';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 
@@ -12,6 +12,7 @@ import useSWR from 'swr';
 // }
 export default function PostIndividualPage() {
   const [post, setPost] = useState<ExtendedPost>();
+  const router = useRouter();
   const { id } = useParams();
   const { data, error } = useSWR(`/api/posts/${id}`);
 
@@ -20,7 +21,7 @@ export default function PostIndividualPage() {
       setPost(data.post);
       console.log(data.post);
     }
-  }, [setPost, data]);
+  }, [setPost, data, router]);
   return (
     <SidebarContainer header={false}>
       {post && <PostItem post={post} />}

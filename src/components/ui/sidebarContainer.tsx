@@ -14,7 +14,7 @@ export default function SidebarContainer({
   header,
 }: SidebarContainerProps) {
   return (
-    <div className="w-screen h-screen flex flex-col items-center pt-24 pb-12 ">
+    <div className="w-screen h-screen flex flex-col items-center pt-24 pb-18">
       <div className="flex gap-3 min-w-full lg:min-w-[899px] max-w-[899px]">
         <div className="flex flex-col w-full lg:w-4/5 gap-3">
           {header && <ContainerHeader type="default" />}

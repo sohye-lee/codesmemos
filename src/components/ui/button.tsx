@@ -1,13 +1,14 @@
 // import { deleteSnippet } from '@/actions';
 import Link from 'next/link';
 import { ReactNode } from 'react';
+import {IconRepeat} from '@tabler/icons-react';
 
 interface ButtonProps {
   button: boolean;
   mode: 'danger' | 'success' | 'save' | 'neutral' | 'black';
   size?: 'small' | 'medium' | 'large';
   addClass?: string;
-  loading?: boolean;
+  loading?: boolean | false;
   link?: string;
   deleteId?: number;
   deleteType?: 'snippets' | 'questions' | 'resources';
@@ -21,7 +22,7 @@ export default function Button({
   mode,
   size,
   addClass,
-  loading,
+  loading = false,
   link,
   onclick,
   children,
@@ -70,7 +71,7 @@ export default function Button({
           className={`rounded-md  border border-slate-800 border-r-2  border-b-2 hover:border  ${btnMode} ${btnSize} ${addClass}`}
           {...rest}
         >
-          {children}
+          {loading? <IconRepeat width={16} className=' animate-spin' />: children}
         </button>
       ) : (
         <Link
@@ -78,7 +79,8 @@ export default function Button({
           className={`rounded-md  border border-slate-800 border-r-2  border-b-2 hover:border  ${btnMode} ${btnSize} ${addClass}`}
           {...rest}
         >
-          {children}
+          {loading? <IconRepeat width={16} className=' animate-spin' />: children}
+          {/* {children} */}
         </Link>
       )}
     </>

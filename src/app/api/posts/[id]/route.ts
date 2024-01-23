@@ -14,7 +14,13 @@ export async function GET(req: NextRequest, context: any) {
     include: {
       user: true,
       language: true,
-      comments: true,
+      comments: {
+        include: {
+          user: true,
+          parent: true, 
+          children: true,
+        }
+      },
       saves: true,
     },
   });
