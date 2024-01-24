@@ -38,11 +38,16 @@ export function sortReplies (comments:ExtendedComment[]) {
  
     // to revise
     comments.filter((c) => c.parentId).map((c) => {
-        const parent = sortedComments[c.parent.id];
-        sortedComments[c.id] = {
-            layer: parent.layer + 1,
-            index: 10**8*(parent.layer) + index, 
-            comment: c
+        if (sortedComments[c.parent.id]) {
+
+            const parent = sortedComments[c.parent.id];
+            sortedComments[c.id] = {
+                layer: parent.layer + 1,
+                index: 10**8*(parent.layer) + index, 
+                comment: c
+            }
+        } else {
+            
         }
         index += 1
     })
