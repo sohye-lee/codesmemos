@@ -9,13 +9,10 @@ export async function GET (req: NextRequest, context: any) {
             postId: id,
         },
         include: {
-            user: {
-                select: {
-                    name: true,
-                    id: true,
-                    image: true,
-                }
-            }
+            user: true,
+            post: true,
+            children: true,
+            parent: true,
         }
     });
 
@@ -67,9 +64,7 @@ export async function POST(req: NextRequest, context: any) {
                   : {}),
               },
         },
-        include: {
-            children: true,
-        }
+       
     })
 
     if (!comment) {

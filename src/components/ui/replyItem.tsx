@@ -10,7 +10,8 @@ import { useRouter } from 'next/navigation';
 import useCreate from '@/lib/useCreate';
 import { useForm } from 'react-hook-form';
 
-interface CommentItemProps {
+interface ReplyItemProps {
+  layer: number;
   comment: ExtendedComment;
   postId: string;
 }
@@ -22,7 +23,7 @@ interface CommentForm {
     parentId: string;
 }
 
-export default function CommentItem({ comment, postId }: CommentItemProps) {
+export default function ReplyItem({ layer, comment, postId }: ReplyItemProps) {
   const router = useRouter();
   const { data: session } = useSession();
   const [editOpen, setEditOpen] = useState(false);
@@ -34,6 +35,7 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
   const [reply, {data, error, loading}] = useCreate(`/api/posts/${postId}/comments`);
   const {handleSubmit, register, formState: {errors}} = useForm<CommentForm>();
 
+  const paddingClass = `pl-[${20*layer}]`;
   const onCommentEdit = (e: FormEvent<HTMLInputElement>) => {
     setContent(e.currentTarget.value);
   };
@@ -63,15 +65,14 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
     router.refresh();
   }
 
-  
-
   useEffect(() => {
     if (deleted) {
       router.refresh();
     }
   }, [deleted, router, setDeleted, setEditOpen, onValidReply, handleSubmit]);
+
   return (
-    <div className="w-full py-2 border-b last:border-none">
+    <div className={`w-full py-2 border-b last:border-none ${paddingClass}`}>
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-full border border-blue-600 bg-blue-200 overflow-hidden">

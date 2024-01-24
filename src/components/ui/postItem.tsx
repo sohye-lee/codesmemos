@@ -7,11 +7,13 @@ import useSWR from 'swr';
 import { FormEvent, useEffect, useState } from 'react';
 import useCreate from '@/lib/useCreate';
 import { signIn } from '@/app/actions';
-import { dateFormat } from '@/lib/functions';
+import { dateFormat, sortReplies } from '@/lib/functions';
 import { useForm } from 'react-hook-form';
 import Button from './button';
 import CommentItem from './ commentItem';
 import { useRouter } from 'next/navigation';
+import { Post } from '@prisma/client';
+import ReplyItem from './replyItem';
 
 interface PostItemProps {
   post: ExtendedPost;
@@ -42,8 +44,8 @@ export default function PostItem({ post }: PostItemProps) {
 
   const onCommentWrite = (e: FormEvent<HTMLInputElement>):void => {
     setCommentLength(e.currentTarget.value.length);
-
   }
+ 
 
   const clickSave = () => {
     if (!session?.user) {
@@ -68,9 +70,28 @@ export default function PostItem({ post }: PostItemProps) {
     }
   }
 
+  // const renderComments = myComments ? myComments.map((comment) => {
+  //   // return <div key={comment.id}>{comment.content}</div>
+    
+  //   return (
+  //   <>
+  //   <ReplyItem comment={comment} key={comment.id} postId={post.id} layer={comment.layer}/>
+  //   <CommentItem comment={comment} key={comment.id} postId={post.id} />
+  //   {/* {comment.children && comment.children.length> 0 ? comment.children.map((c) => <CommentItem comment={c} postId={post.id}/>): null} */}
+    
+  //   </>
+  //   )
+  // }): <p className="text-xs text-gray-600">No comment yet.</p>;
   const renderComments = myComments && myComments.length > 0 ? myComments.map((comment) => {
     // return <div key={comment.id}>{comment.content}</div>
-    return <CommentItem comment={comment} key={comment.id}/>
+    
+    return (
+    <>
+    <CommentItem comment={comment} key={comment.id} postId={post.id} />
+    {/* {comment.children && comment.children.length> 0 ? comment.children.map((c) => <CommentItem comment={c} postId={post.id}/>): null} */}
+    
+    </>
+    )
   }): <p className="text-xs text-gray-600">No comment yet.</p>;
          
   const onValid = (validForm: CommentForm) => {
@@ -91,8 +112,11 @@ export default function PostItem({ post }: PostItemProps) {
     }
 
     if (commentsData && commentsData.comments) {
+      // setMyComments(sortReplies(commentsData.comments));
       setMyComments(commentsData.comments);
     }
+
+    console.log(sortReplies(myComments))
  
   }, [mySaveData, savesData, setMySave, myComments, onValid, reset, createCommentData, createCommentLoading]);
 

@@ -36,9 +36,16 @@ export interface ExtendedPost extends Post {
   comments: ExtendedComment[];
 }
 
+export interface Reply extends Comment {
+  user: User;
+  children: ExtendedComment[];
+  post: Post;
+  parent: ExtendedComment;
+}
+
 export interface ExtendedComment extends Comment {
   user: User;
-  children: Comment[];
+  children: ExtendedComment[];
   post: Post;
-  parent: Comment;
+  parent: ExtendedComment;
 }

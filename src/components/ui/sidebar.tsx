@@ -26,7 +26,7 @@ export default function Sidebar() {
             {language.name}
             <IconArrowRight
               width={14}
-              className="hidden group-hover:block p-0 y-0"
+              className="opacity-0 group-hover:opacity-100 p-0 y-0"
             />
           </Link>
         );
@@ -47,7 +47,7 @@ export default function Sidebar() {
               {topic.slug}
               <IconArrowRight
                 width={14}
-                className="hidden group-hover:block p-0 y-0"
+                className="opacity-0 group-hover:opacity-100 p-0 y-0"
               />
             </Link>
           );
