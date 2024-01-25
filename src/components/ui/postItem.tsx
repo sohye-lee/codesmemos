@@ -7,7 +7,7 @@ import useSWR from 'swr';
 import { FormEvent, useEffect, useState } from 'react';
 import useCreate from '@/lib/useCreate';
 import { signIn } from '@/app/actions';
-import { dateFormat, sortReplies } from '@/lib/functions';
+import { CommentWithNode, dateFormat, organizeComments, sortReplies } from '@/lib/functions';
 import { useForm } from 'react-hook-form';
 import Button from './button';
 import CommentItem from './ commentItem';
@@ -94,6 +94,30 @@ export default function PostItem({ post }: PostItemProps) {
     )
   }): <p className="text-xs text-gray-600">No comment yet.</p>;
          
+
+  const organizedComments = organizeComments(post.comments)
+  console.log(organizedComments);
+
+  const renderComment = (comment:CommentWithNode) => {
+    return (
+    <div className='pl-3'>
+      <p>
+        - {comment.content}
+        </p> 
+        {comment.replies && comment.replies.length > 0 ?
+        comment.replies.map((reply) => renderComment(reply))
+        :
+        null  
+      }
+    </div>
+    )
+  }
+
+  const renderOrganizedComments = organizeComments.length > 0 ? organizedComments.map((o) => {
+    return renderComment(o)
+  }): null;
+
+
   const onValid = (validForm: CommentForm) => {
     createComment(validForm);
     reset();
@@ -196,6 +220,7 @@ export default function PostItem({ post }: PostItemProps) {
     
     <div>
       {renderComments}
+      {renderOrganizedComments}
     </div>
     </div>
 

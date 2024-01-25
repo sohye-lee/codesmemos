@@ -47,7 +47,7 @@ export function sortReplies (comments:ExtendedComment[]) {
                 comment: c
             }
         } else {
-            
+
         }
         index += 1
     })
@@ -57,4 +57,63 @@ export function sortReplies (comments:ExtendedComment[]) {
         return sortedComments[a].index - sortedComments[b].index
     })
 
+}
+
+export interface CommentWithNode extends ExtendedComment {
+    node: number;
+    replies: CommentWithNode[];
+}
+
+export function organizeComments (comments:ExtendedComment[]) {
+
+    let a = comments;
+    // let a = [{id: 1, parentId:null},{id: 2, parentId:1},{id: 3, parentId:2},{id: 4, parentId:2},{id: 5, parentId:1},{id: 6, parentId:null}]
+    let b:CommentWithNode[] = [];
+    let nodes:number[] = [];
+    for (var c of a) {
+        if (!c.parentId) {
+            b.push({
+                ...c, 
+                node: 0, 
+                replies: []
+            })
+        }
+    }
+
+    const findNodes = () => {
+        for (var c of a) {
+            if (c.parentId) {
+
+                let parent = b.filter(p => p.id == c.parentId)[0];
+                let newC = {
+                    ...c, node: (parent.node + 1), replies: []
+                };
+                nodes.push(newC.node)
+
+                b.push(newC)
+            }
+        }
+    }
+
+    while (b.length < a.length) {
+        findNodes();
+    }
+
+    const maxNode = Math.max(...nodes)
+    let result:CommentWithNode[] = []
+
+    for (let i = maxNode; i >= 0; i--) {
+        
+        b.filter(p => p.node == i).map(child => {
+            if (i > 0) {
+
+                let myparent = b.filter(p => p.id == child.parentId)[0]
+                myparent.replies.push(child)
+            } else {
+                result.push(child)
+            }
+        })
+    }
+
+    return result;
 }

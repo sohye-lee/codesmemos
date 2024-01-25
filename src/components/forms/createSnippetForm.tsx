@@ -14,17 +14,19 @@ type IModelContentChangedEvent = /*unresolved*/ any;
 
 export default function CreateSnippetForm() {
   const { data: session } = useSession();
-  if (!session) {
-    signIn();
-  }
+  // if (!session) {
+  //   signIn();
+  // }
   const router = useRouter();
   const [titleLength, setTitleLength] = useState(0);
   const { data, error } = useSWR('/api/languages');
-  const [languages, setLanguages] = useState<Language[]>();
+  const [languages, setLanguages] = useState<Language[]>(data.languages);
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const [note, setNote] = useState('');
   const [languageName, setLanguageName] = useState('javascript');
+  // const [userId, setUserId] = useState(session?.user?.id);
+  // const [type, setType] = useState<postType>("snippet");
 
   const {
     register,
@@ -85,11 +87,10 @@ export default function CreateSnippetForm() {
         })
       : null;
 
+    console.log(data)
   useEffect(() => {
     data && setLanguages(data.languages);
-    // if (!session) {
-    //   signIn();
-    // }
+
   }, [setLanguages, setLanguageName]);
 
   return (
@@ -132,8 +133,9 @@ export default function CreateSnippetForm() {
           })}
           className="rounded border w-full border-slate-400 py-2 px-3 pr-14"
           onSelect={onSelectLanguage}
+          defaultValue={"default"}
         >
-          <option disabled selected value="">
+          <option disabled value="default">
             Select
           </option>
           {renderLanguages}
@@ -168,8 +170,8 @@ export default function CreateSnippetForm() {
           onChange={onChangeNote}
         ></textarea>
       </div>
-      <input className="hidden" name="type" value="snippet" />
-      <input className="hidden" name="userId" value={session?.user?.id} />
+      {/* <input className="hidden" {...register("type")} value="snippet" />
+      <input className="hidden" {...register("userId")} value={session?.user?.id} /> */}
       <div className="flex justify-end">
         <Button size="medium" button={true} mode="success">
           Create
