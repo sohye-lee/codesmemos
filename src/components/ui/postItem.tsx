@@ -22,8 +22,7 @@ interface PostItemProps {
 interface CommentForm {
   content: string;
   userId: string;
-  // postId: string;
-  // parentId?: string;
+ 
 }
 
 export default function PostItem({ post }: PostItemProps) {
@@ -70,52 +69,36 @@ export default function PostItem({ post }: PostItemProps) {
     }
   }
 
-  // const renderComments = myComments ? myComments.map((comment) => {
-  //   // return <div key={comment.id}>{comment.content}</div>
-    
+ 
+  //   const renderComments = myComments && myComments.length > 0 ? myComments.map((comment) => {
   //   return (
   //   <>
-  //   <ReplyItem comment={comment} key={comment.id} postId={post.id} layer={comment.layer}/>
-  //   <CommentItem comment={comment} key={comment.id} postId={post.id} />
-  //   {/* {comment.children && comment.children.length> 0 ? comment.children.map((c) => <CommentItem comment={c} postId={post.id}/>): null} */}
-    
+  //     <CommentItem comment={comment} key={comment.id} postId={post.id} />
   //   </>
   //   )
   // }): <p className="text-xs text-gray-600">No comment yet.</p>;
-  const renderComments = myComments && myComments.length > 0 ? myComments.map((comment) => {
-    // return <div key={comment.id}>{comment.content}</div>
-    
-    return (
-    <>
-    <CommentItem comment={comment} key={comment.id} postId={post.id} />
-    {/* {comment.children && comment.children.length> 0 ? comment.children.map((c) => <CommentItem comment={c} postId={post.id}/>): null} */}
-    
-    </>
-    )
-  }): <p className="text-xs text-gray-600">No comment yet.</p>;
          
 
   const organizedComments = organizeComments(post.comments)
-  console.log(organizedComments);
+ 
 
   const renderComment = (comment:CommentWithNode) => {
     return (
     <div className='pl-3'>
-      <p>
-        - {comment.content}
-        </p> 
+     
+      <CommentItem comment={comment} key={comment.id} postId={post.id} />
+      
         {comment.replies && comment.replies.length > 0 ?
         comment.replies.map((reply) => renderComment(reply))
-        :
-        null  
-      }
+        : null}
     </div>
     )
   }
 
   const renderOrganizedComments = organizeComments.length > 0 ? organizedComments.map((o) => {
     return renderComment(o)
-  }): null;
+  }):         <p className="text-xs text-gray-600">No comment yet.</p>
+  ;
 
 
   const onValid = (validForm: CommentForm) => {
@@ -219,7 +202,6 @@ export default function PostItem({ post }: PostItemProps) {
       </form>
     
     <div>
-      {renderComments}
       {renderOrganizedComments}
     </div>
     </div>

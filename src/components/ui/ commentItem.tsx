@@ -1,17 +1,17 @@
 'use client';
-import { dateFormat } from '@/lib/functions';
+import { CommentWithNode, dateFormat } from '@/lib/functions';
 import { ExtendedComment } from '@/lib/types';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { FormEvent, useEffect, useState } from 'react';
 import Button from './button';
-import { IconTrash, IconEdit, IconArrowBackUp } from '@tabler/icons-react';
+import { IconArrowBackUp, IconCornerDownRight } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import useCreate from '@/lib/useCreate';
 import { useForm } from 'react-hook-form';
 
 interface CommentItemProps {
-  comment: ExtendedComment;
+  comment: CommentWithNode;
   postId: string;
 }
 
@@ -60,19 +60,20 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
 
   const onValidReply = (validForm:CommentForm) => {
     reply(validForm);
+    setReplyOpen(false);
     router.refresh();
   }
-
-  
 
   useEffect(() => {
     if (deleted) {
       router.refresh();
     }
   }, [deleted, router, setDeleted, setEditOpen, onValidReply, handleSubmit]);
+  
   return (
     <div className="w-full py-2 border-b last:border-none">
       <div className="flex items-center gap-3">
+        {comment.node !== 0 && <IconCornerDownRight width={16} />}
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-full border border-blue-600 bg-blue-200 overflow-hidden">
             {comment.user.image ? (
@@ -100,7 +101,6 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
       {editOpen ? (
         <form onSubmit={editContent}>
           <div className="w-full flex flex-col">
-            {/* <label htmlFor="name">Title</label> */}
             <div className="p-0 m-0 relative w-full">
               <input
                 name="content"
@@ -116,8 +116,6 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
               </div>
             </div>
           </div>
-          {/* <input {...register('postId')} value={postId} className='hidden' /> */}
-          {/* <input {...register('userId')} value={session?.user?.id} className='hidden' /> */}
           <Button mode="success" size="small" button={true} addClass="mt-2">
             Save
           </Button>
