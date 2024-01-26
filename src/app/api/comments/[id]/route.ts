@@ -32,7 +32,7 @@ export async function PUT(req: NextRequest, context: any) {
     params: { id },
   } = context;
   const { content } = await req.json();
-  console.log(content);
+  console.log('content I got : ', content);
 
   const existingComment = await db.comment.findFirst({
     where: {
@@ -56,7 +56,6 @@ export async function PUT(req: NextRequest, context: any) {
     },
   });
 
-  console.log(comment)
 
   if (!comment) {
     return NextResponse.json({

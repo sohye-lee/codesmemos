@@ -1,14 +1,18 @@
-import { dateFormat } from "@/lib/functions";
+import { capitalize, dateFormat } from "@/lib/functions";
 import { ExtendedPost } from "@/lib/types";
 import { IconBookmark, IconBookmarkFilled, IconMessage } from "@tabler/icons-react";
+import Image from "next/image";
 import Link from "next/link";
 
 interface PostItemProps {
     post: ExtendedPost;
   }
 export default function PostListItem({post}: PostItemProps) {
+  const link = post.linkType == 'video' ? post.content : '';
+  const videoId = link.split('watch?v=')[1]
+  const videoThumbnail = `https://img.youtube.com/vi/${videoId}/0.jpg`
     return (
-        <div className="border border-slate-500 border-r-2 border-b-2 p-3 flex flex-col gap-3">
+        <Link href={`/posts/${post.id}`} className="border cursor-pointer border-slate-500 border-r-2 border-b-2 p-3 flex flex-col gap-3">
         <div className="flex items-center gap-2">
           <h5 className="text-xs text-gray-500">
             Posted by
@@ -16,8 +20,12 @@ export default function PostListItem({post}: PostItemProps) {
               {post.user.name}
             </Link>
             <span className='mx-2'>|</span>
-            <span className="mr-1">
+            <span>
              Created at {dateFormat(post.createdAt)}
+            </span>
+            <span className='mx-2'>|</span>
+            <span>
+              {capitalize(post.type)}
             </span>
           </h5>
         </div>
@@ -27,9 +35,15 @@ export default function PostListItem({post}: PostItemProps) {
             {post.content.length > 300
               ? post.content.slice(0, 300) + '...'
               : post.content}
-            {/* {post.content} */}
           </pre>
+          {post.linkType == 'video' && post.link ? 
+          <div className="w-full padding-[56.25% 0 0 0]">
+            hi
+              <Image src={videoThumbnail}  alt="thumbnail" width={800}/>
+          </div>
+          : null}
         </div>
+
         <div className="flex items-center gap-3">
           <div className="flex items-center text-xs gap-1 cursor-pointer">
              <IconBookmark width="16" />
@@ -40,6 +54,6 @@ export default function PostListItem({post}: PostItemProps) {
             {post?.comments.length}
           </div>
         </div>
-      </div>
+      </Link>
     )
 }

@@ -6,38 +6,119 @@ import Sidebar from '@/components/ui/sidebar';
 import { Post, Save, User } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import {
   IconCode,
   IconPencilQuestion,
+  IconPencil,
   IconBookmark,
   IconBook,
 } from '@tabler/icons-react';
+import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator';
+import { useForm } from 'react-hook-form';
+import Button from '@/components/ui/button';
+import PostListItem from '@/components/ui/postLIstItem';
+import { ExtendedPost } from '@/lib/types';
 
 interface ExtendedUser extends User {
   posts: Post[];
   saves: Save[];
 }
 
+interface UsernameUpdateForm {
+  username: string;
+}
+
 export default function ProfilePage() {
   const { data: session } = useSession();
+  const router = useRouter();
   const { id } = useParams();
   const { data, error } = useSWR(`/api/users/${id}`);
+  const { data: postsData, error:postsError } = useSWR(`/api/users/${id}/posts`);
+  const [posts, setPosts] = useState<ExtendedPost[]>([]);
+  const {handleSubmit, register, formState: { errors}} = useForm<UsernameUpdateForm>();
   const [user, setUser] = useState<ExtendedUser>();
+
+  const uniqueName: string = uniqueNamesGenerator({
+    dictionaries: [adjectives, animals],
+    length: 2,
+    separator: '_'
+  });
+  const [popupOpen, setPopupOpen] = useState(false);
+
+  const onValid = (validForm:UsernameUpdateForm) => {
+    fetch(`/api/users/${session?.user?.id}`, {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(validForm)
+    })
+    .then((res) => router.refresh()) 
+    setPopupOpen(false)
+  }
+
+  const renderPosts =   posts && posts.length > 0 ? postsData.posts.map((post:ExtendedPost) => {
+    return <PostListItem post={post} />
+  }): <div className="border border-slate-500 border-r-2 border-b-2 p-3">
+    <p className='text-gray-600 text-sm text-center'>No post yet</p>
+  </div>
+
+
 
   useEffect(() => {
     data ? setUser(data?.user) : console.log('no data');
-  }, [data]);
+    postsData && setPosts(postsData?.posts);
+  }, [data, setPopupOpen]);
+
   return (
     <Container width="medium">
-      <div className="w-screen h-screen flex flex-col items-center ">
-        <div className="flex gap-3 min-w-full lg:min-w-[899px] ">
+      {popupOpen ?
+        <div className="fixed z-100 top-0 left-0 w-screen h-screen bg-slate-600 bg-opacity-20  flex items-center justify-center">
+          <form onSubmit={handleSubmit(onValid)} className="bg-white px-4 py-5 flex flex-col gap-3 rounded-sm">
+            <div className="w-full flex flex-col">
+              <label htmlFor="name">Set your username</label>
+              <div className="p-0 m-0 relative w-full">
+                <input
+                  {...register('username', {
+                    minLength: {
+                      value: 3,
+                      message: 'Min. 3 characters',
+                    },
+                    maxLength: {
+                      value: 40,
+                      message: 'Max. 40 characters',
+                    },
+                  })}
+                  type="text"
+                  placeholder="Snippet's Title"
+                  className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
+                  defaultValue={user?.username || uniqueName}
+         
+                />
+                
+              </div>
+              {errors.username ? (
+                <span className="text-danger-400 text-[14px]">
+                  {errors.username.message}
+                </span>
+              ) : null}
+          </div>
+          <div className="flex justify-end">
+            <Button size="small" mode="black" button={true}>
+              Update
+            </Button>
+          </div>
+        </form>
+      </div>
+      : null}
+      <div className="w-full flex flex-col items-center ">
+        <div className="flex gap-3 min-w-full lg:min-w-[899px] max-w-[899px]">
           <div className="flex flex-col w-full lg:w-4/5 gap-3">
             <ContainerHeader type="default" />
-
-            <div className="border border-slate-500 border-r-2 border-b-2 p-3"></div>
+            {renderPosts}
           </div>
           <div className="  flex-col w-full lg:w-1/5 hidden lg:flex gap-3">
             <div>
@@ -59,8 +140,12 @@ export default function ProfilePage() {
                     </p>
                   )}
                 </div>
-                <div className="text-blue-600  font-medium text-md   text-center">
-                  {user?.name}
+                <div className="text-blue-600  font-medium text-md   text-center flex items-center gap-2">
+                  {user?.username || user?.name}
+                  <div className='px-1 py-[2px] border border-blue-200 rounded-md bg-transparent hover:bg-gray-100 cursor-pointer' onClick={() => setPopupOpen(true)}>
+
+                  <IconPencil width={16}  />
+                  </div>
                 </div>
                 <div className="text-gra6-600  font-medium text-sm   text-center mb-3">
                   {user?.posts.length} posts

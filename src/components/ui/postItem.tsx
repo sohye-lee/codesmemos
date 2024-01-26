@@ -1,5 +1,5 @@
 'use client';
-import { ExtendedComment, ExtendedPost } from '@/lib/types';
+import { CommentWithNode, ExtendedComment, ExtendedPost } from '@/lib/types';
 import Link from 'next/link';
 import { IconHeart, IconHeartFilled, IconMessage, IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
@@ -7,7 +7,7 @@ import useSWR from 'swr';
 import { FormEvent, useEffect, useState } from 'react';
 import useCreate from '@/lib/useCreate';
 import { signIn } from '@/app/actions';
-import { CommentWithNode, dateFormat, organizeComments, sortReplies } from '@/lib/functions';
+import { dateFormat, organizeComments, sortReplies } from '@/lib/functions';
 import { useForm } from 'react-hook-form';
 import Button from './button';
 import CommentItem from './ commentItem';
@@ -32,10 +32,10 @@ export default function PostItem({ post }: PostItemProps) {
   const { data: mySaveData } = useSWR(
     `/api/saves/${post.id}/${session?.user?.id}`
   );
-  const { data: commentsData } = useSWR(`/api/saves/${post.id}/comments`);
+  // const { data: commentsData } = useSWR(`/api/saves/${post.id}/comments`);
   const [saves, setSaves] = useState(0);
   const [mySave, setMySave] = useState(false);
-  const [myComments, setMyComments] = useState(post.comments);
+  // const [myComments, setMyComments] = useState(post.comments);
   const [updateSave, {data:saveData, error:saveError, loading}] = useCreate(`/api/saves/${post?.id}`);
   const [createComment, {data:createCommentData, error:createCommentError, loading:createCommentLoading}] = useCreate(`/api/posts/${post?.id}/comments`);
   const {handleSubmit, register, formState: {errors}, reset} = useForm<CommentForm>();
@@ -68,26 +68,14 @@ export default function PostItem({ post }: PostItemProps) {
       })
     }
   }
-
- 
-  //   const renderComments = myComments && myComments.length > 0 ? myComments.map((comment) => {
-  //   return (
-  //   <>
-  //     <CommentItem comment={comment} key={comment.id} postId={post.id} />
-  //   </>
-  //   )
-  // }): <p className="text-xs text-gray-600">No comment yet.</p>;
          
-
   const organizedComments = organizeComments(post.comments)
- 
-
   const renderComment = (comment:CommentWithNode) => {
     return (
-    <div className='pl-3'>
+    <div className='pl-3' key={comment.id}>
      
-      <CommentItem comment={comment} key={comment.id} postId={post.id} />
-      
+      <CommentItem comment={comment}  postId={post.id} />
+       
         {comment.replies && comment.replies.length > 0 ?
         comment.replies.map((reply) => renderComment(reply))
         : null}
@@ -95,9 +83,10 @@ export default function PostItem({ post }: PostItemProps) {
     )
   }
 
-  const renderOrganizedComments = organizeComments.length > 0 ? organizedComments.map((o) => {
+
+  const renderOrganizedComments =  organizedComments.length > 0 ? organizedComments.map((o) => {
     return renderComment(o)
-  }):         <p className="text-xs text-gray-600">No comment yet.</p>
+  }):  <p className="text-xs text-gray-600">No comment yet</p>
   ;
 
 
@@ -117,15 +106,8 @@ export default function PostItem({ post }: PostItemProps) {
     } else {
       setMySave(false);
     }
-
-    if (commentsData && commentsData.comments) {
-      // setMyComments(sortReplies(commentsData.comments));
-      setMyComments(commentsData.comments);
-    }
-
-    console.log(sortReplies(myComments))
  
-  }, [mySaveData, savesData, setMySave, myComments, onValid, reset, createCommentData, createCommentLoading]);
+  }, [mySaveData, savesData, setMySave, onValid, reset, createCommentData, createCommentLoading,   ]);
 
   return (
     <>
@@ -201,9 +183,10 @@ export default function PostItem({ post }: PostItemProps) {
       </Button>
       </form>
     
-    <div>
-      {renderOrganizedComments}
-    </div>
+      <div>
+        {renderOrganizedComments}
+      
+      </div>
     </div>
 
     </>

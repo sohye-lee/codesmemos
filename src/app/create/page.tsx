@@ -7,6 +7,9 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Editor } from '@monaco-editor/react';
 import CreateSnippetForm from '@/components/forms/createSnippetForm';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { getStaticPaths } from 'next/dist/build/templates/pages';
+import CreateResourceForm from '@/components/forms/createResourceForm';
 
 type TabType = 'snippet' | 'question' | 'resource';
 
@@ -21,8 +24,9 @@ interface CreatePostForm {
   languageName?: string;
 }
 
-export default function CreatePage() {
-  const [tab, setTab] = useState<TabType>('snippet');
+export default function CreatePage(props:any) {
+  const type = props.searchParams.type;
+  const [tab, setTab] = useState<TabType>(type || 'snippet');
   const {
     register,
     handleSubmit,
@@ -31,7 +35,7 @@ export default function CreatePage() {
   const activeStyle = 'border-b-none bg-white';
   const inactiveStyle = 'border-b border-slate-400 bg-gray-200 text-gray-600';
   return (
-    <Container width="small" bgColor="bg-[#EDEDFF] ">
+    <Container width="small" bgColor="bg-blue-100 ">
       <div className="w-full flex flex-col gap-3 p-3">
         <h1 className="text-xl font-medium">Create a New Post</h1>
         <div className="w-full border border-slate-500 border-r-2 border-b-2">
@@ -62,30 +66,11 @@ export default function CreatePage() {
             </div>
           </div>
           <div className="p-4 bg-white">
+            {tab == "snippet" && 
+            
             <CreateSnippetForm />
-            {/* <form action="" className="flex flex-col gap-3">
-              <div className="w-full flex flex-col">
-                <label htmlFor="name">Title</label>
-                <input
-                  {...register('title', {
-                    required: 'This field is required',
-                  })}
-                  type="text"
-                  placeholder="*Type here"
-                  className="rounded border border-slate-400 py-2 px-3"
-                />
-                {errors.title ? (
-                  <span className="text-danger-400 text-[14px]">
-                    {errors.title.message}
-                  </span>
-                ) : null}
-              </div>
-              <div className="flex justify-end">
-                <Button size="medium" button={true} mode="success">
-                  Create
-                </Button>
-              </div>
-            </form> */}
+            }
+            {tab == "resource" && <CreateResourceForm />}
           </div>
         </div>
       </div>

@@ -121,9 +121,9 @@ export default function Header() {
                 ref={dropdownCreate}
                 className="absolute right-0 top-[105%] bg-white border border-slate-300 rounded-sm flex flex-col min-w-32"
               >
-                <NavSubItem link="/questions/new">Question</NavSubItem>
-                <NavSubItem link="/snippets/new">Code</NavSubItem>
-                <NavSubItem link="/bookmarks/new">Bookmark</NavSubItem>
+                <NavSubItem link="/create?type=snippet">Snippet</NavSubItem>
+                <NavSubItem link="/create?type=question">Code</NavSubItem>
+                <NavSubItem link="/create?type=resource">Resource</NavSubItem>
               </div>
             ) : null}
           </div>

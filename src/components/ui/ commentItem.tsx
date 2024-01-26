@@ -1,11 +1,11 @@
 'use client';
-import { CommentWithNode, dateFormat } from '@/lib/functions';
-import { ExtendedComment } from '@/lib/types';
+import { dateFormat } from '@/lib/functions';
+import { CommentWithNode } from '@/lib/types';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { FormEvent, useEffect, useState } from 'react';
 import Button from './button';
-import { IconArrowBackUp, IconCornerDownRight } from '@tabler/icons-react';
+import { IconArrowBackUp, IconCornerDownRight, IconSend } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import useCreate from '@/lib/useCreate';
 import { useForm } from 'react-hook-form';
@@ -37,6 +37,7 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
   const onCommentEdit = (e: FormEvent<HTMLInputElement>) => {
     setContent(e.currentTarget.value);
   };
+
   const editContent = () => {
     fetch(`/api/comments/${comment.id}`, {
       method: 'PUT',
@@ -45,7 +46,8 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
       },
       body: JSON.stringify({ content })
     })
-    router.refresh();
+
+    // router.refresh();
   };
 
   const deleteComment = () => {
@@ -55,7 +57,7 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
             'Content-Type': 'application/json',
         },
     })
-    router.refresh();
+    // router.refresh();
   };
 
   const onValidReply = (validForm:CommentForm) => {
@@ -68,12 +70,16 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
     if (deleted) {
       router.refresh();
     }
-  }, [deleted, router, setDeleted, setEditOpen, onValidReply, handleSubmit]);
+  }, [deleted, router, setDeleted, onValidReply, handleSubmit]);
   
   return (
-    <div className="w-full py-2 border-b last:border-none">
-      <div className="flex items-center gap-3">
+    <div className="w-full py-2 border-b last:border-none flex">
+ 
         {comment.node !== 0 && <IconCornerDownRight width={16} />}
+        <div className='flex flex-col w-full'>
+
+      <div className="flex items-center gap-3">
+  
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-full border border-blue-600 bg-blue-200 overflow-hidden">
             {comment.user.image ? (
@@ -99,7 +105,7 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
         </span>
       </div>
       {editOpen ? (
-        <form onSubmit={editContent}>
+        <form onSubmit={editContent} className='mt-2'>
           <div className="w-full flex flex-col">
             <div className="p-0 m-0 relative w-full">
               <input
@@ -123,15 +129,17 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
       ) : (
         <div className="pl-8 text-sm">{comment.content}</div>
       )}
-      <div className="flex items-center justify-end gap-3">
-        <IconArrowBackUp width={16} className="cursor-pointer" onClick={() => setReplyOpen(true)} />
+      <div className="flex items-stretch justify-end gap-2">
+        <div className="px-1 border-blue-300 border rounded mt-1 mb-2 hover:bg-gray-50">
+          <IconArrowBackUp width={16} color="rgb(37, 99, 235)" className="cursor-pointer text-blue-600" onClick={() => {setReplyOpen(true); setEditOpen(false);}} />
+        </div>
         {session?.user?.id == comment.user.id ? (
           <div className="flex items-center gap-2 pt-1 pb-2 justify-end  ">
             <Button
               size="small"
               button={true}
               mode="save"
-              onClick={() => setEditOpen(true)}
+              onClick={() => {setEditOpen(true); setReplyOpen(false)}}
             >
               edit
             </Button>
@@ -147,20 +155,18 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
         ) : null}
       </div>
       {replyOpen ?
-      <form onSubmit={handleSubmit(onValidReply)}>
-          <div className="w-full flex flex-col">
-            {/* <label htmlFor="name">Title</label> */}
+      <form onSubmit={handleSubmit(onValidReply)} className='flex items-stretch relative'>
+          <div className="w-full flex  ">
+    
             <div className="p-0 m-0 relative w-full">
               <input
                 {...register('content')}
                 type="text"
-                // value={content}
                 placeholder="Reply"
                 className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
-                // onChange={onCommentEdit}
                 onChange={(e:FormEvent<HTMLInputElement>) => setReplyLength(e.currentTarget.value.length)}
                 />
-              <div className="absolute top-[50%] -translate-y-[50%] right-2 font-medium text-xs text-blue-600">
+              <div className="absolute top-[50%] -translate-y-[50%] right-12 font-medium text-xs text-blue-600">
                 {replyLength}/500
               </div>
             </div>
@@ -168,14 +174,13 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
           <input {...register('parentId')} value={comment.id} className='hidden' />
           <input {...register('postId')} value={postId} className='hidden' />
           <input {...register('userId')} value={session?.user?.id} className='hidden' />
-          <Button mode="success" size="small" button={true} addClass="mt-2 float-right">
-            Reply
+          <Button mode="success" size="small" button={true} addClass="absolute top-[50%] right-1 -translate-y-[50%] h-100">
+            <IconSend width={16} />
           </Button>
         </form>
         :
         null}
-
-        {/* {comment.children && comment.children.length> 0 ? comment.children.map((c) => {return <CommentItem comment={c} postId={postId}/>}): null} */}
+        </div>
     </div>
   );
 }

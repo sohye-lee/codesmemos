@@ -1,4 +1,4 @@
-import { ExtendedComment } from "./types";
+import { CommentWithNode, ExtendedComment } from "./types";
 
 export const dateFormat = (datetime:Date) => {
     return new Date(datetime).toLocaleDateString();
@@ -59,17 +59,13 @@ export function sortReplies (comments:ExtendedComment[]) {
 
 }
 
-export interface CommentWithNode extends ExtendedComment {
-    node: number;
-    replies: CommentWithNode[];
-}
+
 
 export function organizeComments (comments:ExtendedComment[]) {
 
     let a = comments;
-    // let a = [{id: 1, parentId:null},{id: 2, parentId:1},{id: 3, parentId:2},{id: 4, parentId:2},{id: 5, parentId:1},{id: 6, parentId:null}]
     let b:CommentWithNode[] = [];
-    let nodes:number[] = [];
+    let nodes:number[] = [0];
     for (var c of a) {
         if (!c.parentId) {
             b.push({
@@ -99,6 +95,7 @@ export function organizeComments (comments:ExtendedComment[]) {
         findNodes();
     }
 
+ 
     const maxNode = Math.max(...nodes)
     let result:CommentWithNode[] = []
 
@@ -114,6 +111,22 @@ export function organizeComments (comments:ExtendedComment[]) {
             }
         })
     }
-
+ 
+    
+    if (maxNode == 0) {
+        return b;
+    }
     return result;
 }
+
+ export const capitalize = (string:string) => {
+    let words = string.split(' ');
+    let capitalized = [];
+    for (var w of words) {
+        const firstLetter = w[0].toUpperCase();
+        const theRest = w.slice(1,)
+        const newW = firstLetter + theRest;
+        capitalized.push(newW);
+    }
+    return capitalized.join(' ');
+ }

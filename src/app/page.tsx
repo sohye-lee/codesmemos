@@ -11,6 +11,9 @@ export default function Home() {
   const { breadcrumb, setBreadcrumb } = useStore();
   const [posts, setPosts] = useState([]);
   const {data} = useSWR('/api/posts');
+ 
+ 
+  
   useEffect(() => {
     setBreadcrumb('Home');
   }, [setBreadcrumb]);
@@ -19,6 +22,7 @@ export default function Home() {
       {data && data.posts ? 
       data.posts.map((post:ExtendedPost) => <PostListItem post={post}  />)
       :null}
+ 
     </SidebarContainer>
   );
 }

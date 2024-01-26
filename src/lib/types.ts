@@ -49,3 +49,8 @@ export interface ExtendedComment extends Comment {
   post: Post;
   parent: ExtendedComment;
 }
+
+export interface CommentWithNode extends ExtendedComment {
+  node: number;
+  replies: CommentWithNode[];
+}
