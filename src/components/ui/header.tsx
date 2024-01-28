@@ -127,6 +127,7 @@ export default function Header() {
               </div>
             ) : null}
           </div>
+
           {session?.user ? (
             <div className="relative">
               <div

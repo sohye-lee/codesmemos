@@ -1,7 +1,13 @@
 'use client';
 import { CommentWithNode, ExtendedComment, ExtendedPost } from '@/lib/types';
 import Link from 'next/link';
-import { IconHeart, IconHeartFilled, IconMessage, IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
+import {
+  IconHeart,
+  IconHeartFilled,
+  IconMessage,
+  IconBookmark,
+  IconBookmarkFilled,
+} from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import useSWR from 'swr';
 import { FormEvent, useEffect, useState } from 'react';
@@ -22,7 +28,6 @@ interface PostItemProps {
 interface CommentForm {
   content: string;
   userId: string;
- 
 }
 
 export default function PostItem({ post }: PostItemProps) {
@@ -36,68 +41,82 @@ export default function PostItem({ post }: PostItemProps) {
   const [saves, setSaves] = useState(0);
   const [mySave, setMySave] = useState(false);
   // const [myComments, setMyComments] = useState(post.comments);
-  const [updateSave, {data:saveData, error:saveError, loading}] = useCreate(`/api/saves/${post?.id}`);
-  const [createComment, {data:createCommentData, error:createCommentError, loading:createCommentLoading}] = useCreate(`/api/posts/${post?.id}/comments`);
-  const {handleSubmit, register, formState: {errors}, reset} = useForm<CommentForm>();
-  const [ commentLength, setCommentLength] = useState(0);
+  const [updateSave, { data: saveData, error: saveError, loading }] = useCreate(
+    `/api/saves/${post?.id}`
+  );
+  const [
+    createComment,
+    {
+      data: createCommentData,
+      error: createCommentError,
+      loading: createCommentLoading,
+    },
+  ] = useCreate(`/api/posts/${post?.id}/comments`);
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    reset,
+  } = useForm<CommentForm>();
+  const [commentLength, setCommentLength] = useState(0);
 
-  const onCommentWrite = (e: FormEvent<HTMLInputElement>):void => {
+  const onCommentWrite = (e: FormEvent<HTMLInputElement>): void => {
     setCommentLength(e.currentTarget.value.length);
-  }
- 
+  };
 
   const clickSave = () => {
     if (!session?.user) {
       signIn();
     }
     if (!mySave) {
-      updateSave({userId: session?.user?.id});
- 
+      updateSave({ userId: session?.user?.id });
     } else {
       fetch(`/api/saves/${post.id}/${session?.user?.id}`, {
         method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.ok) {
-          setMySave(true)
-        }
-      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.ok) {
+            setMySave(true);
+          }
+        });
     }
-  }
-         
-  const organizedComments = organizeComments(post.comments)
-  const renderComment = (comment:CommentWithNode) => {
+  };
+
+  const organizedComments = organizeComments(post.comments);
+  const renderComment = (comment: CommentWithNode) => {
     return (
-    <div className='pl-3' key={comment.id}>
-     
-      <CommentItem comment={comment}  postId={post.id} />
-       
-        {comment.replies && comment.replies.length > 0 ?
-        comment.replies.map((reply) => renderComment(reply))
-        : null}
-    </div>
-    )
-  }
+      <div
+        className="pl-3 border-b last:border-none border-gray-200"
+        key={comment.id}
+      >
+        <CommentItem comment={comment} postId={post.id} />
+        {comment.replies && comment.replies.length > 0
+          ? comment.replies.map((reply) => renderComment(reply))
+          : null}
+      </div>
+    );
+  };
 
-
-  const renderOrganizedComments =  organizedComments.length > 0 ? organizedComments.map((o) => {
-    return renderComment(o)
-  }):  <p className="text-xs text-gray-600">No comment yet</p>
-  ;
-
-
+  const renderOrganizedComments =
+    organizedComments.length > 0 ? (
+      organizedComments.map((o) => {
+        return renderComment(o);
+      })
+    ) : (
+      <p className="text-xs text-gray-600">No comment yet</p>
+    );
   const onValid = (validForm: CommentForm) => {
     createComment(validForm);
     reset();
-    router.push(`/posts/${post.id}`)
-  }
+    router.push(`/posts/${post.id}`);
+  };
 
   useEffect(() => {
-    if (savesData  ) {
+    if (savesData) {
       setSaves(savesData.saveCount);
     }
 
@@ -106,89 +125,105 @@ export default function PostItem({ post }: PostItemProps) {
     } else {
       setMySave(false);
     }
- 
-  }, [mySaveData, savesData, setMySave, onValid, reset, createCommentData, createCommentLoading,   ]);
+  }, [
+    mySaveData,
+    savesData,
+    setMySave,
+    reset,
+    createCommentData,
+    createCommentLoading,
+  ]);
 
   return (
     <>
-    <div className="border border-slate-500 border-r-2 border-b-2 p-3 flex flex-col gap-3">
-      <div className="flex items-center gap-2">
-        <h5 className="text-xs text-gray-500">
-          Posted by
-          <Link href={`/users/${post.user.id}`} className="underline ml-1">
-            {post.user.name}
-          </Link>
-          <span className='mx-2'>|</span>
-          <span className="mr-1">
-           Created at {dateFormat(post.createdAt)}
-          </span>
-        </h5>
-      </div>
-      <h2 className="text-lg font-medium">{post.title}</h2>
-      <div className="text-sm p-2 bg-gray-200">
-        <pre className=" text-wrap">
-          {/* {post.content.length > 300
+      <div className="border border-slate-500 border-r-2 border-b-2 p-3 py-2 pb-1 flex flex-col gap-3">
+        <div className="flex items-center gap-2">
+          <h5 className="text-xs text-gray-500">
+            Posted by
+            <Link href={`/users/${post.user.id}`} className="underline ml-1">
+              {post.user.name}
+            </Link>
+            <span className="mx-2">|</span>
+            <span className="mr-1">
+              Created at {dateFormat(post.createdAt)}
+            </span>
+          </h5>
+        </div>
+        <h2 className="text-lg font-medium">{post.title}</h2>
+        <div className="text-sm p-2 bg-gray-200">
+          <pre className=" text-wrap">
+            {/* {post.content.length > 300
             ? post.content.slice(0, 300) + '...'
             : post.content} */}
-          {post.content}
-        </pre>
-      </div>
-      <div className="flex items-center gap-3">
-        <div className="flex items-center text-xs gap-1 cursor-pointer" onClick={clickSave}>
-          {mySave ? <IconBookmarkFilled width={16} /> : <IconBookmark width="16" />}
-          {saves}
+            {post.content}
+          </pre>
         </div>
-        <div className="flex items-center text-xs gap-1 cursor-pointer" onClick={clickSave}>
-          <IconMessage width={16} />
-          {post?.comments.length}
-        </div>
-      </div>
-    </div>
-    <div className="border border-slate-500 border-r-2 border-b-2 p-3 flex flex-col gap-3 ">
-      <form onSubmit={handleSubmit(onValid)}>
-      <div className="w-full flex flex-col">
-        {/* <label htmlFor="name">Title</label> */}
-        <div className="p-0 m-0 relative w-full">
-          <input
-            {...register('content', {
-              required: 'This field is required',
-              minLength: {
-                value: 3,
-                message: 'Min. 3 characters',
-              },
-              maxLength: {
-                value: 500,
-                message: 'Max. 500 characters',
-              },
-            })}
-            type="text"
-            placeholder="Write your comment"
-            className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
-            onChange={onCommentWrite}
-          />
-          <div className="absolute top-[50%] -translate-y-[50%] right-2 font-medium text-xs text-blue-600">
-            {commentLength}/500
+        <div className="flex items-center gap-3">
+          <div
+            className="flex items-center text-xs gap-1 cursor-pointer"
+            onClick={clickSave}
+          >
+            {mySave ? (
+              <IconBookmarkFilled width={16} />
+            ) : (
+              <IconBookmark width="16" />
+            )}
+            {saves}
+          </div>
+          <div
+            className="flex items-center text-xs gap-1 cursor-pointer"
+            onClick={clickSave}
+          >
+            <IconMessage width={16} />
+            {post?.comments.length}
           </div>
         </div>
-        {errors.content ? (
-          <span className="text-danger-400 text-[14px]">
-            {errors.content.message}
-          </span>
-        ) : null}
       </div>
-      {/* <input {...register('postId')} value={post?.id} className='hidden' /> */}
-      <input {...register('userId')} value={session?.user?.id} className='hidden' />
-      <Button mode="success" size="small" button={true} addClass="mt-2">
-        Save
-      </Button>
-      </form>
-    
-      <div>
-        {renderOrganizedComments}
-      
-      </div>
-    </div>
+      <div className="border border-slate-500 border-r-2 border-b-2 p-3 flex flex-col gap-3 ">
+        <form onSubmit={handleSubmit(onValid)}>
+          <div className="w-full flex flex-col">
+            {/* <label htmlFor="name">Title</label> */}
+            <div className="p-0 m-0 relative w-full">
+              <input
+                {...register('content', {
+                  required: 'This field is required',
+                  minLength: {
+                    value: 3,
+                    message: 'Min. 3 characters',
+                  },
+                  maxLength: {
+                    value: 500,
+                    message: 'Max. 500 characters',
+                  },
+                })}
+                type="text"
+                placeholder="Write your comment"
+                className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
+                onChange={onCommentWrite}
+              />
+              <div className="absolute top-[50%] -translate-y-[50%] right-2 font-medium text-xs text-blue-600">
+                {commentLength}/500
+              </div>
+            </div>
+            {errors.content ? (
+              <span className="text-danger-400 text-[14px]">
+                {errors.content.message}
+              </span>
+            ) : null}
+          </div>
+          {/* <input {...register('postId')} value={post?.id} className='hidden' /> */}
+          <input
+            {...register('userId')}
+            value={session?.user?.id}
+            className="hidden"
+          />
+          <Button mode="success" size="small" button={true} addClass="mt-2">
+            Save
+          </Button>
+        </form>
 
+        <div>{renderOrganizedComments}</div>
+      </div>
     </>
   );
 }
