@@ -13,6 +13,7 @@ export async function GET(req: NextRequest, context: any) {
     include: {
       posts: true,
       saves: true,
+      comments: true,
     },
   });
   if (!user) {
@@ -39,24 +40,24 @@ export async function PUT(req: NextRequest, context: any) {
   const existingUser = await db.user.findUnique({
     where: {
       id,
-    }
-  })
+    },
+  });
 
   if (!existingUser) {
     return NextResponse.json({
       ok: false,
-      message: "This user does not exist.",
+      message: 'This user does not exist.',
     });
   }
 
   const user = await db.user.update({
     where: {
-      id
+      id,
     },
     data: {
       username,
-    }
-  })
+    },
+  });
 
   return NextResponse.json({
     ok: true,

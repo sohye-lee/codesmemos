@@ -10,19 +10,18 @@ import { ExtendedPost } from '@/lib/types';
 export default function Home() {
   const { breadcrumb, setBreadcrumb } = useStore();
   const [posts, setPosts] = useState([]);
-  const {data} = useSWR('/api/posts');
- 
- 
-  
+  const { data } = useSWR('/api/posts');
+
   useEffect(() => {
     setBreadcrumb('Home');
   }, [setBreadcrumb]);
   return (
     <SidebarContainer header={true}>
-      {data && data.posts ? 
-      data.posts.map((post:ExtendedPost) => <PostListItem post={post}  />)
-      :null}
- 
+      {data && data.posts
+        ? data.posts.map((post: ExtendedPost) => (
+            <PostListItem post={post} key={post.id} />
+          ))
+        : null}
     </SidebarContainer>
   );
 }

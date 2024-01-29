@@ -25,7 +25,7 @@ export default function Profile() {
         )}
       </div>
       <span className="inline-block text-[10px] text-gray-700">
-        {session?.user?.name}
+        {session?.user?.username || session?.user?.name}
       </span>
     </div>
   );

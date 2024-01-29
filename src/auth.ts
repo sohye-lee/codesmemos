@@ -28,6 +28,7 @@ export const {
     async session({ session, user }: any) {
       if (session && user) {
         session.user.id = user.id;
+        session.user.username = user.username;
       }
       return session;
     },

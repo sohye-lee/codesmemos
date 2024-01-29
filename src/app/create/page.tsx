@@ -10,6 +10,7 @@ import CreateSnippetForm from '@/components/forms/createSnippetForm';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { getStaticPaths } from 'next/dist/build/templates/pages';
 import CreateResourceForm from '@/components/forms/createResourceForm';
+import CreateQuestionForm from '@/components/forms/createQuestionForm';
 
 type TabType = 'snippet' | 'question' | 'resource';
 
@@ -24,7 +25,7 @@ interface CreatePostForm {
   languageName?: string;
 }
 
-export default function CreatePage(props:any) {
+export default function CreatePage(props: any) {
   const type = props.searchParams.type;
   const [tab, setTab] = useState<TabType>(type || 'snippet');
   const {
@@ -66,11 +67,9 @@ export default function CreatePage(props:any) {
             </div>
           </div>
           <div className="p-4 bg-white">
-            {tab == "snippet" && 
-            
-            <CreateSnippetForm />
-            }
-            {tab == "resource" && <CreateResourceForm />}
+            {tab == 'snippet' && <CreateSnippetForm />}
+            {tab == 'question' && <CreateQuestionForm />}
+            {tab == 'resource' && <CreateResourceForm />}
           </div>
         </div>
       </div>

@@ -9,9 +9,10 @@ import useSWR from 'swr';
 import { Language } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import useCreate from '@/lib/useCreate';
 type IModelContentChangedEvent = /*unresolved*/ any;
 
-export default function CreateSnippetForm() {
+export default function CreateQuestionForm() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [titleLength, setTitleLength] = useState(0);
@@ -29,6 +30,11 @@ export default function CreateSnippetForm() {
   } = useForm<CreatePostForm>({
     mode: 'onBlur',
   });
+
+  const [
+    createQuestion,
+    { data: createData, error: createError, loading: createLoading },
+  ] = useCreate('/api/posts');
 
   const onChangeTitle = (e: FormEvent<HTMLInputElement>): void => {
     e.preventDefault();
@@ -49,6 +55,11 @@ export default function CreateSnippetForm() {
 
   const onChangeNote = (e: FormEvent<HTMLTextAreaElement>): void => {
     setNote(e.currentTarget.value);
+  };
+
+  const onValid = (validForm: CreatePostForm) => {
+    createQuestion(validForm);
+    router.push(`/posts/${createData?.post.id}`);
   };
 
   const onSubmit = () => {
@@ -84,10 +95,10 @@ export default function CreateSnippetForm() {
   console.log(data);
   useEffect(() => {
     data && setLanguages(data.languages);
-  }, [setLanguages, setLanguageName]);
+  }, [setLanguages, setLanguageName, data]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
+    <form onSubmit={handleSubmit(onValid)} className="flex flex-col gap-3">
       <div className="w-full flex flex-col">
         <label htmlFor="name">Title</label>
         <div className="p-0 m-0 relative w-full">
@@ -140,20 +151,25 @@ export default function CreateSnippetForm() {
         ) : null}
       </div>
       <div className="w-full flex flex-col">
-        <label htmlFor="name">Code</label>
+        <label htmlFor="name">Description</label>
         <div className="p-0 m-0 relative w-full">
-          <Editor
-            height="30vh"
-            defaultLanguage={languageName}
-            // defaultValue=""
-            value={content}
-            className="w-full bg-[#1e1e1e] py-3 rounded"
-            theme="vs-dark"
-            onChange={(value, event) => onChangeContent(value + '', event)}
-          />
+          <textarea
+            {...register('content', {
+              required: 'This field is required.',
+            })}
+            placeholder="Write a description"
+            rows={12}
+            className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
+            onChange={onChangeNote}
+          ></textarea>
         </div>
+        {errors.content ? (
+          <span className="text-danger-400 text-[14px]">
+            {errors.content.message}
+          </span>
+        ) : null}
       </div>
-      <div className="w-full flex flex-col">
+      {/* <div className="w-full flex flex-col">
         <label htmlFor="name">Note</label>
         <textarea
           {...register('note')}
@@ -162,9 +178,13 @@ export default function CreateSnippetForm() {
           className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
           onChange={onChangeNote}
         ></textarea>
-      </div>
-      {/* <input className="hidden" {...register("type")} value="snippet" />
-      <input className="hidden" {...register("userId")} value={session?.user?.id} /> */}
+      </div> */}
+      <input className="hidden" {...register('type')} value="question" />
+      <input
+        className="hidden"
+        {...register('userId')}
+        value={session?.user?.id}
+      />
       <div className="flex justify-end">
         <Button size="medium" button={true} mode="success">
           Create

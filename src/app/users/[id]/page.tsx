@@ -14,6 +14,7 @@ import {
   IconPencilQuestion,
   IconPencil,
   IconBookmark,
+  IconMessage,
 } from '@tabler/icons-react';
 import {
   uniqueNamesGenerator,
@@ -24,6 +25,7 @@ import { useForm } from 'react-hook-form';
 import Button from '@/components/ui/button';
 import PostListItem from '@/components/ui/postLIstItem';
 import { ExtendedPost } from '@/lib/types';
+import Loading from '@/app/loading';
 
 interface ExtendedUser extends User {
   posts: Post[];
@@ -82,7 +84,7 @@ export default function ProfilePage() {
   useEffect(() => {
     data ? setUser(data?.user) : console.log('no data');
     postsData && setPosts(postsData?.posts);
-  }, [data, setPopupOpen]);
+  }, [data, postsData]);
 
   return (
     <Container width="medium">
@@ -130,7 +132,7 @@ export default function ProfilePage() {
         <div className="flex gap-3 min-w-full lg:min-w-[899px] max-w-[899px]">
           <div className="flex flex-col w-full lg:w-4/5 gap-3">
             <ContainerHeader type="default" />
-            {renderPosts}
+            {!postsData && !postsError ? <Loading /> : renderPosts}
           </div>
           <div className="  flex-col w-full lg:w-1/5 hidden lg:flex gap-3">
             <div>
@@ -209,6 +211,19 @@ export default function ProfilePage() {
                           user?.posts.filter((p) => p.type === 'resource')
                             .length
                         }
+                      </span>
+                    </div>
+                    <div className="flex items-stretch gap-0 w-full">
+                      <div className="flex items-center gap-1 px-1 rounded bg-blue-600 rounded-r-none w-2/3">
+                        <IconMessage
+                          color="#fff"
+                          width="14"
+                          className="m-0 p-0"
+                        />
+                        <span className="text-white text-[12px]">Comments</span>
+                      </div>
+                      <span className="text-blue-500 text-[11px] border border-blue-600 px-2 w-1/3 flex items-center rounded-r">
+                        {user?.comments.length}
                       </span>
                     </div>
                   </div>

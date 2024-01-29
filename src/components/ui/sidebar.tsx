@@ -76,11 +76,11 @@ export default function Sidebar() {
         <h3 className="text-md font-medium py-1">Languages</h3>
         {renderLanguages}
       </div>
-      <hr className="mt-3 border-gray-400" />
+      {/* <hr className="mt-3 border-gray-400" />
       <div className="flex flex-col ">
         <h3 className="text-md font-medium py-1">Topics</h3>
         {renderTopics}
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { useStore } from 'zustand';
 import NavItem from './navitem';
 
 interface ContainerHeaderProps {
@@ -6,6 +7,7 @@ interface ContainerHeaderProps {
 export default function ContainerHeader({
   type = 'default',
 }: ContainerHeaderProps) {
+  // const {filter, setFilter} = useStore();
   return (
     <>
       {type == 'default' ? (

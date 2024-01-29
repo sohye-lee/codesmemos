@@ -13,9 +13,10 @@ import { FormEvent, Key, useEffect, useRef, useState } from 'react';
 import useStore from '@/app/store';
 import { breadcrumbs, paths } from '@/lib/strings';
 import { useRouter } from 'next/navigation';
+import Loading from '@/app/loading';
 
 export default function Header() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [openProfile, setOpenProfile] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
   const { breadcrumb, setBreadcrumb } = useStore();
@@ -122,12 +123,11 @@ export default function Header() {
                 className="absolute right-0 top-[105%] bg-white border border-slate-300 rounded-sm flex flex-col min-w-32"
               >
                 <NavSubItem link="/create?type=snippet">Snippet</NavSubItem>
-                <NavSubItem link="/create?type=question">Code</NavSubItem>
+                <NavSubItem link="/create?type=question">Question</NavSubItem>
                 <NavSubItem link="/create?type=resource">Resource</NavSubItem>
               </div>
             ) : null}
           </div>
-
           {session?.user ? (
             <div className="relative">
               <div
