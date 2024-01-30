@@ -3,7 +3,7 @@
 import Container from '@/components/ui/container';
 import ContainerHeader from '@/components/ui/containerHeader';
 import Sidebar from '@/components/ui/sidebar';
-import { Post, Save, User } from '@prisma/client';
+import { Comment, Post, Save, User } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
@@ -30,6 +30,7 @@ import Loading from '@/app/loading';
 interface ExtendedUser extends User {
   posts: Post[];
   saves: Save[];
+  comments: Comment[];
 }
 
 interface UsernameUpdateForm {
