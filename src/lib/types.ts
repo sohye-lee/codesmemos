@@ -54,3 +54,9 @@ export interface CommentWithNode extends ExtendedComment {
   node: number;
   replies: CommentWithNode[];
 }
+
+export interface ExtendedUser extends User {
+  posts: Post[];
+  saves: Save[];
+  comments: Comment[];
+}

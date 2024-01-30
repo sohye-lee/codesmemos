@@ -24,14 +24,8 @@ import {
 import { useForm } from 'react-hook-form';
 import Button from '@/components/ui/button';
 import PostListItem from '@/components/ui/postLIstItem';
-import { ExtendedPost } from '@/lib/types';
+import { ExtendedPost, ExtendedUser } from '@/lib/types';
 import Loading from '@/app/loading';
-
-interface ExtendedUser extends User {
-  posts: Post[];
-  saves: Save[];
-  comments: Comment[];
-}
 
 interface UsernameUpdateForm {
   username: string;

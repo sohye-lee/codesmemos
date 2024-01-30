@@ -1,5 +1,6 @@
 import { useStore } from 'zustand';
 import NavItem from './navitem';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 interface ContainerHeaderProps {
   type: 'default' | 'languages' | 'topics';
@@ -8,29 +9,32 @@ export default function ContainerHeader({
   type = 'default',
 }: ContainerHeaderProps) {
   // const {filter, setFilter} = useStore();
+  const searchParams = useSearchParams();
+const filter = searchParams.get('filter')
+const currentPath = usePathname();
   return (
     <>
       {type == 'default' ? (
         <div className="border flex items-center justify-between   border-slate-500 border-r-2 border-b-2 p-3">
           <div className="flex items-center">
-            <NavItem icon="all" link="/">
+            <NavItem icon="all" link={`${currentPath}?filter=all`}>
               All
             </NavItem>
-            <NavItem icon="snippet" link="/">
+            <NavItem icon="snippet" link={`${currentPath}?filter=snippet`}>
               Snippets
             </NavItem>
-            <NavItem icon="question" link="/">
+            <NavItem icon="question" link={`${currentPath}?filter=question`}>
               Questions
             </NavItem>
-            <NavItem icon="resource" link="/">
+            <NavItem icon="resource" link={`${currentPath}?filter=resource`}>
               Resources
             </NavItem>
           </div>
           <div className="flex items-center  ">
-            <NavItem icon="new" link="/">
+            <NavItem icon="new" link={`${currentPath}?filter=new`}>
               New
             </NavItem>
-            <NavItem icon="hot" link="/">
+            <NavItem icon="hot" link={`${currentPath}?filter=hot`}>
               Hot
             </NavItem>
           </div>
