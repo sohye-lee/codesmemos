@@ -1,3 +1,5 @@
+ 
+import { useRouter } from 'next/router';
 import { type NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
@@ -27,14 +29,14 @@ export async function POST(request: NextRequest) {
     to: process.env.MY_EMAIL,
     // cc: email, (uncomment this line if you want to send a copy to the sender)
     subject: `Message from ${name} (${email})`,
-    text: message,
+    text: `From: \n${name} \n\nEmail: \n${email} \n\nMessage: \n${message}`,
   };
 
   const sendMailPromise = () =>
     new Promise<string>((resolve, reject) => {
       transport.sendMail(mailOptions, function (err) {
         if (!err) {
-          resolve('Email sent');
+          resolve('Thank you! Your message has been successfully delivered!');
         } else {
           reject(err.message);
         }
@@ -43,7 +45,7 @@ export async function POST(request: NextRequest) {
 
   try {
     await sendMailPromise();
-    return NextResponse.json({ message: 'Email sent' });
+    return NextResponse.json({ message: 'Thank you! Your message has been successfully delivered!' });
   } catch (err) {
     return NextResponse.json({ error: err }, { status: 500 });
   }

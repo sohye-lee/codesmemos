@@ -133,8 +133,4 @@ export function organizeComments (comments:ExtendedComment[]) {
  }
 
 
- export const setBreadcrumb = (breadcrumb: string) => {
-    const { storeState, setStoreState } = useStore();
-    setStoreState({...storeState, breadcrumb,});
-    
- }
+  

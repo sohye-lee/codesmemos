@@ -86,6 +86,7 @@ export default function Header() {
             <option value={'new'}>New</option>
             <option value={'topics'}>By Topic</option>
             <option value={'languages'}>By Language</option>
+            <option value={'feedback'}>Feedback</option>
           </select>
           <NavItem
             icon="search"

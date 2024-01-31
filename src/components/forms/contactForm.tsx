@@ -3,16 +3,35 @@ import { useForm } from "react-hook-form"
 import Button from "../ui/button";
 import { IconSend } from '@tabler/icons-react';
 import { boxClassName } from "@/lib/strings";
+import { useRouter } from "next/navigation";
 
-interface SendContactForm {
+export interface SendContactForm {
     name: string;
     email: string;
     message: string;
 }
 
+
+
 export default function ContactForm() {
-    
- 
+    const router = useRouter();
+
+    function  sendEmail(data: SendContactForm) {
+
+        const apiEndpoint = '/api/email';
+        fetch(apiEndpoint, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        })
+        .then((res) => res.json())
+        .then((response) => {
+            alert(response.message);
+        })
+        .catch((err) => {
+            alert(err);
+        });
+    }
+
     const {
         register,
         handleSubmit,
@@ -21,8 +40,11 @@ export default function ContactForm() {
         mode: 'onBlur',
       });
       const onValid = (validForm:SendContactForm) => {
+        sendEmail(validForm);
+        router.push('/feedback/thankyou');
 
       }
+
     
     return (
         <form onSubmit={handleSubmit(onValid)} className={`${boxClassName} bg-white px-4 py-5 w-full flex flex-col gap-3`}>
@@ -82,7 +104,7 @@ export default function ContactForm() {
             <div className="w-full flex flex-col">
                 <label htmlFor="email">Message</label>
                 <div className="p-0 m-0 relative w-full">
-                    <input
+                    <textarea
                         {...register('message', {
                         required: 'This field is required',
                         minLength: {
@@ -90,14 +112,14 @@ export default function ContactForm() {
                             message: 'Min. 3 characters',
                         },
                         maxLength: {
-                            value: 100,
-                            message: 'Max. 100 characters',
+                            value: 3000,
+                            message: 'Max. 3000 characters',
                         },
                         })}
-                        type="test"
+                        rows={6}
                         placeholder="Anything you want to say..."
                         className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
-                    />
+                    ></textarea>
                 </div>
                 {errors.message ? (
                 <span className="text-danger-400 text-[14px]">

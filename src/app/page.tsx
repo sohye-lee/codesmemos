@@ -16,7 +16,7 @@ export default function Home() {
   const filter = searchParams.get('filter')
 
   useEffect(() => {
-    data.posts && setFilteredPosts(data.posts);
+    data?.posts && setFilteredPosts(data.posts);
     setStoreState({...storeState, breadcrumb:'Home'});
     if (filter == 'all') {
       setFilteredPosts(data?.posts);
@@ -33,7 +33,7 @@ export default function Home() {
     } else if (filter == null) {
       setFilteredPosts(data?.posts)
     }
-  }, [setStoreState, useSearchParams, searchParams]);
+  }, [setStoreState, searchParams, data?.posts, filter]);
   return (
     <SidebarContainer header={true}>
       {filteredPosts
