@@ -10,15 +10,13 @@ import {  useSearchParams } from 'next/navigation';
 
 export default function Home() {
   const { storeState, setStoreState } = useStore();
-  const [posts, setPosts] = useState([]);
-  const [filteredPosts, setFilteredPosts] = useState<ExtendedPost[]>( );
+  const [filteredPosts, setFilteredPosts] = useState<ExtendedPost[]>([]);
   const { data, error } = useSWR('/api/posts');
-const searchParams = useSearchParams();
-const filter = searchParams.get('filter')
-console.log('filter?: ', filter)
+  const searchParams = useSearchParams();
+  const filter = searchParams.get('filter')
 
   useEffect(() => {
-    data && data.posts && setFilteredPosts(data.posts);
+    data.posts && setFilteredPosts(data.posts);
     setStoreState({...storeState, breadcrumb:'Home'});
     if (filter == 'all') {
       setFilteredPosts(data?.posts);
@@ -29,10 +27,10 @@ console.log('filter?: ', filter)
     } else if (filter == 'resource') {
       setFilteredPosts(data?.posts.filter((post:ExtendedPost) => post.type =='resource'))
     } else if (filter == 'hot') {
-      setFilteredPosts(data?.posts.order((post:ExtendedPost) => post.saves))
+      setFilteredPosts(data?.posts.sort((a:ExtendedPost,b:ExtendedPost) => a.saves.length < b.saves.length ? 1 : -1));
     } else if (filter == 'new') {
-      setFilteredPosts(data?.posts.order((post:ExtendedPost) => post.createdAt))
-    } else {
+      setFilteredPosts(data?.posts.sort((a:ExtendedPost,b:ExtendedPost) => a.createdAt < b.createdAt ? 1 : -1).slice(0,10))
+    } else if (filter == null) {
       setFilteredPosts(data?.posts)
     }
   }, [setStoreState, useSearchParams, searchParams]);
@@ -43,6 +41,7 @@ console.log('filter?: ', filter)
             <PostListItem post={post} key={post.id} />
           ))
         : null}
+        {!data?.posts && !error ? <Loading /> : null}
     </SidebarContainer>
   );
 }

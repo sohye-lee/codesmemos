@@ -6,7 +6,7 @@ import Sidebar from '@/components/ui/sidebar';
 import { Comment, Post, Save, User } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import {
@@ -35,6 +35,9 @@ export default function ProfilePage() {
   const { data: session } = useSession();
   const router = useRouter();
   const { id } = useParams();
+  const searchParams = useSearchParams();
+  const filter = searchParams.get('filter')
+  const [filteredPosts, setFilteredPosts] = useState<ExtendedPost[]>([]);
   const { data, error } = useSWR(`/api/users/${id}`);
   const { data: postsData, error: postsError } = useSWR(
     `/api/users/${id}/posts`
@@ -66,8 +69,8 @@ export default function ProfilePage() {
   };
 
   const renderPosts =
-    posts && posts.length > 0 ? (
-      postsData.posts.map((post: ExtendedPost) => {
+  filteredPosts && filteredPosts.length > 0 ? (
+    filteredPosts.map((post: ExtendedPost) => {
         return <PostListItem post={post} key={post.id} />;
       })
     ) : (
@@ -79,7 +82,23 @@ export default function ProfilePage() {
   useEffect(() => {
     data ? setUser(data?.user) : console.log('no data');
     postsData && setPosts(postsData?.posts);
-  }, [data, postsData]);
+    // setStoreState({...setStoreState, breadcrumb:'Home'});
+    if (filter == 'all') {
+      setFilteredPosts(postsData?.posts);
+    } else if (filter == 'snippet') {
+      setFilteredPosts(postsData?.posts.filter((post:ExtendedPost) => post.type =='snippet'))
+    } else if (filter == 'question') {
+      setFilteredPosts(postsData?.posts.filter((post:ExtendedPost) => post.type =='question'))
+    } else if (filter == 'resource') {
+      setFilteredPosts(postsData?.posts.filter((post:ExtendedPost) => post.type =='resource'))
+    } else if (filter == 'hot') {
+      setFilteredPosts(postsData?.posts.sort((a:ExtendedPost,b:ExtendedPost) => a.saves.length > b.saves.length ? 1 : -1));
+    } else if (filter == 'new') {
+      setFilteredPosts(postsData?.posts.sort((a:ExtendedPost,b:ExtendedPost) => a.createdAt < b.createdAt ? 1 : -1).slice(0,10))
+    } else if (filter == null) {
+      setFilteredPosts(postsData?.posts)
+    }
+  }, [data, postsData, useSearchParams, searchParams]);
 
   return (
     <Container width="medium">
@@ -127,7 +146,7 @@ export default function ProfilePage() {
         <div className="flex gap-3 min-w-full lg:min-w-[899px] max-w-[899px]">
           <div className="flex flex-col w-full lg:w-4/5 gap-3">
             <ContainerHeader type="default" />
-            {!postsData && !postsError ? <Loading /> : renderPosts}
+            {!filteredPosts   ? <Loading /> : renderPosts}
           </div>
           <div className="  flex-col w-full lg:w-1/5 hidden lg:flex gap-3">
             <div>
@@ -231,3 +250,7 @@ export default function ProfilePage() {
     </Container>
   );
 }
+function setStoreState(arg0: any) {
+  throw new Error('Function not implemented.');
+}
+

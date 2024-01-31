@@ -1,3 +1,4 @@
+import useStore from "@/app/store";
 import { CommentWithNode, ExtendedComment } from "./types";
 
 export const dateFormat = (datetime:Date) => {
@@ -129,4 +130,11 @@ export function organizeComments (comments:ExtendedComment[]) {
         capitalized.push(newW);
     }
     return capitalized.join(' ');
+ }
+
+
+ export const setBreadcrumb = (breadcrumb: string) => {
+    const { storeState, setStoreState } = useStore();
+    setStoreState({...storeState, breadcrumb,});
+    
  }

@@ -119,16 +119,16 @@ export const breadcrumbs: {
   //   hot: '/?filter=hot',
   //   languages: '/languages',
   //   topics: '/topics',
-  snippets: {
-    url: '/?filter=snippets',
+  snippet: {
+    url: '/?filter=snippet',
     name: 'Snippets',
   },
-  questions: {
-    url: '/?filter=questions',
+  question: {
+    url: '/?filter=question',
     name: 'Questions',
   },
-  resources: {
-    url: '/?filter=resources',
+  resource: {
+    url: '/?filter=resource',
     name: 'Resources',
   },
   new: {
@@ -148,3 +148,6 @@ export const breadcrumbs: {
     name: 'By Topic',
   },
 };
+
+
+export const boxClassName = " border border-slate-500 border-r-2 border-b-2 p-3 py-2 ";

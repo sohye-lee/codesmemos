@@ -19,7 +19,7 @@ export default function Header() {
   const { data: session, status } = useSession();
   const [openProfile, setOpenProfile] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
-  const { breadcrumb, setBreadcrumb } = useStore();
+  const { storeState, setStoreState } = useStore();
   const dropdownCreate = useRef<HTMLDivElement>(null);
   const dropdownProfile = useRef<HTMLDivElement>(null);
   const buttonCreate = useRef<HTMLDivElement>(null);
@@ -31,7 +31,7 @@ export default function Header() {
     // router.push(breadcrumbs[e.currentTarget.value])
     router.push(breadcrumbs[e.currentTarget.value].url);
     setUrl(breadcrumbs[e.currentTarget.value].url);
-    setBreadcrumb(breadcrumbs[e.currentTarget.value].name);
+    setStoreState({...storeState, breadcrumb: breadcrumbs[e.currentTarget.value].name});
   };
   function assertIsNode(e: EventTarget | null): asserts e is Node {
     if (!e || !('nodeType' in e)) {
@@ -63,7 +63,7 @@ export default function Header() {
     if (typeof window !== 'undefined') {
       window.addEventListener('click', handleClick);
     }
-  }, [openProfile, openCreate, breadcrumb, setUrl]);
+  }, [openProfile, openCreate, storeState, setUrl]);
 
   return (
     <div className="fixed top-0 border-b  border-slate-400 left-0 w-full flex justify-center items-center bg-white">
@@ -79,9 +79,9 @@ export default function Header() {
             onChange={onChange}
           >
             <option value={'home'}>Home</option>
-            <option value={'snippets'}>Snippets</option>
-            <option value={'questions'}>Questions</option>
-            <option value={'resources'}>Resources</option>
+            <option value={'snippet'}>Snippets</option>
+            <option value={'question'}>Questions</option>
+            <option value={'resource'}>Resources</option>
             <option value={'hot'}>Hot</option>
             <option value={'new'}>New</option>
             <option value={'topics'}>By Topic</option>
