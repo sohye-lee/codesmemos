@@ -9,6 +9,7 @@ import {
   IconList,
   IconHeart,
   IconSearch,
+  IconHome2
 } from '@tabler/icons-react';
 
 interface NavItemProps {
@@ -22,7 +23,8 @@ interface NavItemProps {
     | 'hot'
     | 'all'
     | 'like'
-    | 'search';
+    | 'search'
+    | 'home'
   children: React.ReactNode;
   addClass?: string;
   [key: string]: any;
@@ -38,6 +40,7 @@ const iconDict = {
   all: <IconList width={14} />,
   like: <IconHeart width={14} />,
   search: <IconSearch width={14} />,
+  home: <IconHome2 width={14} />,
 };
 export default function NavItem({
   link,

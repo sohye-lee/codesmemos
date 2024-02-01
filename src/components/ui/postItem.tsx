@@ -1,25 +1,25 @@
-'use client';
-import { CommentWithNode, ExtendedComment, ExtendedPost } from '@/lib/types';
-import Link from 'next/link';
+"use client";
+import { CommentWithNode, ExtendedComment, ExtendedPost } from "@/lib/types";
+import Link from "next/link";
 import {
   IconHeart,
   IconHeartFilled,
   IconMessage,
   IconBookmark,
   IconBookmarkFilled,
-} from '@tabler/icons-react';
-import { useSession } from 'next-auth/react';
-import useSWR from 'swr';
-import { FormEvent, useEffect, useState } from 'react';
-import useCreate from '@/lib/useCreate';
-import { signIn } from '@/app/actions';
-import { dateFormat, organizeComments, sortReplies } from '@/lib/functions';
-import { useForm } from 'react-hook-form';
-import Button from './button';
-import CommentItem from './ commentItem';
-import { useRouter } from 'next/navigation';
-import { Post } from '@prisma/client';
-import ReplyItem from './replyItem';
+} from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
+import useSWR from "swr";
+import { FormEvent, useEffect, useState } from "react";
+import useCreate from "@/lib/useCreate";
+import { signIn } from "@/app/actions";
+import { dateFormat, organizeComments, sortReplies } from "@/lib/functions";
+import { useForm } from "react-hook-form";
+import Button from "./button";
+import CommentItem from "./commentItem";
+import { useRouter } from "next/navigation";
+import { Post } from "@prisma/client";
+import ReplyItem from "./replyItem";
 
 interface PostItemProps {
   post: ExtendedPost;
@@ -72,9 +72,9 @@ export default function PostItem({ post }: PostItemProps) {
       updateSave({ userId: session?.user?.id });
     } else {
       fetch(`/api/saves/${post.id}/${session?.user?.id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       })
         .then((res) => res.json())
@@ -185,15 +185,15 @@ export default function PostItem({ post }: PostItemProps) {
             {/* <label htmlFor="name">Title</label> */}
             <div className="p-0 m-0 relative w-full">
               <input
-                {...register('content', {
-                  required: 'This field is required',
+                {...register("content", {
+                  required: "This field is required",
                   minLength: {
                     value: 3,
-                    message: 'Min. 3 characters',
+                    message: "Min. 3 characters",
                   },
                   maxLength: {
                     value: 500,
-                    message: 'Max. 500 characters',
+                    message: "Max. 500 characters",
                   },
                 })}
                 type="text"
@@ -213,7 +213,7 @@ export default function PostItem({ post }: PostItemProps) {
           </div>
           {/* <input {...register('postId')} value={post?.id} className='hidden' /> */}
           <input
-            {...register('userId')}
+            {...register("userId")}
             value={session?.user?.id}
             className="hidden"
           />

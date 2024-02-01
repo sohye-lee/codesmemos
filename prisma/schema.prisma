@@ -51,6 +51,7 @@ model User {
   answers       Answer[]
   saves         Save[]
   votes         Vote[]
+  pockets       Pocket[]
 }
 
 model VerificationToken {
@@ -80,6 +81,17 @@ model Language {
   updatedAt DateTime @updatedAt
 }
 
+model Pocket {
+  id    String @id @default(cuid())
+  name  String 
+  userId  String 
+  user    User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  posts   Post[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 // Snippets and Resources (posts) - comments - saves
 model Post {
   id        String @id @default(cuid())
@@ -91,6 +103,7 @@ model Post {
   linkType  String?
   userId    String
   languageName String
+  pocketId  String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -99,6 +112,7 @@ model Post {
   language Language?  @relation(fields: [languageName], references: [name])
   comments Comment[]
   saves    Save[]
+  pocket    Pocket? @relation(fields: [pocketId], references: [id])
 }
 
 model Comment {
@@ -178,3 +192,4 @@ model Vote {
   user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
   question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
+
