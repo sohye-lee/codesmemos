@@ -1,3 +1,4 @@
+"use client";
 import { paths } from "@/lib/constants";
 import NavItem from "./navitem";
 import { IconArrowRight } from "@tabler/icons-react";

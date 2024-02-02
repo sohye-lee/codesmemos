@@ -1,1 +1,5 @@
 Dynamic breadcrumb in nav bar: https://medium.com/@kcabading/creating-a-breadcrumb-component-in-a-next-js-app-router-a0ea24cdb91a
+
+# 1. responsiveness
+# 2. refresh => mobile nav close
+# 3. pocket logic update
