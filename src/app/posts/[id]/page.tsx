@@ -1,11 +1,11 @@
-'use client';
-import PostItem from '@/components/ui/postItem';
-import SidebarContainer from '@/components/ui/sidebarContainer';
-import { ExtendedPost } from '@/lib/types';
-import useCreate from '@/lib/useCreate';
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import useSWR from 'swr';
+"use client";
+import PostItem from "@/components/ui/postRelated/postItem";
+import SidebarContainer from "@/components/ui/containers/sidebarContainer";
+import { ExtendedPost } from "@/lib/types";
+import useCreate from "@/lib/useCreate";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
 
 // interface PostProps {
 //   post: ExtendedPost;

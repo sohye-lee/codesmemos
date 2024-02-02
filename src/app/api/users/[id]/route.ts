@@ -1,6 +1,6 @@
-import { db } from '@/db';
-import { message } from '@/lib/strings';
-import { NextRequest, NextResponse } from 'next/server';
+import { db } from "@/db";
+import { message } from "@/lib/constants";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, context: any) {
   const {
@@ -46,7 +46,7 @@ export async function PUT(req: NextRequest, context: any) {
   if (!existingUser) {
     return NextResponse.json({
       ok: false,
-      message: 'This user does not exist.',
+      message: "This user does not exist.",
     });
   }
 

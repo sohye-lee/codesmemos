@@ -1,18 +1,18 @@
-'use client';
-import { dateFormat } from '@/lib/functions';
-import { CommentWithNode } from '@/lib/types';
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
-import { FormEvent, useEffect, useState } from 'react';
-import Button from './button';
+"use client";
+import { dateFormat } from "@/lib/functions";
+import { CommentWithNode } from "@/lib/types";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { FormEvent, useEffect, useState } from "react";
+import Button from "../button";
 import {
   IconArrowBackUp,
   IconCornerDownRight,
   IconSend,
-} from '@tabler/icons-react';
-import { useRouter } from 'next/navigation';
-import useCreate from '@/lib/useCreate';
-import { useForm } from 'react-hook-form';
+} from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
+import useCreate from "@/lib/useCreate";
+import { useForm } from "react-hook-form";
 
 interface CommentItemProps {
   comment: CommentWithNode;
@@ -50,9 +50,9 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
 
   const editContent = () => {
     fetch(`/api/comments/${comment.id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ content }),
     });
@@ -62,9 +62,9 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
 
   const deleteComment = () => {
     fetch(`/api/comments/${comment.id}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
     // router.refresh();
@@ -92,7 +92,7 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
               {comment.user.image ? (
                 <>
                   <Image
-                    src={comment.user.image + ''}
+                    src={comment.user.image + ""}
                     alt="avatar"
                     width="40"
                     height="40"
@@ -180,7 +180,7 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
             <div className="w-full flex  ">
               <div className="p-0 m-0 relative w-full">
                 <input
-                  {...register('content')}
+                  {...register("content")}
                   type="text"
                   placeholder="Reply"
                   className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
@@ -194,13 +194,13 @@ export default function CommentItem({ comment, postId }: CommentItemProps) {
               </div>
             </div>
             <input
-              {...register('parentId')}
+              {...register("parentId")}
               value={comment.id}
               className="hidden"
             />
-            <input {...register('postId')} value={postId} className="hidden" />
+            <input {...register("postId")} value={postId} className="hidden" />
             <input
-              {...register('userId')}
+              {...register("userId")}
               value={session?.user?.id}
               className="hidden"
             />

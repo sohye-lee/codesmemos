@@ -1,17 +1,17 @@
-'use client';
-import Loading from '@/app/loading';
-import Button from '@/components/ui/button';
-import Container from '@/components/ui/container';
-import useCreate from '@/lib/useCreate';
-import { Topic } from '@prisma/client';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import useSWR from 'swr';
-import { IconPencil, IconTrash } from '@tabler/icons-react';
-import useDelete from '@/lib/useDelete';
-import DeleteButton from '@/components/forms/deleteTopicButton';
-import EditTopicInput from '@/components/forms/editTopicInput';
+"use client";
+import Loading from "@/app/loading";
+import Button from "@/components/ui/button";
+import Container from "@/components/ui/containers/container";
+import useCreate from "@/lib/useCreate";
+import { Topic } from "@prisma/client";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import useSWR from "swr";
+import { IconPencil, IconTrash } from "@tabler/icons-react";
+import useDelete from "@/lib/useDelete";
+import DeleteButton from "@/components/forms/deleteTopicButton";
+import EditTopicInput from "@/components/forms/editTopicInput";
 
 interface TopicCreateForm {
   slug: string;
@@ -19,9 +19,9 @@ interface TopicCreateForm {
 }
 export default function TopicCreatePage() {
   const router = useRouter();
-  const { data: topicsData, error: topicsError } = useSWR('/api/topics');
+  const { data: topicsData, error: topicsError } = useSWR("/api/topics");
   const [topics, setTopics] = useState<Topic[]>([]);
-  const [createTopic, { data, error, loading }] = useCreate('/api/topics');
+  const [createTopic, { data, error, loading }] = useCreate("/api/topics");
 
   const {
     register,
@@ -86,15 +86,15 @@ export default function TopicCreatePage() {
               <div className="w-full flex flex-col">
                 <label htmlFor="name">Name</label>
                 <input
-                  {...register('slug', {
-                    required: 'This field is required',
+                  {...register("slug", {
+                    required: "This field is required",
                     maxLength: {
                       value: 30,
-                      message: 'No more than 30 characters',
+                      message: "No more than 30 characters",
                     },
                     minLength: {
                       value: 3,
-                      message: 'At least 3 characters required',
+                      message: "At least 3 characters required",
                     },
                   })}
                   type="text"

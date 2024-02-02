@@ -1,6 +1,6 @@
-import { db } from '@/db';
-import { message } from '@/lib/strings';
-import { NextRequest, NextResponse } from 'next/server';
+import { db } from "@/db";
+import { message } from "@/lib/constants";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, context: any) {
   const {
@@ -15,12 +15,12 @@ export async function GET(req: NextRequest, context: any) {
       posts: {
         include: {
           user: true,
-          saves: true, 
+          saves: true,
           comments: true,
-        }
-      }
-    }
-  })
+        },
+      },
+    },
+  });
 
   if (!language) {
     return NextResponse.json({
@@ -28,7 +28,7 @@ export async function GET(req: NextRequest, context: any) {
       message: message.error.post,
     });
   }
-  
+
   return NextResponse.json({
     ok: true,
     message: message.success.post,
@@ -52,7 +52,7 @@ export async function PUT(req: NextRequest, context: any) {
   if (existingLanguage) {
     return NextResponse.json({
       ok: false,
-      message: 'This language already exists!',
+      message: "This language already exists!",
     });
   }
 

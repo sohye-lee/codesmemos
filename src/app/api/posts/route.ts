@@ -1,9 +1,9 @@
-import { db } from '@/db';
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
-import { message } from '@/lib/strings';
-import { Router } from 'next/router';
-import { redirect } from 'next/dist/server/api-utils';
+import { db } from "@/db";
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
+import { message } from "@/lib/constants";
+import { Router } from "next/router";
+import { redirect } from "next/dist/server/api-utils";
 
 export async function GET(req: NextRequest, context: any) {
   const posts = await db.post.findMany({
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest, res: NextResponse, context: any) {
   const session = await auth();
 
   if (session?.user?.id !== userId) {
-    return NextResponse.redirect('/login');
+    return NextResponse.redirect("/login");
   }
 
   const post = await db.post.create({

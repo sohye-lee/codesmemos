@@ -1,6 +1,6 @@
-import { db } from '@/db';
-import { message } from '@/lib/strings';
-import { NextRequest, NextResponse } from 'next/server';
+import { db } from "@/db";
+import { message } from "@/lib/constants";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, context: any) {
   const {

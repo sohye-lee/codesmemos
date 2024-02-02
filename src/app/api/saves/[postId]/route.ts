@@ -1,7 +1,7 @@
-import { auth } from '@/auth';
-import { db } from '@/db';
-import { message } from '@/lib/strings';
-import { NextRequest, NextResponse } from 'next/server';
+import { auth } from "@/auth";
+import { db } from "@/db";
+import { message } from "@/lib/constants";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, context: any) {
   const {
@@ -18,13 +18,13 @@ export async function GET(req: NextRequest, context: any) {
     ok: true,
     message: message.success.get,
     saveCount: saves.length,
-    saves
+    saves,
   });
 }
 
 export async function POST(req: NextRequest, context: any) {
   const {
-    params: { postId},
+    params: { postId },
   } = context;
 
   const { userId } = await req.json();
@@ -34,28 +34,26 @@ export async function POST(req: NextRequest, context: any) {
       post: {
         connect: {
           id: postId,
-        }
+        },
       },
       user: {
         connect: {
           id: userId,
-        }
-      }
+        },
+      },
     },
+  });
 
-  })
- 
   if (!save) {
     return NextResponse.json({
       ok: false,
-      message: message.error.post
-    })
+      message: message.error.post,
+    });
   }
 
   return NextResponse.json({
-    ok: true, 
-    message: message.success.post, 
+    ok: true,
+    message: message.success.post,
     save,
-  })
-
+  });
 }

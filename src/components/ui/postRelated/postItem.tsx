@@ -15,7 +15,7 @@ import useCreate from "@/lib/useCreate";
 import { signIn } from "@/app/actions";
 import { dateFormat, organizeComments, sortReplies } from "@/lib/functions";
 import { useForm } from "react-hook-form";
-import Button from "./button";
+import Button from "../button";
 import CommentItem from "./commentItem";
 import { useRouter } from "next/navigation";
 import { Post } from "@prisma/client";
@@ -151,12 +151,7 @@ export default function PostItem({ post }: PostItemProps) {
         </div>
         <h2 className="text-lg font-medium">{post.title}</h2>
         <div className="text-sm p-2 bg-gray-200">
-          <pre className=" text-wrap">
-            {/* {post.content.length > 300
-            ? post.content.slice(0, 300) + '...'
-            : post.content} */}
-            {post.content}
-          </pre>
+          <pre className=" text-wrap">{post.content}</pre>
         </div>
         <div className="flex items-center gap-3">
           <div

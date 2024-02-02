@@ -1,6 +1,6 @@
-import { db } from '@/db';
-import { message } from '@/lib/strings';
-import { NextRequest, NextResponse } from 'next/server';
+import { db } from "@/db";
+import { message } from "@/lib/constants";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(req: NextRequest, context: any) {
   const {
@@ -32,7 +32,7 @@ export async function PUT(req: NextRequest, context: any) {
     params: { id },
   } = context;
   const { content } = await req.json();
-  console.log('content I got : ', content);
+  console.log("content I got : ", content);
 
   const existingComment = await db.comment.findFirst({
     where: {
@@ -43,7 +43,7 @@ export async function PUT(req: NextRequest, context: any) {
   if (!existingComment) {
     return NextResponse.json({
       ok: false,
-      message: 'No comment with this id.',
+      message: "No comment with this id.",
     });
   }
 
@@ -55,7 +55,6 @@ export async function PUT(req: NextRequest, context: any) {
       content,
     },
   });
-
 
   if (!comment) {
     return NextResponse.json({

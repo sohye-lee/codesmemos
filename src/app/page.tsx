@@ -1,9 +1,9 @@
 "use client";
-import SidebarContainer from "@/components/ui/sidebarContainer";
+import SidebarContainer from "@/components/ui/containers/sidebarContainer";
 import useStore from "./store";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import PostListItem from "@/components/ui/postLIstItem";
+import PostListItem from "@/components/ui/postRelated/postLIstItem";
 import { ExtendedPost } from "@/lib/types";
 import Loading from "./loading";
 import { useSearchParams } from "next/navigation";
@@ -19,18 +19,34 @@ export default function Home() {
     data?.posts && setFilteredPosts(data.posts);
     setStoreState({ ...storeState, breadcrumb: "Home" });
     if (filter == "all") {
-      setFilteredPosts(data?.posts);
+      setFilteredPosts(
+        data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
+          a.createdAt < b.createdAt ? 1 : -1
+        )
+      );
     } else if (filter == "snippet") {
       setFilteredPosts(
-        data?.posts.filter((post: ExtendedPost) => post.type == "snippet")
+        data?.posts
+          .filter((post: ExtendedPost) => post.type == "snippet")
+          .sort((a: ExtendedPost, b: ExtendedPost) =>
+            a.createdAt < b.createdAt ? 1 : -1
+          )
       );
     } else if (filter == "question") {
       setFilteredPosts(
-        data?.posts.filter((post: ExtendedPost) => post.type == "question")
+        data?.posts
+          .filter((post: ExtendedPost) => post.type == "question")
+          .sort((a: ExtendedPost, b: ExtendedPost) =>
+            a.createdAt < b.createdAt ? 1 : -1
+          )
       );
     } else if (filter == "resource") {
       setFilteredPosts(
-        data?.posts.filter((post: ExtendedPost) => post.type == "resource")
+        data?.posts
+          .filter((post: ExtendedPost) => post.type == "resource")
+          .sort((a: ExtendedPost, b: ExtendedPost) =>
+            a.createdAt < b.createdAt ? 1 : -1
+          )
       );
     } else if (filter == "hot") {
       setFilteredPosts(
@@ -47,7 +63,11 @@ export default function Home() {
           .slice(0, 10)
       );
     } else if (filter == null) {
-      setFilteredPosts(data?.posts);
+      setFilteredPosts(
+        data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
+          a.createdAt < b.createdAt ? 1 : -1
+        )
+      );
     }
   }, [setStoreState, searchParams, data?.posts, filter]);
   return (

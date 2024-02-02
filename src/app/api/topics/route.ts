@@ -1,8 +1,8 @@
-import { accountType } from './../../../lib/types';
-import { db } from '@/db';
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
-import { message } from '@/lib/strings';
+import { accountType } from "./../../../lib/types";
+import { db } from "@/db";
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
+import { message } from "@/lib/constants";
 
 export async function GET(req: NextRequest, context: any) {
   const topics = await db.topic.findMany({
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest, res: NextResponse, context: any) {
   if (topicExisting) {
     return NextResponse.json({
       ok: false,
-      message: 'This topic already exists in database!',
+      message: "This topic already exists in database!",
     });
   }
 

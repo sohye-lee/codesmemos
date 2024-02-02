@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { message } from "@/lib/strings";
+import { message } from "@/lib/constants";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, res: NextResponse) {

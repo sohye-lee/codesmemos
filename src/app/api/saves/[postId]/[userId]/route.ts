@@ -1,6 +1,6 @@
-import { db } from '@/db';
-import { message } from '@/lib/strings';
-import { NextRequest, NextResponse } from 'next/server';
+import { db } from "@/db";
+import { message } from "@/lib/constants";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, context: any) {
   const {
@@ -18,13 +18,13 @@ export async function GET(req: NextRequest, context: any) {
   if (!save) {
     return NextResponse.json({
       ok: false,
-      message: 'Not saved by the user',
+      message: "Not saved by the user",
     });
   }
 
   return NextResponse.json({
     ok: true,
-    message: 'Saved',
+    message: "Saved",
   });
 }
 
@@ -32,19 +32,19 @@ export async function DELETE(req: NextRequest, context: any) {
   const {
     params: { postId, userId },
   } = context;
- 
+
   const existingSave = await db.save.findFirst({
     where: {
       postId,
       userId,
-    }
-  })
+    },
+  });
 
   if (!existingSave) {
     return NextResponse.json({
       ok: false,
       message: "You haven't saved this post",
-    })
+    });
   }
 
   const save = await db.save.delete({
@@ -53,10 +53,8 @@ export async function DELETE(req: NextRequest, context: any) {
     },
   });
 
- 
-
   return NextResponse.json({
     ok: true,
-    message: message.success.delete
+    message: message.success.delete,
   });
 }

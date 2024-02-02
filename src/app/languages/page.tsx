@@ -1,4 +1,4 @@
-import SidebarContainer from '@/components/ui/sidebarContainer';
+import SidebarContainer from "@/components/ui/containers/sidebarContainer";
 
 export default function TopicsPage() {
   return (
