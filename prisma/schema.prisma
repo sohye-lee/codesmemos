@@ -84,6 +84,7 @@ model Language {
 model Pocket {
   id    String @id @default(cuid())
   name  String 
+  orderIndex Int? @default(0)
   userId  String 
   user    User @relation(fields: [userId], references: [id], onDelete: Cascade)
   posts   Post[]

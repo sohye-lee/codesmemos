@@ -7,6 +7,7 @@ import {
 } from '@tabler/icons-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import PostInfo from './postInfo';
 
 interface PostItemProps {
   post: ExtendedPost;
@@ -20,18 +21,8 @@ export default function PostListItem({ post }: PostItemProps) {
       href={`/posts/${post.id}`}
       className="border cursor-pointer border-slate-500 border-r-2 border-b-2 p-3 flex flex-col gap-3"
     >
-      <div className="flex items-center gap-2">
-        <h5 className="text-xs text-gray-500">
-          Posted by
-          <Link href={`/users/${post.user.id}`} className="underline ml-1">
-            {post.user.username || post.user.name}
-          </Link>
-          <span className="mx-2">|</span>
-          <span>Created at {dateFormat(post.createdAt)}</span>
-          <span className="mx-2">|</span>
-          <span>{capitalize(post.type)}</span>
-        </h5>
-      </div>
+      <PostInfo post={post} />
+
       <h2 className="text-lg font-medium">{post.title}</h2>
       <div className="text-sm p-2 bg-gray-200">
         <pre className=" text-wrap">

@@ -1,25 +1,25 @@
-"use client";
-import { CommentWithNode, ExtendedComment, ExtendedPost } from "@/lib/types";
-import Link from "next/link";
+'use client';
+import { CommentWithNode, ExtendedPocket, ExtendedPost } from '@/lib/types';
 import {
-  IconHeart,
-  IconHeartFilled,
   IconMessage,
   IconBookmark,
   IconBookmarkFilled,
-} from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import useSWR from "swr";
-import { FormEvent, useEffect, useState } from "react";
-import useCreate from "@/lib/useCreate";
-import { signIn } from "@/app/actions";
-import { dateFormat, organizeComments, sortReplies } from "@/lib/functions";
-import { useForm } from "react-hook-form";
-import Button from "../button";
-import CommentItem from "./commentItem";
-import { useRouter } from "next/navigation";
-import { Post } from "@prisma/client";
-import ReplyItem from "./replyItem";
+  IconFolder,
+  IconPlus,
+  IconCheck,
+} from '@tabler/icons-react';
+import { useSession } from 'next-auth/react';
+import useSWR from 'swr';
+import { FormEvent, useEffect, useState } from 'react';
+import useCreate from '@/lib/useCreate';
+import { signIn } from '@/app/actions';
+import { organizeComments } from '@/lib/functions';
+import { useForm } from 'react-hook-form';
+import Button from '../button';
+import CommentItem from './commentItem';
+import { useRouter } from 'next/navigation';
+import PostInfo from './postInfo';
+import NoDataMessage from '../messages/noData';
 
 interface PostItemProps {
   post: ExtendedPost;
@@ -37,10 +37,13 @@ export default function PostItem({ post }: PostItemProps) {
   const { data: mySaveData } = useSWR(
     `/api/saves/${post.id}/${session?.user?.id}`
   );
-  // const { data: commentsData } = useSWR(`/api/saves/${post.id}/comments`);
+  const { data: myPocketData } = useSWR(
+    `/api/users/${session?.user?.id}/pockets`
+  );
+
+  const [pocketsOpen, setPocketsOpen] = useState(false);
   const [saves, setSaves] = useState(0);
   const [mySave, setMySave] = useState(false);
-  // const [myComments, setMyComments] = useState(post.comments);
   const [updateSave, { data: saveData, error: saveError, loading }] = useCreate(
     `/api/saves/${post?.id}`
   );
@@ -52,6 +55,7 @@ export default function PostItem({ post }: PostItemProps) {
       loading: createCommentLoading,
     },
   ] = useCreate(`/api/posts/${post?.id}/comments`);
+
   const {
     handleSubmit,
     register,
@@ -72,9 +76,9 @@ export default function PostItem({ post }: PostItemProps) {
       updateSave({ userId: session?.user?.id });
     } else {
       fetch(`/api/saves/${post.id}/${session?.user?.id}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       })
         .then((res) => res.json())
@@ -87,6 +91,7 @@ export default function PostItem({ post }: PostItemProps) {
   };
 
   const organizedComments = organizeComments(post.comments);
+
   const renderComment = (comment: CommentWithNode) => {
     return (
       <div
@@ -108,6 +113,60 @@ export default function PostItem({ post }: PostItemProps) {
       })
     ) : (
       <p className="text-xs text-gray-600">No comment yet</p>
+    );
+
+  const addToPocketHandler = (pocketId: string) => {
+    fetch(`/api/posts/${post.id}/pockets/${pocketId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    setPocketsOpen(false);
+    router.refresh();
+  };
+
+  const renderMyPockets =
+    myPocketData && myPocketData.pockets && myPocketData.pockets.length > 0 ? (
+      myPocketData.pockets.map((pocket: ExtendedPocket) => {
+        return (
+          <div
+            key={pocket.id}
+            className={` p-2 border-b border-gray-400 last:border-none flex items-center gap-1 hover:bg-gray-100 min-w-[260px] group cursor-pointer ${
+              post.pocketId == pocket.id && 'bg-blue-100'
+            }`}
+            onClick={() => addToPocketHandler(pocket.id)}
+          >
+            {post.pocketId == pocket.id ? (
+              <IconCheck width={12} color="rgb(37 99 235)" />
+            ) : (
+              <>
+                <IconFolder width={12} className="block group-hover:hidden" />
+                <IconPlus width={12} className="hidden group-hover:block" />
+              </>
+            )}
+            <p
+              className={`text-sm ${
+                post.pocketId == pocket.id && 'text-blue-600 font-medium'
+              }`}
+            >
+              {pocket.name}
+            </p>
+          </div>
+        );
+      })
+    ) : (
+      <div>
+        <NoDataMessage message="You don't have any pocket yet." />
+        <Button
+          size="small"
+          mode="black"
+          button={false}
+          link="/account/mystuffs"
+        >
+          Go Create
+        </Button>
+      </div>
     );
   const onValid = (validForm: CommentForm) => {
     createComment(validForm);
@@ -137,58 +196,70 @@ export default function PostItem({ post }: PostItemProps) {
   return (
     <>
       <div className="border border-slate-500 border-r-2 border-b-2 p-3 py-2 pb-1 flex flex-col gap-3">
-        <div className="flex items-center gap-2">
-          <h5 className="text-xs text-gray-500">
-            Posted by
-            <Link href={`/users/${post.user.id}`} className="underline ml-1">
-              {post.user.name}
-            </Link>
-            <span className="mx-2">|</span>
-            <span className="mr-1">
-              Created at {dateFormat(post.createdAt)}
-            </span>
-          </h5>
-        </div>
+        <PostInfo post={post} />
         <h2 className="text-lg font-medium">{post.title}</h2>
         <div className="text-sm p-2 bg-gray-200">
           <pre className=" text-wrap">{post.content}</pre>
         </div>
-        <div className="flex items-center gap-3">
-          <div
-            className="flex items-center text-xs gap-1 cursor-pointer"
-            onClick={clickSave}
-          >
-            {mySave ? (
-              <IconBookmarkFilled width={16} />
-            ) : (
-              <IconBookmark width="16" />
-            )}
-            {saves}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div
+              className="flex items-center text-xs gap-1 cursor-pointer"
+              onClick={clickSave}
+            >
+              {mySave ? (
+                <IconBookmarkFilled width={16} />
+              ) : (
+                <IconBookmark width="16" />
+              )}
+              {saves}
+            </div>
+            <div
+              className="flex items-center text-xs gap-1 cursor-pointer"
+              onClick={clickSave}
+            >
+              <IconMessage width={16} />
+              {post?.comments.length}
+            </div>
           </div>
-          <div
-            className="flex items-center text-xs gap-1 cursor-pointer"
-            onClick={clickSave}
-          >
-            <IconMessage width={16} />
-            {post?.comments.length}
+          <div className="flex items-center relative">
+            <div
+              className="flex items-center px-2 cursor-pointer gap-1 text-xs"
+              onClick={() => setPocketsOpen((prev) => !prev)}
+            >
+              <IconFolder width={16} /> Add to Pocket
+            </div>
+
+            {pocketsOpen ? (
+              session && session?.user ? (
+                <div className="absolute top-[100%] z-50 right-0 border border-slate-400 bg-white flex flex-col">
+                  {renderMyPockets}
+                </div>
+              ) : (
+                <>
+                  <NoDataMessage message={'Please login.'} />
+                </>
+              )
+            ) : null}
           </div>
         </div>
       </div>
+
       <div className="border border-slate-500 border-r-2 border-b-2 p-3 flex flex-col gap-3 ">
         <form onSubmit={handleSubmit(onValid)}>
           <div className="w-full flex flex-col">
             {/* <label htmlFor="name">Title</label> */}
             <div className="p-0 m-0 relative w-full">
               <input
-                {...register("content", {
-                  required: "This field is required",
+                {...register('content', {
+                  required: 'This field is required',
                   minLength: {
                     value: 3,
-                    message: "Min. 3 characters",
+                    message: 'Min. 3 characters',
                   },
                   maxLength: {
                     value: 500,
-                    message: "Max. 500 characters",
+                    message: 'Max. 500 characters',
                   },
                 })}
                 type="text"
@@ -208,7 +279,7 @@ export default function PostItem({ post }: PostItemProps) {
           </div>
           {/* <input {...register('postId')} value={post?.id} className='hidden' /> */}
           <input
-            {...register("userId")}
+            {...register('userId')}
             value={session?.user?.id}
             className="hidden"
           />

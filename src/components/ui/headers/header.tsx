@@ -1,20 +1,21 @@
-"use client";
-import Link from "next/link";
-import Profile from "./profile";
-import { IconPlus, IconDotsVertical } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import Logo from "public/images/logo.svg";
-import Image from "next/image";
-import NavItem from "./navitem";
-import Button from "../button";
-import { signIn, signOut } from "@/app/actions";
-import NavSubItem from "./navSubitem";
-import { FormEvent, Key, useEffect, useRef, useState } from "react";
-import useStore from "@/app/store";
-import { breadcrumbs, paths } from "@/lib/constants";
-import { usePathname, useRouter } from "next/navigation";
-import Loading from "@/app/loading";
-import MobileHeader from "./mobileHeader";
+'use client';
+import Link from 'next/link';
+import Profile from './profile';
+import { IconPlus, IconDotsVertical } from '@tabler/icons-react';
+import { useSession } from 'next-auth/react';
+import Logo from 'public/images/logo.svg';
+import Image from 'next/image';
+import NavItem from './navitem';
+import Button from '../button';
+import { signIn, signOut } from '@/app/actions';
+import NavSubItem from './navSubitem';
+import { FormEvent, Key, useEffect, useRef, useState } from 'react';
+import useStore from '@/app/store';
+import { breadcrumbs, paths } from '@/lib/constants';
+import { usePathname, useRouter } from 'next/navigation';
+import Loading from '@/app/loading';
+import MobileHeader from './mobileHeader';
+import Breadcrumb from './breadcrumb';
 
 export default function Header() {
   const { data: session, status } = useSession();
@@ -39,7 +40,7 @@ export default function Header() {
     });
   };
   function assertIsNode(e: EventTarget | null): asserts e is Node {
-    if (!e || !("nodeType" in e)) {
+    if (!e || !('nodeType' in e)) {
       throw new Error(`Node expected`);
     }
   }
@@ -70,8 +71,8 @@ export default function Header() {
       }
     }
 
-    if (typeof window !== "undefined") {
-      window.addEventListener("click", handleClick);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('click', handleClick);
     }
   }, [openProfile, openCreate, storeState, setUrl]);
 
@@ -83,8 +84,11 @@ export default function Header() {
             <Link href="/" id="logo" className="font-semibold text-sm ">
               <Image src={Logo} alt="logo" width={160} />
             </Link>
+            <div className="hidden lg:block ">
+              <Breadcrumb />
+            </div>
 
-            <select
+            {/* <select
               name="breadcrumb"
               id="breadcrumb"
               className="hidden lg:block rounded border border-slate-400 text-sm text-gray-600 py-2 px-3 "
@@ -98,7 +102,7 @@ export default function Header() {
               <option value={"new"}>New</option>
               <option value={"languages"}>By Language</option>
               <option value={"feedback"}>Feedback</option>
-            </select>
+            </select> */}
 
             <NavItem
               icon="search"

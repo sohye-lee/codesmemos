@@ -1,16 +1,16 @@
-import { breadcrumbType } from "./types";
+import { breadcrumbType } from './types';
 export const message = {
   success: {
-    get: "Successfully loaded!",
-    post: "Successfully created!",
-    update: "Successfully updated!",
-    delete: "Successfully deleted!",
+    get: 'Successfully loaded!',
+    post: 'Successfully created!',
+    update: 'Successfully updated!',
+    delete: 'Successfully deleted!',
   },
   error: {
-    get: "Not found",
-    post: "Unsuccessful. Please try again.",
-    update: "Unsuccessful. Please try again.",
-    delete: "Unsuccessful. Please try again.",
+    get: 'Not found',
+    post: 'Unsuccessful. Please try again.',
+    update: 'Unsuccessful. Please try again.',
+    delete: 'Unsuccessful. Please try again.',
   },
 };
 
@@ -18,34 +18,34 @@ export const paths = {
   client: {
     get: {
       home() {
-        return "/";
+        return '/';
       },
       topics() {
-        return "/topics";
+        return '/topics';
       },
       topic(slug: string) {
         return `/topics/${slug}`;
       },
       languages() {
-        return "/languages";
+        return '/languages';
       },
       snippets() {
-        return "/?filter=snippet";
+        return '/?filter=snippet';
       },
       questions() {
-        return "/?filter=question";
+        return '/?filter=question';
       },
       resources() {
-        return "/?filter=resource";
+        return '/?filter=resource';
       },
       hot() {
-        return "/?filter=hot";
+        return '/?filter=hot';
       },
       new() {
-        return "/?filter=new";
+        return '/?filter=new';
       },
       posts() {
-        return "/posts";
+        return '/posts';
       },
       postInTopic(slug: string) {
         return `/topics/${slug}/posts`;
@@ -54,21 +54,21 @@ export const paths = {
         return `/topics/${slug}/posts/${postId}`;
       },
       users() {
-        return "/users";
+        return '/users';
       },
       user(userId: string) {
         return `/users/${userId}`;
       },
       feedback() {
-        return "/feedback";
+        return '/feedback';
       },
     },
     create: {
       topicCreate() {
-        return "/topics/new";
+        return '/topics/new';
       },
       postCreate() {
-        return "/create";
+        return '/create';
       },
       postCreateInTopic(slug: string) {
         return `/topics/${slug}/posts/new`;
@@ -86,13 +86,13 @@ export const paths = {
   server: {
     get: {
       topics() {
-        return "/api/topics";
+        return '/api/topics';
       },
       posts() {
-        return "/api/posts";
+        return '/api/posts';
       },
       users() {
-        return "/api/users";
+        return '/api/users';
       },
       topic(slug: string) {
         return `/api/topics/${slug}`;
@@ -106,7 +106,7 @@ export const paths = {
     },
     create: {
       topic() {
-        return "/api/topics";
+        return '/api/topics';
       },
       post(slug: string) {
         return `/api/topics/${slug}/posts`;
@@ -114,7 +114,7 @@ export const paths = {
     },
     update: {
       topic() {
-        return "/api/topics";
+        return '/api/topics';
       },
       post(slug: string) {
         return `/api/topics/${slug}/posts`;
@@ -130,8 +130,8 @@ export const breadcrumbs: {
   };
 } = {
   home: {
-    url: "/",
-    name: "Home",
+    url: '/',
+    name: 'Home',
   },
   //   snippets: '/?filter=snippets',
   //   questions: '/?filter=questions',
@@ -141,38 +141,38 @@ export const breadcrumbs: {
   //   languages: '/languages',
   //   topics: '/topics',
   snippet: {
-    url: "/?filter=snippet",
-    name: "Snippets",
+    url: '/?filter=snippet',
+    name: 'Snippets',
   },
   question: {
-    url: "/?filter=question",
-    name: "Questions",
+    url: '/?filter=question',
+    name: 'Questions',
   },
   resource: {
-    url: "/?filter=resource",
-    name: "Resources",
+    url: '/?filter=resource',
+    name: 'Resources',
   },
   new: {
-    url: "/?filter=new",
-    name: "Resources",
+    url: '/?filter=new',
+    name: 'Resources',
   },
   hot: {
-    url: "/?filter=hot",
-    name: "Hot",
+    url: '/?filter=hot',
+    name: 'Hot',
   },
   languages: {
-    url: "/languages",
-    name: "By Language",
+    url: '/languages',
+    name: 'By Language',
   },
   topics: {
-    url: "/topics",
-    name: "By Topic",
+    url: '/topics',
+    name: 'By Topic',
   },
   feedback: {
-    url: "/feedback",
-    name: "Feedback",
+    url: '/feedback',
+    name: 'Feedback',
   },
 };
 
 export const boxClassName =
-  " border border-slate-500 border-r-2 border-b-2 p-3 py-2 ";
+  ' border border-slate-500 border-r-2 border-b-2 p-3 py-2 ';

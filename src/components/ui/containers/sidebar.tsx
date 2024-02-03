@@ -1,18 +1,19 @@
-"use client";
-import { useEffect, useState } from "react";
-import Button from "../button";
-import { IconPencilCode, IconArrowRight } from "@tabler/icons-react";
-import useSWR from "swr";
-import { Language, Topic } from "@prisma/client";
-import Link from "next/link";
+'use client';
+import { useEffect, useState } from 'react';
+import Button from '../button';
+import { IconPencilCode, IconArrowRight } from '@tabler/icons-react';
+import useSWR from 'swr';
+import { Language, Topic } from '@prisma/client';
+import Link from 'next/link';
+import NoDataMessage from '../messages/noData';
 
 export default function Sidebar() {
   const [languages, setLanguages] = useState<Language[]>();
   const [topics, setTopics] = useState<Topic[]>();
 
-  const { data: topicsData, error: topicsError } = useSWR("/api/topics");
+  const { data: topicsData, error: topicsError } = useSWR('/api/topics');
   const { data: languagesData, error: languagesError } =
-    useSWR("/api/languages");
+    useSWR('/api/languages');
 
   const renderLanguages =
     languages && languages.length > 0 ? (
@@ -32,7 +33,7 @@ export default function Sidebar() {
         );
       })
     ) : (
-      <p>No language yet</p>
+      <NoDataMessage message="No language yet" />
     );
 
   const renderTopics =

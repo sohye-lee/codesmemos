@@ -1,7 +1,7 @@
 // import { deleteSnippet } from '@/actions';
 import Link from 'next/link';
 import { ReactNode } from 'react';
-import {IconRepeat} from '@tabler/icons-react';
+import { IconRepeat } from '@tabler/icons-react';
 
 interface ButtonProps {
   button: boolean;
@@ -68,18 +68,26 @@ export default function Button({
       {button ? (
         <button
           type="submit"
-          className={`rounded-md  border border-slate-800 border-r-2  border-b-2 hover:border  ${btnMode} ${btnSize} ${addClass}`}
+          className={`rounded-md  border border-slate-800 border-r-2  border-b-2 hover:border gap-1 flex items-center justify-center ${btnMode} ${btnSize} ${addClass}`}
           {...rest}
         >
-          {loading? <IconRepeat width={16} className=' animate-spin' />: children}
+          {loading ? (
+            <IconRepeat width={16} className=" animate-spin" />
+          ) : (
+            children
+          )}
         </button>
       ) : (
         <Link
           href={link || '/'}
-          className={`rounded-md  border border-slate-800 border-r-2  border-b-2 hover:border  ${btnMode} ${btnSize} ${addClass}`}
+          className={`rounded-md  border border-slate-800 border-r-2  border-b-2 hover:border gap-1 flex items-center justify-center ${btnMode} ${btnSize} ${addClass}`}
           {...rest}
         >
-          {loading? <IconRepeat width={16} className=' animate-spin' />: children}
+          {loading ? (
+            <IconRepeat width={16} className=" animate-spin" />
+          ) : (
+            children
+          )}
           {/* {children} */}
         </Link>
       )}
