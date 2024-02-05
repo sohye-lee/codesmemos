@@ -1,28 +1,28 @@
-'use client';
-import Link from 'next/link';
-import Profile from './profile';
-import { IconPlus, IconDotsVertical } from '@tabler/icons-react';
-import { useSession } from 'next-auth/react';
-import Logo from 'public/images/logo.svg';
-import Image from 'next/image';
-import NavItem from './navitem';
-import Button from '../button';
-import { signIn, signOut } from '@/app/actions';
-import NavSubItem from './navSubitem';
-import { FormEvent, Key, useEffect, useRef, useState } from 'react';
-import useStore from '@/app/store';
-import { breadcrumbs, paths } from '@/lib/constants';
-import { usePathname, useRouter } from 'next/navigation';
-import Loading from '@/app/loading';
-import MobileHeader from './mobileHeader';
-import Breadcrumb from './breadcrumb';
+"use client";
+import Link from "next/link";
+import Profile from "./profile";
+import { IconPlus, IconDotsVertical } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
+import Logo from "public/images/logo.svg";
+import Image from "next/image";
+import NavItem from "./navitem";
+import Button from "../button";
+import { signIn, signOut } from "@/app/actions";
+import NavSubItem from "./navSubitem";
+import { FormEvent, Key, useEffect, useRef, useState } from "react";
+import useStore from "@/app/store";
+import { breadcrumbs, paths } from "@/lib/constants";
+import { usePathname, useRouter } from "next/navigation";
+import Loading from "@/app/loading";
+import MobileHeader from "./mobileHeader";
+import Breadcrumb from "./breadcrumb";
 
 export default function Header() {
   const { data: session, status } = useSession();
   const [openProfile, setOpenProfile] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
   const [openMobileNav, setOpenMobileNav] = useState(false);
-  const { storeState, setStoreState } = useStore();
+  const { breadcrumb, setBreadcrumb } = useStore();
   const dropdownCreate = useRef<HTMLDivElement>(null);
   const dropdownProfile = useRef<HTMLDivElement>(null);
   const buttonCreate = useRef<HTMLDivElement>(null);
@@ -34,13 +34,10 @@ export default function Header() {
     // router.push(breadcrumbs[e.currentTarget.value])
     router.push(breadcrumbs[e.currentTarget.value].url);
     setUrl(breadcrumbs[e.currentTarget.value].url);
-    setStoreState({
-      ...storeState,
-      breadcrumb: breadcrumbs[e.currentTarget.value].name,
-    });
+    setBreadcrumb(breadcrumbs[e.currentTarget.value].name);
   };
   function assertIsNode(e: EventTarget | null): asserts e is Node {
-    if (!e || !('nodeType' in e)) {
+    if (!e || !("nodeType" in e)) {
       throw new Error(`Node expected`);
     }
   }
@@ -71,10 +68,10 @@ export default function Header() {
       }
     }
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener('click', handleClick);
+    if (typeof window !== "undefined") {
+      window.addEventListener("click", handleClick);
     }
-  }, [openProfile, openCreate, storeState, setUrl]);
+  }, [openProfile, openCreate, setBreadcrumb, setUrl]);
 
   return (
     <>

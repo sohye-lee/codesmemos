@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { message } from "@/lib/constants";
 import { Router } from "next/router";
 import { redirect } from "next/dist/server/api-utils";
+import { ExtendedPost } from "@/lib/types";
 
 export async function GET(req: NextRequest, context: any) {
   const posts = await db.post.findMany({
@@ -27,6 +28,7 @@ export async function GET(req: NextRequest, context: any) {
     ok: true,
     message: message.success.post,
     posts,
+    // posts: posts.sort(function (a: ExtendedPost, b: ExtendedPost) { return new Date(b.createdAt) - new Date(b.createdAt)})
   });
 }
 
