@@ -31,7 +31,7 @@ export default function Container({
 
   return (
     <div
-      className={`w-screen flex flex-col min-h-screen items-center pt-24 pb-12 ${bgColor}`}
+      className={`w-full flex flex-col min-h-screen items-center pt-24 pb-12 ${bgColor}`}
     >
       <div
         className={`${containerWidth} px-4 flex flex-col items-center justify-center ${addClass}`}

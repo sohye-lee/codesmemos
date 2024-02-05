@@ -55,13 +55,41 @@ export default function Sidebar() {
         })
       : null;
 
+  // useEffect(() => {
+  //   topicsData && setTopics(topicsData.topics);
+  //   languagesData && setLanguages(languagesData.languages);
+  // }, [setTopics, setLanguages, topicsData, languagesData]);
+
+  const [sidebar, setSidebar] = useState<HTMLDivElement>();
+  const [style, setStyle] = useState({
+    position: 'relative',
+    right: sidebar?.getBoundingClientRect().right,
+    top: 0,
+  });
   useEffect(() => {
     topicsData && setTopics(topicsData.topics);
     languagesData && setLanguages(languagesData.languages);
-  }, [setTopics, setLanguages, topicsData, languagesData]);
+    setSidebar(document.getElementById('sidebar') as HTMLDivElement);
 
+    const fixSidebar = () => {
+      if (window.scrollY > 60) {
+        setStyle({ ...style, position: 'fixed', top: 70 });
+      } else {
+        setStyle({ ...style, position: 'retlative', top: 0 });
+      }
+    };
+    window.addEventListener('scroll', fixSidebar);
+  }, [style, setTopics, setLanguages, topicsData, languagesData]);
   return (
-    <div className="border border-slate-500 border-r-2 border-b-2 p-3 flex flex-col gap-3">
+    <div
+      className="border border-slate-500 border-r-2 border-b-2 p-3 flex flex-col gap-3 z-0"
+      style={{
+        right: style.right,
+        top: style.top,
+        position: style.position == 'fixed' ? 'fixed' : 'relative',
+        width: sidebar?.clientWidth,
+      }}
+    >
       <Button
         size="medium"
         mode="success"

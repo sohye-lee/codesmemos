@@ -1,10 +1,14 @@
 'use client';
+import { signIn } from '@/app/actions';
 import PocketItem from '@/components/ui/accountRelated/pocketItem';
+import SimplePostItem from '@/components/ui/accountRelated/simplePostItem';
 import Button from '@/components/ui/button';
 import Container from '@/components/ui/containers/container';
+import NoDataMessage from '@/components/ui/messages/noData';
 import { boxClassName } from '@/lib/constants';
-import { ExtendedPocket } from '@/lib/types';
+import { ExtendedPocket, ExtendedSave } from '@/lib/types';
 import useCreate from '@/lib/useCreate';
+import { Save } from '@prisma/client';
 import {
   IconFolder,
   IconFolderCheck,
@@ -30,6 +34,8 @@ export default function MyStuffsPage() {
   const { data: session } = useSession();
   const { data, error } = useSWR(`/api/users/${session?.user?.id}/pockets`);
   const [pockets, setPockets] = useState<ExtendedPocket[]>();
+  const [saves, setSaves] = useState<ExtendedSave[]>();
+  const { data: savesData } = useSWR(`/api/users/${session?.user?.id}/saves`);
   const [tab, setTab] = useState<MyStuffsTab>('pockets');
   const [popupOpen, setPopupOpen] = useState<boolean>(false);
   const activeStyle = 'border-b-none bg-white';
@@ -72,13 +78,30 @@ export default function MyStuffsPage() {
       <p className="py-4 text-center text-gray-600 text-sm">No pocket yet.</p>
     );
 
+  const renderSaves =
+    saves && saves.length > 0 ? (
+      saves.map((save) => {
+        return <SimplePostItem key={save.id} post={save.post} />;
+      })
+    ) : (
+      <NoDataMessage
+        message="You haven't saved any post yet."
+        addClass="col-span-2"
+      />
+    );
+
   useEffect(() => {
+    // if (!session || !session?.user) {
+    //   signIn();
+    // }
     data && data.pockets && setPockets(data.pockets);
     createPocketData && setPopupOpen(false);
     if (createPocketData && createPocketData?.ok) {
       router.refresh();
     }
-  }, [data, createPocketData, router]);
+
+    savesData && savesData.saves && setSaves(savesData.saves);
+  }, [data, createPocketData, router, savesData]);
   return (
     <Container width="medium" bgColor="bg-blue-50">
       <div className="w-full border border-slate-500 border-r-2 border-b-2 bg-white">
@@ -101,33 +124,47 @@ export default function MyStuffsPage() {
           </div>
         </div>
         <div className="p-3">
-          <div className="flex justify-end py-2">
-            {popupOpen ? (
-              <Button
-                size="small"
-                mode="black"
-                button={true}
-                onClick={() => setPopupOpen(false)}
-              >
-                <IconChevronUp width={16} /> Close
-              </Button>
-            ) : (
-              <Button
-                size="small"
-                mode="success"
-                button={true}
-                onClick={() => setPopupOpen(true)}
-              >
-                <IconPlus width={16} /> Add
-              </Button>
-            )}
-          </div>
-          {createPocketData && (
-            <p className="text-sm text-gray-600">{createPocketData.message}</p>
+          {tab == 'pockets' && (
+            <div className="w-full">
+              <div className="flex justify-end py-2">
+                {popupOpen ? (
+                  <Button
+                    size="small"
+                    mode="black"
+                    button={true}
+                    onClick={() => setPopupOpen(false)}
+                  >
+                    <IconChevronUp width={16} /> Close
+                  </Button>
+                ) : (
+                  <Button
+                    size="small"
+                    mode="success"
+                    button={true}
+                    onClick={() => setPopupOpen(true)}
+                  >
+                    <IconPlus width={16} /> Add
+                  </Button>
+                )}
+              </div>
+              {createPocketData && (
+                <p className="text-sm text-gray-600">
+                  {createPocketData.message}
+                </p>
+              )}
+
+              {popupOpen && renderCreatePocketForm}
+              <div className="p-3 w-full flex flex-col gap-3">
+                {renderPockets}
+              </div>
+            </div>
           )}
 
-          {popupOpen && renderCreatePocketForm}
-          <div className="p-3 w-full flex flex-col gap-3">{renderPockets}</div>
+          {tab == 'saves' && (
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 py-8 items-stretch">
+              {renderSaves}
+            </div>
+          )}
         </div>
       </div>
     </Container>

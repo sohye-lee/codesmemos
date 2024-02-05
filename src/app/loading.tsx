@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <div className="fixed w-screen h-screen z-200 top-0 left-0 flex items-center justify-center bg-blue-200 px-4">
+    <div className="fixed w-screen h-screen z-[200] top-0 left-0 flex items-center justify-center bg-blue-200 px-4">
       <div className="w-16 h-16 rounded-full border-3 border-blue-50 border-r-blue-200 animate-spin"></div>
     </div>
     // <div className="fixed w-screen h-screen top-0 left-0 bg-slate-200 flex items-center justify-center">

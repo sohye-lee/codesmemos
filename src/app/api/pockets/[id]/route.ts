@@ -29,3 +29,42 @@ export async function GET(req: NextRequest, context: any) {
     pocket,
   });
 }
+
+export async function PUT(req: NextRequest, context: any) {
+  const {
+    params: { id },
+  } = context;
+  const { name, orderIndex } = await req.json();
+
+  const existingPocket = await db.pocket.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!existingPocket)
+    return NextResponse.json({ ok: false, message: message.error.update });
+
+  const pocket = await db.pocket.update({
+    where: {
+      id,
+    },
+    data: {
+      name,
+      orderIndex,
+    },
+  });
+
+  if (!pocket) {
+    return NextResponse.json({
+      ok: true,
+      message: message.success.update,
+    });
+  }
+
+  return NextResponse.json({
+    ok: true,
+    message: message.success.update,
+    pocket,
+  });
+}

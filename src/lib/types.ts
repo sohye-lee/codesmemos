@@ -72,3 +72,8 @@ export interface ExtendedUser extends User {
 export interface ExtendedPocket extends Pocket {
   posts: ExtendedPost[];
 }
+
+export interface ExtendedSave extends Save {
+  post: ExtendedPost;
+  user: User;
+}

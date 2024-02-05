@@ -42,7 +42,7 @@ export default function ContainerHeader({
             </div>
           </div>
 
-          <div className="flex">
+          <div className="flex lg:hidden">
             <Breadcrumb />
           </div>
         </>
