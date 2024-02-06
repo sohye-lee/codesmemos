@@ -1,21 +1,26 @@
-import { capitalize, dateFormat } from '@/lib/functions';
-import { ExtendedPost } from '@/lib/types';
+import {
+  capitalize,
+  dateFormat,
+  getYoutubeThumbnail,
+  getYoutubeVideo,
+} from "@/lib/functions";
+import { ExtendedPost } from "@/lib/types";
 import {
   IconBookmark,
   IconBookmarkFilled,
   IconMessage,
-} from '@tabler/icons-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import PostInfo from './postInfo';
+} from "@tabler/icons-react";
+import Image from "next/image";
+import Link from "next/link";
+import PostInfo from "./postInfo";
 
 interface PostItemProps {
   post: ExtendedPost;
 }
 export default function PostListItem({ post }: PostItemProps) {
-  const link = post.linkType == 'video' ? post.content : '';
-  const videoId = link.split('watch?v=')[1];
-  const videoThumbnail = `https://img.youtube.com/vi/${videoId}/0.jpg`;
+  const link = post.linkType == "video" ? post.content : "";
+  // const videoId = link.split("watch?v=")[1];
+  // const videoThumbnail = `https://img.youtube.com/vi/${videoId}/0.jpg`;
   return (
     <Link
       href={`/posts/${post.id}`}
@@ -27,13 +32,23 @@ export default function PostListItem({ post }: PostItemProps) {
       <div className="text-sm p-2 bg-gray-200">
         <pre className=" text-wrap">
           {post.content.length > 300
-            ? post.content.slice(0, 300) + '...'
+            ? post.content.slice(0, 300) + "..."
             : post.content}
         </pre>
-        {post.linkType == 'video' && post.link ? (
-          <div className="w-full padding-[56.25% 0 0 0]">
-            hi
-            <Image src={videoThumbnail} alt="thumbnail" width={800} />
+        {post.linkType == "video" ? (
+          <div className="w-full padding-[56.25% 0 0 0]  ">
+            <Image
+              src={getYoutubeThumbnail(post?.link + "")}
+              alt="thumbnail"
+              width={800}
+              height={(800 * 9) / 16}
+            />
+            {/* <Image
+              src={videoThumbnail}
+              alt="thumbnail"
+              width={800}
+              height={(800 * 9) / 16}
+            /> */}
           </div>
         ) : null}
       </div>

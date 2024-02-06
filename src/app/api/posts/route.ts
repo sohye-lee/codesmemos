@@ -7,6 +7,9 @@ import { redirect } from "next/dist/server/api-utils";
 import { ExtendedPost } from "@/lib/types";
 
 export async function GET(req: NextRequest, context: any) {
+  // const {
+  //   query: { filter },
+  // } = await req.json();
   const posts = await db.post.findMany({
     include: {
       user: true,
@@ -24,11 +27,15 @@ export async function GET(req: NextRequest, context: any) {
     });
   }
 
+  const arrangedPosts = posts.sort((a, b) =>
+    a.createdAt < b.createdAt ? 1 : -1
+  );
+
   return NextResponse.json({
     ok: true,
     message: message.success.post,
-    posts,
-    // posts: posts.sort(function (a: ExtendedPost, b: ExtendedPost) { return new Date(b.createdAt) - new Date(b.createdAt)})
+    // posts,
+    posts: arrangedPosts,
   });
 }
 

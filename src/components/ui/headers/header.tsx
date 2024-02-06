@@ -71,7 +71,7 @@ export default function Header() {
     if (typeof window !== "undefined") {
       window.addEventListener("click", handleClick);
     }
-  }, [openProfile, openCreate, setBreadcrumb, setUrl]);
+  }, [openProfile, openCreate, breadcrumb, setBreadcrumb, setUrl]);
 
   return (
     <>

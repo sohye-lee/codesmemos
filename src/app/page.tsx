@@ -7,8 +7,11 @@ import PostListItem from "@/components/ui/postRelated/postLIstItem";
 import { ExtendedPost } from "@/lib/types";
 import Loading from "./loading";
 import { useSearchParams } from "next/navigation";
+import { set } from "react-hook-form";
 
 export default function Home() {
+  const searchParams = useSearchParams();
+  const filter = searchParams.get("filter");
   const { breadcrumb, setBreadcrumb } = useStore();
   const [page, setPage] = useState(1);
   const { data, error } = useSWR("/api/posts");
@@ -18,42 +21,35 @@ export default function Home() {
   const [pagedPosts, setPagedPosts] = useState<ExtendedPost[]>(
     filteredPosts?.slice(0, 10 * page)
   );
-  const searchParams = useSearchParams();
-  const filter = searchParams.get("filter");
 
   useEffect(() => {
-    data?.posts &&
-      setFilteredPosts(
-        data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
-          a.createdAt < b.createdAt ? 1 : -1
-        )
-      );
+    filter && setBreadcrumb(filter);
 
-    if (data?.posts) {
+    if (!filter) {
+      setFilteredPosts(data?.posts);
+    } else {
       if (filter == null || filter == "all") {
-        setBreadcrumb("Home");
-        setFilteredPosts(
-          data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
-            a.createdAt < b.createdAt ? 1 : -1
-          )
-        );
+        setFilteredPosts(data?.posts);
       } else if (filter == "hot") {
         setFilteredPosts(
           data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
             a.saves.length < b.saves.length ? 1 : -1
           )
         );
-      } else {
+      } else if (filter == "new") {
         setFilteredPosts(
           data?.posts
-            .filter((post: ExtendedPost) => post.type == filter)
             .sort((a: ExtendedPost, b: ExtendedPost) =>
               a.createdAt < b.createdAt ? 1 : -1
             )
+            .slice(0, 10)
+        );
+      } else {
+        setFilteredPosts(
+          data?.posts.filter((post: ExtendedPost) => post.type == filter)
         );
       }
     }
-
     // if (filter == 'all') {
     //   setFilteredPosts(
     //     data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
@@ -107,10 +103,9 @@ export default function Home() {
     //     )
     //   );
     // }
-
     // filteredPosts?.length > 0 &&
     //   setPagedPosts(filteredPosts.slice(10 * (page - 1), 10 * page));
-  }, [searchParams, filter, filteredPosts]);
+  }, [searchParams, filter, data?.posts]);
   return (
     <SidebarContainer header={true}>
       {filteredPosts

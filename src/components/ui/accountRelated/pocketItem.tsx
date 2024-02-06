@@ -31,6 +31,30 @@ export default function PocketItem({ pocket }: { pocket: ExtendedPocket }) {
     setEditOpen((prev) => !prev);
   };
 
+  const [orderIndex, setOrderIndex] = useState<number>(pocket?.orderIndex || 0);
+
+  const orderUp = () => {
+    setOrderIndex(orderIndex - 1);
+    fetch(`/api/pockets/${pocket.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ orderIndex }),
+    });
+  };
+
+  const orderDown = () => {
+    setOrderIndex(orderIndex + 1);
+    fetch(`/api/pockets/${pocket.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ orderIndex }),
+    });
+  };
+
   const onValid = (validForm: EditPocketForm) => {
     fetch(`/api/pockets/${pocket.id}`, {
       method: "PUT",
@@ -48,7 +72,7 @@ export default function PocketItem({ pocket }: { pocket: ExtendedPocket }) {
     formState: { errors },
   } = useForm<EditPocketForm>();
 
-  useEffect(() => {}, [handleSubmit, editOpen]);
+  useEffect(() => {}, [handleSubmit, editOpen, orderIndex]);
   return (
     <div className="w-full py-3 px-4 bg-gray-100 rounded-sm cursor-pointer">
       <div className="flex items-center justify-between gap-3">
@@ -73,10 +97,24 @@ export default function PocketItem({ pocket }: { pocket: ExtendedPocket }) {
               </Button>
             </form>
           ) : (
-            pocket.name
+            <span>{pocket.name}</span>
           )}
         </div>
         <div className="flex items-center gap-2">
+          <div className="h-full flex flex-col items-center justify-between gap-1">
+            <button
+              className="px-1  hover:bg-blue-200 rounded"
+              onClick={orderUp}
+            >
+              <IconChevronUp width={12} className="hover:text-blue-500" />
+            </button>
+            <button
+              className="px-1 hover:bg-blue-200 rounded"
+              onClick={orderDown}
+            >
+              <IconChevronDown width={12} className="hover:text-blue-500" />
+            </button>
+          </div>
           <Button
             size="small"
             button={true}

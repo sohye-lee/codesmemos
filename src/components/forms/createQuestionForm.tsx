@@ -1,40 +1,40 @@
-'use client';
+"use client";
 
-import { CreatePostForm } from '@/lib/types';
-import { Editor, EditorProps } from '@monaco-editor/react';
-import { useForm } from 'react-hook-form';
-import Button from '../ui/button';
-import { useState, FormEvent, useEffect } from 'react';
-import useSWR from 'swr';
-import { Language } from '@prisma/client';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import useCreate from '@/lib/useCreate';
+import { CreatePostForm } from "@/lib/types";
+import { Editor, EditorProps } from "@monaco-editor/react";
+import { useForm } from "react-hook-form";
+import Button from "../ui/button";
+import { useState, FormEvent, useEffect } from "react";
+import useSWR from "swr";
+import { Language } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import useCreate from "@/lib/useCreate";
 type IModelContentChangedEvent = /*unresolved*/ any;
 
 export default function CreateQuestionForm() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [titleLength, setTitleLength] = useState(0);
-  const { data, error } = useSWR('/api/languages');
+  const { data, error } = useSWR("/api/languages");
   const [languages, setLanguages] = useState<Language[]>(data?.languages);
-  const [content, setContent] = useState('');
-  const [title, setTitle] = useState('');
-  const [note, setNote] = useState('');
-  const [languageName, setLanguageName] = useState('javascript');
+  const [content, setContent] = useState("");
+  const [title, setTitle] = useState("");
+  const [note, setNote] = useState("");
+  const [languageName, setLanguageName] = useState("javascript");
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<CreatePostForm>({
-    mode: 'onBlur',
+    mode: "onBlur",
   });
 
   const [
     createQuestion,
     { data: createData, error: createError, loading: createLoading },
-  ] = useCreate('/api/posts');
+  ] = useCreate("/api/posts");
 
   const onChangeTitle = (e: FormEvent<HTMLInputElement>): void => {
     e.preventDefault();
@@ -63,10 +63,10 @@ export default function CreateQuestionForm() {
   };
 
   const onSubmit = () => {
-    fetch('/api/posts', {
-      method: 'POST',
+    fetch("/api/posts", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         userId: session?.user?.id!,
@@ -74,11 +74,11 @@ export default function CreateQuestionForm() {
         content,
         note,
         languageName,
-        type: 'snippet',
+        type: "snippet",
       }),
     })
       .then((res) => res.json())
-      .then((data) => router.push(`/posts/${data.post.id}`));
+      .then((data) => router.push(`/posts/${data?.post?.id}`));
   };
 
   const renderLanguages =
@@ -103,15 +103,15 @@ export default function CreateQuestionForm() {
         <label htmlFor="name">Title</label>
         <div className="p-0 m-0 relative w-full">
           <input
-            {...register('title', {
-              required: 'This field is required',
+            {...register("title", {
+              required: "This field is required",
               minLength: {
                 value: 3,
-                message: 'Min. 3 characters',
+                message: "Min. 3 characters",
               },
               maxLength: {
                 value: 100,
-                message: 'Max. 100 characters',
+                message: "Max. 100 characters",
               },
             })}
             type="text"
@@ -132,12 +132,12 @@ export default function CreateQuestionForm() {
       <div className="w-full flex flex-col">
         <label htmlFor="name">Language</label>
         <select
-          {...register('languageName', {
-            required: 'This field is required',
+          {...register("languageName", {
+            required: "This field is required",
           })}
           className="rounded border w-full border-slate-400 py-2 px-3 pr-14"
           onSelect={onSelectLanguage}
-          defaultValue={'default'}
+          defaultValue={"default"}
         >
           <option disabled value="default">
             Select
@@ -154,8 +154,8 @@ export default function CreateQuestionForm() {
         <label htmlFor="name">Description</label>
         <div className="p-0 m-0 relative w-full">
           <textarea
-            {...register('content', {
-              required: 'This field is required.',
+            {...register("content", {
+              required: "This field is required.",
             })}
             placeholder="Write a description"
             rows={12}
@@ -179,10 +179,10 @@ export default function CreateQuestionForm() {
           onChange={onChangeNote}
         ></textarea>
       </div> */}
-      <input className="hidden" {...register('type')} value="question" />
+      <input className="hidden" {...register("type")} value="question" />
       <input
         className="hidden"
-        {...register('userId')}
+        {...register("userId")}
         value={session?.user?.id}
       />
       <div className="flex justify-end">

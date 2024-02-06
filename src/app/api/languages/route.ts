@@ -1,5 +1,6 @@
 import { db } from "@/db";
 import { message } from "@/lib/constants";
+import { Language } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, res: NextResponse) {
@@ -15,7 +16,9 @@ export async function GET(req: NextRequest, res: NextResponse) {
   return NextResponse.json({
     ok: true,
     message: message.success.get,
-    languages,
+    languages: languages.sort((a: Language, b: Language) =>
+      a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
+    ),
   });
 }
 
