@@ -1,19 +1,19 @@
 // 'use client';
-import type { Metadata } from 'next';
-import { Inter, Space_Grotesk } from 'next/font/google';
-import './globals.css';
-import Providers from './providers';
-import Header from '@/components/ui/headers/header';
-import Footer from '@/components/ui/footer';
+import type { Metadata } from "next";
+import { Inter, Space_Grotesk } from "next/font/google";
+import "./globals.css";
+import Providers from "./providers";
+import Header from "@/components/ui/headers/header";
+import Footer from "@/components/ui/footer";
 // import { IconArrowUp } from '@tabler/icons-react';
 // import { useEffect, useState } from 'react';
 
-const inter = Inter({ subsets: ['latin'] });
-const spaceGrotesk = Space_Grotesk({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Pockets for Your Codes',
-  description: 'Developed by Sohye',
+  title: "Pockets for Your Codes",
+  description: "Developed by Sohye",
 };
 
 export default function RootLayout({

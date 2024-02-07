@@ -1,13 +1,16 @@
 "use client";
+
 import Container from "@/components/ui/containers/container";
 import { postType } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import CreateSnippetForm from "@/components/forms/createSnippetForm";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import CreateResourceForm from "@/components/forms/createResourceForm";
 import CreateQuestionForm from "@/components/forms/createQuestionForm";
-import useStore from "../store";
+import useStore from "@/app/store";
+import useSWR from "swr";
+import EditQuestionForm from "@/components/forms/editQuestionForm";
 
 type TabType = "snippet" | "question" | "resource";
 
@@ -22,19 +25,26 @@ interface CreatePostForm {
   languageName?: string;
 }
 
-export default function CreatePage(props: any) {
+export default function EditPage() {
   const { breadcrumb, setBreadcrumb } = useStore();
   const searchParams = useSearchParams();
   const type = searchParams.get("type")?.toString();
+
   const [tab, setTab] = useState(type || "snippet");
+
+  const path = usePathname();
+  const [post, setPost] = useState();
+  const { data } = useSWR(`/api/posts/${path.split("/")[2]}`);
 
   const activeStyle = "border-b-none bg-white";
   const inactiveStyle = "border-b border-slate-400 bg-gray-200 text-gray-600";
 
   useEffect(() => {
-    setBreadcrumb("create");
+    setBreadcrumb(type + "");
+    data && data?.post && setPost(data?.post);
+
     type && type != null && setTab(type);
-  }, [setBreadcrumb, type, searchParams]);
+  }, [setBreadcrumb, type, searchParams, data?.post]);
 
   return (
     <Container width="small" bgColor="bg-blue-100 ">
@@ -69,7 +79,9 @@ export default function CreatePage(props: any) {
           </div>
           <div className="p-4 bg-white">
             {tab == "snippet" && <CreateSnippetForm />}
-            {tab == "question" && <CreateQuestionForm />}
+            {tab == "question" && (
+              <EditQuestionForm method="edit" post={post} />
+            )}
             {tab == "resource" && <CreateResourceForm />}
           </div>
         </div>

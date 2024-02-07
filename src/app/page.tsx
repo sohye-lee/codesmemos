@@ -7,30 +7,35 @@ import PostListItem from "@/components/ui/postRelated/postLIstItem";
 import { ExtendedPost } from "@/lib/types";
 import Loading from "./loading";
 import { useSearchParams } from "next/navigation";
-import { set } from "react-hook-form";
 
 export default function Home() {
   const searchParams = useSearchParams();
   const filter = searchParams.get("filter");
   const { breadcrumb, setBreadcrumb } = useStore();
-  const [page, setPage] = useState(1);
   const { data, error } = useSWR("/api/posts");
   const [filteredPosts, setFilteredPosts] = useState<ExtendedPost[]>(
     data?.posts
   );
-  const [pagedPosts, setPagedPosts] = useState<ExtendedPost[]>(
-    filteredPosts?.slice(0, 10 * page)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageCount, setPageCount] = useState(
+    Math.ceil(filteredPosts?.length / 10)
   );
 
   useEffect(() => {
     filter && setBreadcrumb(filter);
 
-    if (!filter) {
-      setFilteredPosts(data?.posts);
+    if (filteredPosts?.length > 0) {
+      setPageCount(Math.ceil(filteredPosts?.length / 10));
+    }
+
+    if (!filter || filter == null || filter == "all") {
+      setFilteredPosts(
+        data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
+          a.createdAt < b.createdAt ? 1 : -1
+        )
+      );
     } else {
-      if (filter == null || filter == "all") {
-        setFilteredPosts(data?.posts);
-      } else if (filter == "hot") {
+      if (filter == "hot") {
         setFilteredPosts(
           data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
             a.saves.length < b.saves.length ? 1 : -1
@@ -46,71 +51,20 @@ export default function Home() {
         );
       } else {
         setFilteredPosts(
-          data?.posts.filter((post: ExtendedPost) => post.type == filter)
+          data?.posts
+            .filter((post: ExtendedPost) => post.type == filter)
+            .sort((a: ExtendedPost, b: ExtendedPost) =>
+              a.createdAt < b.createdAt ? 1 : -1
+            )
         );
       }
     }
-    // if (filter == 'all') {
-    //   setFilteredPosts(
-    //     data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
-    //       a.createdAt < b.createdAt ? 1 : -1
-    //     )
-    //   );
-    // } else if (filter == 'snippet') {
-    //   setFilteredPosts(
-    //     data?.posts
-    //       .filter((post: ExtendedPost) => post.type == 'snippet')
-    //       .sort((a: ExtendedPost, b: ExtendedPost) =>
-    //         a.createdAt < b.createdAt ? 1 : -1
-    //       )
-    //   );
-    //   // setBreadcrumb('Snippet');
-    // } else if (filter == 'question') {
-    //   setFilteredPosts(
-    //     data?.posts
-    //       .filter((post: ExtendedPost) => post.type == 'question')
-    //       .sort((a: ExtendedPost, b: ExtendedPost) =>
-    //         a.createdAt < b.createdAt ? 1 : -1
-    //       )
-    //   );
-    //   // setBreadcrumb('Snippet');
-    // } else if (filter == 'resource') {
-    //   setFilteredPosts(
-    //     data?.posts
-    //       .filter((post: ExtendedPost) => post.type == 'resource')
-    //       .sort((a: ExtendedPost, b: ExtendedPost) =>
-    //         a.createdAt < b.createdAt ? 1 : -1
-    //       )
-    //   );
-    // } else if (filter == 'hot') {
-    //   setFilteredPosts(
-    //     data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
-    //       a.saves.length < b.saves.length ? 1 : -1
-    //     )
-    //   );
-    // } else if (filter == 'new') {
-    //   setFilteredPosts(
-    //     data?.posts
-    //       .sort((a: ExtendedPost, b: ExtendedPost) =>
-    //         a.createdAt < b.createdAt ? 1 : -1
-    //       )
-    //       .slice(0, 10)
-    //   );
-    // } else if (filter == null) {
-    //   setFilteredPosts(
-    //     data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
-    //       a.createdAt < b.createdAt ? 1 : -1
-    //     )
-    //   );
-    // }
-    // filteredPosts?.length > 0 &&
-    //   setPagedPosts(filteredPosts.slice(10 * (page - 1), 10 * page));
-  }, [searchParams, filter, data?.posts]);
+  }, [searchParams, filter, data?.posts, pageCount]);
   return (
     <SidebarContainer header={true}>
       {filteredPosts
         ? filteredPosts
-            // .slice(10 * (page - 1), 10 * page)
+            .slice(10 * (pageCount - 1), 10 * pageCount)
             .map((post: ExtendedPost) => (
               <PostListItem post={post} key={post.id} />
             ))

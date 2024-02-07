@@ -6,23 +6,25 @@ import {
   Save,
   Topic,
   User,
-} from '@prisma/client';
+} from "@prisma/client";
 
-export type accountType = 'member' | 'admin';
-export type postType = 'snippet' | 'question' | 'resource';
-export type saveType = 'save' | 'vote';
-export type linkType = 'url' | 'video';
+export type accountType = "member" | "admin";
+export type postType = "snippet" | "question" | "resource";
+export type saveType = "save" | "vote";
+export type linkType = "url" | "video";
 
-export type WidthType = 'full' | 'wide' | 'medium' | 'small';
+export type WidthType = "full" | "wide" | "medium" | "small";
 export type breadcrumbType =
-  | 'Home'
-  | 'Snippets'
-  | 'Questions'
-  | 'Resources'
-  | 'New'
-  | 'Hot'
-  | 'By Topic'
-  | 'By Language';
+  | "Home"
+  | "Snippets"
+  | "Questions"
+  | "Resources"
+  | "New"
+  | "Hot"
+  | "By Topic"
+  | "By Language"
+  | "Feedback"
+  | "Create";
 
 export interface CreatePostForm {
   title: string;
@@ -31,10 +33,20 @@ export interface CreatePostForm {
   note?: string;
   link?: string;
   linkType?: string;
-  topicSlug?: string;
+  // topicSlug?: string;
   languageName?: string;
   userId: string;
 }
+
+export interface EditPostFormProps {
+  method: "create" | "edit";
+  post?: ExtendedPost;
+}
+
+// export interface EditPostForm {
+//   method: "create" | "edit";
+//   post?: ExtendedPost;
+// }
 
 export interface ExtendedPost extends Post {
   user: User;
