@@ -1,5 +1,5 @@
-import { ExtendedPocket } from "@/lib/types";
-import { Post } from "@prisma/client";
+import { ExtendedPocket } from '@/lib/types';
+import { Post } from '@prisma/client';
 import {
   IconFolder,
   IconFolderOpen,
@@ -8,14 +8,14 @@ import {
   IconChevronUp,
   IconDoorExit,
   IconCheck,
-} from "@tabler/icons-react";
-import { useEffect, useState } from "react";
-import SimplePostItem from "./simplePostItem";
-import NoDataMessage from "../messages/noData";
-import Button from "../button";
-import { useForm } from "react-hook-form";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+} from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
+import SimplePostItem from './simplePostItem';
+import NoDataMessage from '../messages/noData';
+import Button from '../button';
+import { useForm } from 'react-hook-form';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 interface EditPocketForm {
   name: string;
 }
@@ -34,32 +34,32 @@ export default function PocketItem({ pocket }: { pocket: ExtendedPocket }) {
   const [orderIndex, setOrderIndex] = useState<number>(pocket?.orderIndex || 0);
 
   const orderUp = () => {
-    setOrderIndex(orderIndex - 1);
+    // setOrderIndex(orderIndex - 1);
     fetch(`/api/pockets/${pocket.id}`, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ orderIndex }),
+      body: JSON.stringify({ orderIndex: orderIndex - 1 }),
     });
   };
 
   const orderDown = () => {
-    setOrderIndex(orderIndex + 1);
+    // setOrderIndex(orderIndex + 1);
     fetch(`/api/pockets/${pocket.id}`, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ orderIndex }),
+      body: JSON.stringify({ orderIndex: orderIndex + 1 }),
     });
   };
 
   const onValid = (validForm: EditPocketForm) => {
     fetch(`/api/pockets/${pocket.id}`, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(validForm),
     });
@@ -72,7 +72,9 @@ export default function PocketItem({ pocket }: { pocket: ExtendedPocket }) {
     formState: { errors },
   } = useForm<EditPocketForm>();
 
-  useEffect(() => {}, [handleSubmit, editOpen, orderIndex]);
+  useEffect(() => {
+    setOrderIndex(pocket?.orderIndex || 0);
+  }, [handleSubmit, editOpen, orderIndex, setOrderIndex]);
   return (
     <div className="w-full py-3 px-4 bg-gray-100 rounded-sm cursor-pointer">
       <div className="flex items-center justify-between gap-3">
@@ -88,7 +90,7 @@ export default function PocketItem({ pocket }: { pocket: ExtendedPocket }) {
               className="w-full flex items-stretch gap-2"
             >
               <input
-                {...register("name")}
+                {...register('name')}
                 defaultValue={pocket.name}
                 className="w-full border border-gray-600 bg-white rounded focus:ring focus:ring-blue-500 py-1 px-3"
               />
@@ -118,7 +120,7 @@ export default function PocketItem({ pocket }: { pocket: ExtendedPocket }) {
           <Button
             size="small"
             button={true}
-            mode={editOpen ? "neutral" : "save"}
+            mode={editOpen ? 'neutral' : 'save'}
             onClick={editOpenHandler}
           >
             {editOpen ? <IconDoorExit width={16} /> : <IconEdit width={16} />}

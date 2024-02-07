@@ -168,6 +168,10 @@ export const breadcrumbs: {
     url: '/topics',
     name: 'By Topic',
   },
+  create: {
+    url: '/create',
+    name: 'Create',
+  },
   feedback: {
     url: '/feedback',
     name: 'Feedback',

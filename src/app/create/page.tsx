@@ -1,18 +1,19 @@
-"use client";
+'use client';
 
-import Button from "@/components/ui/button";
-import Container from "@/components/ui/containers/container";
-import { postType } from "@/lib/types";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Editor } from "@monaco-editor/react";
-import CreateSnippetForm from "@/components/forms/createSnippetForm";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { getStaticPaths } from "next/dist/build/templates/pages";
-import CreateResourceForm from "@/components/forms/createResourceForm";
-import CreateQuestionForm from "@/components/forms/createQuestionForm";
+import Button from '@/components/ui/button';
+import Container from '@/components/ui/containers/container';
+import { postType } from '@/lib/types';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Editor } from '@monaco-editor/react';
+import CreateSnippetForm from '@/components/forms/createSnippetForm';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { getStaticPaths } from 'next/dist/build/templates/pages';
+import CreateResourceForm from '@/components/forms/createResourceForm';
+import CreateQuestionForm from '@/components/forms/createQuestionForm';
+import useStore from '../store';
 
-type TabType = "snippet" | "question" | "resource";
+type TabType = 'snippet' | 'question' | 'resource';
 
 interface CreatePostForm {
   title: string;
@@ -26,15 +27,23 @@ interface CreatePostForm {
 }
 
 export default function CreatePage(props: any) {
-  const type = props.searchParams.type;
-  const [tab, setTab] = useState<TabType>(type || "snippet");
+  const { breadcrumb, setBreadcrumb } = useStore();
+  const searchParams = useSearchParams();
+  const type = searchParams.get('type')?.toString();
+  const [tab, setTab] = useState(type || 'snippet');
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<CreatePostForm>();
-  const activeStyle = "border-b-none bg-white";
-  const inactiveStyle = "border-b border-slate-400 bg-gray-200 text-gray-600";
+  const activeStyle = 'border-b-none bg-white';
+  const inactiveStyle = 'border-b border-slate-400 bg-gray-200 text-gray-600';
+
+  useEffect(() => {
+    setBreadcrumb('create');
+    type && type != null && setTab(type);
+  }, [setBreadcrumb, type, searchParams]);
+
   return (
     <Container width="small" bgColor="bg-blue-100 ">
       <div className="w-full flex flex-col gap-3 p-3">
@@ -43,33 +52,33 @@ export default function CreatePage(props: any) {
           <div className="w-full flex items-stretch">
             <div
               className={`w-1/3 py-2 px-3 text-md  ${
-                tab == "snippet" ? activeStyle : inactiveStyle
+                tab == 'snippet' ? activeStyle : inactiveStyle
               }`}
-              onClick={() => setTab("snippet")}
+              onClick={() => setTab('snippet')}
             >
               Snippet
             </div>
             <div
               className={`w-1/3 py-2 px-3  text-md border-l border-slate-400 ${
-                tab == "question" ? activeStyle : inactiveStyle
+                tab == 'question' ? activeStyle : inactiveStyle
               }`}
-              onClick={() => setTab("question")}
+              onClick={() => setTab('question')}
             >
               Question
             </div>
             <div
               className={`w-1/3 py-2 px-3  text-md border-l border-slate-400 ${
-                tab == "resource" ? activeStyle : inactiveStyle
+                tab == 'resource' ? activeStyle : inactiveStyle
               }`}
-              onClick={() => setTab("resource")}
+              onClick={() => setTab('resource')}
             >
               Resource
             </div>
           </div>
           <div className="p-4 bg-white">
-            {tab == "snippet" && <CreateSnippetForm />}
-            {tab == "question" && <CreateQuestionForm />}
-            {tab == "resource" && <CreateResourceForm />}
+            {tab == 'snippet' && <CreateSnippetForm />}
+            {tab == 'question' && <CreateQuestionForm />}
+            {tab == 'resource' && <CreateResourceForm />}
           </div>
         </div>
       </div>

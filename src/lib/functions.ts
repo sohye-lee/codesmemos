@@ -1,5 +1,5 @@
-import useStore from "@/app/store";
-import { CommentWithNode, ExtendedComment } from "./types";
+import useStore from '@/app/store';
+import { CommentWithNode, ExtendedComment } from './types';
 
 export const dateFormat = (datetime: Date) => {
   return new Date(datetime).toLocaleDateString();
@@ -112,7 +112,7 @@ export function organizeComments(comments: ExtendedComment[]) {
 }
 
 export const capitalize = (string: string) => {
-  let words = string.split(" ");
+  let words = string.split(' ');
   let capitalized = [];
   for (var w of words) {
     const firstLetter = w[0].toUpperCase();
@@ -120,21 +120,22 @@ export const capitalize = (string: string) => {
     const newW = firstLetter + theRest;
     capitalized.push(newW);
   }
-  return capitalized.join(" ");
+  return capitalized.join(' ');
 };
 
 export const getYoutubeVideo = (url: string) => {
-  const videoId = url.split("watch?v=")[1];
+  const videoId = url.split('.be/')[1];
   if (videoId == null) {
-    return "/images/video_not_found.jpg";
+    return '/images/video_not_found.jpg';
   }
   return `https://www.youtube.com/embed/${videoId}`;
 };
 
 export const getYoutubeThumbnail = (url: string) => {
-  const videoId = url.split("watch?v=")[1];
+  let videoId = url.split('.be/')[1];
+  videoId = videoId.split('?si')[0];
   if (videoId == null) {
-    return "/images/video_not_found.jpg";
+    return '/images/video_not_found.jpg';
   }
   return `https://img.youtube.com/vi/${videoId}/0.jpg`;
 };

@@ -7,19 +7,21 @@ import {
   IconFolder,
   IconPlus,
   IconCheck,
+  IconEdit,
 } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import useSWR from 'swr';
 import { FormEvent, useEffect, useState } from 'react';
 import useCreate from '@/lib/useCreate';
 import { signIn } from '@/app/actions';
-import { organizeComments } from '@/lib/functions';
+import { getYoutubeVideo, organizeComments } from '@/lib/functions';
 import { useForm } from 'react-hook-form';
 import Button from '../button';
 import CommentItem from './commentItem';
 import { useRouter } from 'next/navigation';
 import PostInfo from './postInfo';
 import NoDataMessage from '../messages/noData';
+import Link from 'next/link';
 
 interface PostItemProps {
   post: ExtendedPost;
@@ -195,12 +197,59 @@ export default function PostItem({ post }: PostItemProps) {
 
   return (
     <>
-      <div className="border border-slate-500 border-r-2 border-b-2 p-3 py-2 pb-1 flex flex-col gap-3">
+      <div className="border border-slate-500 border-r-2 border-b-2 p-3 py-2 pb-1 flex flex-col gap-3 relative">
+        {session?.user?.id == post.userId && (
+          <>
+            <Button
+              size="small"
+              mode="black"
+              button={false}
+              link={`/posts/${post.id}/edit`}
+              addClass="absolute top-2 right-2 "
+              data-tooltip-target="tooltip-edit"
+            >
+              <IconEdit width={16} />
+            </Button>
+            <div
+              id="tooltip-edit"
+              role="tooltip"
+              className="absolute z-10 top-10 right-0 invisible inline-block px-3 py-2 text-xs font-medium text-white transition-opacity duration-300 bg-gray-600 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+            >
+              Edit this post
+              <div className="tooltip-arrow" data-popper-arrow></div>
+            </div>
+          </>
+        )}
         <PostInfo post={post} />
         <h2 className="text-lg font-medium">{post.title}</h2>
-        <div className="text-sm p-2 bg-gray-200">
-          <pre className=" text-wrap">{post.content}</pre>
-        </div>
+        {post.content && post.content.length > 0 && (
+          <div className="text-sm p-2 bg-gray-200">
+            <pre className=" text-wrap">
+              {post.content.length > 300
+                ? post.content.slice(0, 300) + '...'
+                : post.content}
+            </pre>
+          </div>
+        )}
+        {post.link && post.link.length > 0 && (
+          <Link
+            href={post.link || '#'}
+            className="text-sm p-2 bg-blue-100 underline hover:text-blue-600"
+          >
+            <span className=" text-wrap">{post.link}</span>
+          </Link>
+        )}
+        {post.link && post.linkType == 'video' && (
+          <div className="aspect-video">
+            <iframe
+              src={getYoutubeVideo(post.link || '')}
+              className="w-full h-full"
+            />
+          </div>
+        )}
+        {post.note && post.note.length > 0 && (
+          <div className="w-full bg-gray-200 p-2">{post.note}</div>
+        )}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div

@@ -1,21 +1,21 @@
-"use client";
-import Link from "next/link";
-import Profile from "./profile";
-import { IconPlus, IconDotsVertical } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import Logo from "public/images/logo.svg";
-import Image from "next/image";
-import NavItem from "./navitem";
-import Button from "../button";
-import { signIn, signOut } from "@/app/actions";
-import NavSubItem from "./navSubitem";
-import { FormEvent, Key, useEffect, useRef, useState } from "react";
-import useStore from "@/app/store";
-import { breadcrumbs, paths } from "@/lib/constants";
-import { usePathname, useRouter } from "next/navigation";
-import Loading from "@/app/loading";
-import MobileHeader from "./mobileHeader";
-import Breadcrumb from "./breadcrumb";
+'use client';
+import Link from 'next/link';
+import Profile from './profile';
+import { IconPlus, IconDotsVertical } from '@tabler/icons-react';
+import { useSession } from 'next-auth/react';
+import Logo from 'public/images/logo-black.svg';
+import Image from 'next/image';
+import NavItem from './navitem';
+import Button from '../button';
+import { signIn, signOut } from '@/app/actions';
+import NavSubItem from './navSubitem';
+import { FormEvent, Key, useEffect, useRef, useState } from 'react';
+import useStore from '@/app/store';
+import { breadcrumbs, paths } from '@/lib/constants';
+import { usePathname, useRouter } from 'next/navigation';
+import Loading from '@/app/loading';
+import MobileHeader from './mobileHeader';
+import Breadcrumb from './breadcrumb';
 
 export default function Header() {
   const { data: session, status } = useSession();
@@ -37,7 +37,7 @@ export default function Header() {
     setBreadcrumb(breadcrumbs[e.currentTarget.value].name);
   };
   function assertIsNode(e: EventTarget | null): asserts e is Node {
-    if (!e || !("nodeType" in e)) {
+    if (!e || !('nodeType' in e)) {
       throw new Error(`Node expected`);
     }
   }
@@ -68,8 +68,8 @@ export default function Header() {
       }
     }
 
-    if (typeof window !== "undefined") {
-      window.addEventListener("click", handleClick);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('click', handleClick);
     }
   }, [openProfile, openCreate, breadcrumb, setBreadcrumb, setUrl]);
 

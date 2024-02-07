@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-"use client";
-import useStore from "@/app/store";
-import { breadcrumbs } from "@/lib/constants";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { FormEvent, useEffect } from "react";
+'use client';
+import useStore from '@/app/store';
+import { breadcrumbs } from '@/lib/constants';
+import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { FormEvent, useEffect } from 'react';
 
 export default function Breadcrumb() {
   const { breadcrumb, setBreadcrumb } = useStore();
@@ -25,14 +25,15 @@ export default function Breadcrumb() {
       onChange={onChange}
       value={breadcrumb}
     >
-      <option value={"home"}>Home</option>
-      <option value={"snippet"}>Snippets</option>
-      <option value={"question"}>Questions</option>
-      <option value={"resource"}>Resources</option>
-      <option value={"hot"}>Hot</option>
-      <option value={"new"}>New</option>
-      <option value={"languages"}>By Language</option>
-      <option value={"feedback"}>Feedback</option>
+      <option value={'home'}>Home</option>
+      <option value={'snippet'}>Snippets</option>
+      <option value={'question'}>Questions</option>
+      <option value={'resource'}>Resources</option>
+      <option value={'hot'}>Hot</option>
+      <option value={'new'}>New</option>
+      <option value={'languages'}>By Language</option>
+      <option value={'create'}>Create</option>
+      <option value={'feedback'}>Feedback</option>
     </select>
   );
 }

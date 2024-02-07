@@ -37,7 +37,7 @@ export default function SidebarContainer({
   // }, [style]);
 
   return (
-    <div className="w-full flex flex-col items-center pt-24 pb-18">
+    <div className="w-full flex flex-col items-center pt-24 pb-20">
       <div className="flex gap-3 px-4 w-full sm:max-w-full md:max-w-[899px]">
         <div className="flex flex-col w-full lg:w-4/5 gap-3 mb-10">
           {header && type == 'default' ? (

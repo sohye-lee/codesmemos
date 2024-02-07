@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { CreatePostForm, postType } from "@/lib/types";
-import { Editor, EditorProps } from "@monaco-editor/react";
-import { useForm } from "react-hook-form";
-import Button from "../ui/button";
-import { useState, FormEvent, useEffect } from "react";
-import useSWR from "swr";
-import { Language } from "@prisma/client";
-import { useSession } from "next-auth/react";
-import { signIn, signOut } from "@/app/actions";
-import { useRouter } from "next/navigation";
-import useCreate from "@/lib/useCreate";
+import { CreatePostForm, postType } from '@/lib/types';
+import { Editor, EditorProps } from '@monaco-editor/react';
+import { useForm } from 'react-hook-form';
+import Button from '../ui/button';
+import { useState, FormEvent, useEffect } from 'react';
+import useSWR from 'swr';
+import { Language } from '@prisma/client';
+import { useSession } from 'next-auth/react';
+import { signIn, signOut } from '@/app/actions';
+import { useRouter } from 'next/navigation';
+import useCreate from '@/lib/useCreate';
 type IModelContentChangedEvent = /*unresolved*/ any;
 
 export default function CreateResourceForm() {
@@ -18,23 +18,23 @@ export default function CreateResourceForm() {
 
   const router = useRouter();
   const [titleLength, setTitleLength] = useState(0);
-  const { data, error } = useSWR("/api/languages");
+  const { data, error } = useSWR('/api/languages');
   const [
     createResource,
     { data: createData, error: createError, loading: createLoading },
-  ] = useCreate("/api/posts");
+  ] = useCreate('/api/posts');
   const [languages, setLanguages] = useState<Language[]>(data?.languages);
-  const [content, setContent] = useState("");
-  const [title, setTitle] = useState("");
-  const [note, setNote] = useState("");
-  const [languageName, setLanguageName] = useState("javascript");
+  const [content, setContent] = useState('');
+  const [title, setTitle] = useState('');
+  const [note, setNote] = useState('');
+  const [languageName, setLanguageName] = useState('javascript');
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<CreatePostForm>({
-    mode: "onBlur",
+    mode: 'onBlur',
   });
 
   const onChangeTitle = (e: FormEvent<HTMLInputElement>): void => {
@@ -60,6 +60,7 @@ export default function CreateResourceForm() {
 
   const onValid = (validForm: CreatePostForm) => {
     createResource(validForm);
+    createData?.ok && router.push(`/posts/${createData?.post.id}`);
   };
 
   const renderLanguages =
@@ -77,7 +78,7 @@ export default function CreateResourceForm() {
   useEffect(() => {
     data && setLanguages(data.languages);
 
-    createData.ok && router.push(`/posts/${createData?.post.id}`);
+    createData?.ok && router.push(`/posts/${createData?.post.id}`);
   }, [setLanguages, setLanguageName]);
 
   return (
@@ -86,15 +87,15 @@ export default function CreateResourceForm() {
         <label htmlFor="name">Title</label>
         <div className="p-0 m-0 relative w-full">
           <input
-            {...register("title", {
-              required: "This field is required",
+            {...register('title', {
+              required: 'This field is required',
               minLength: {
                 value: 3,
-                message: "Min. 3 characters",
+                message: 'Min. 3 characters',
               },
               maxLength: {
                 value: 100,
-                message: "Max. 100 characters",
+                message: 'Max. 100 characters',
               },
             })}
             type="text"
@@ -115,12 +116,12 @@ export default function CreateResourceForm() {
       <div className="w-full flex flex-col">
         <label htmlFor="name">Language</label>
         <select
-          {...register("languageName", {
-            required: "This field is required",
+          {...register('languageName', {
+            required: 'This field is required',
           })}
           className="rounded border w-full border-slate-400 py-2 px-3 pr-14"
           // onSelect={onSelectLanguage}
-          defaultValue={"default"}
+          defaultValue={'default'}
         >
           <option disabled value="default">
             Select
@@ -135,13 +136,15 @@ export default function CreateResourceForm() {
       </div>
       <div className="w-full flex flex-col">
         <label htmlFor="name">Useful Resource</label>
-        <textarea
-          {...register("link", { required: true })}
+        <input
+          {...register('link', { required: true })}
           placeholder="Link"
-          rows={2}
           className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
           // onChange={onChangeNote}
-        ></textarea>
+        />
+        <p className="text-blue-400 text-xs font-medium mt-[4px]">
+          *Copy a general video url here. Do not use url for embedding.
+        </p>
         {errors.link ? (
           <span className="text-danger-400 text-[14px]">
             {errors.link.message}
@@ -151,10 +154,10 @@ export default function CreateResourceForm() {
       <div className="w-full flex flex-col">
         <label htmlFor="name">Link Type</label>
         <select
-          {...register("linkType")}
+          {...register('linkType')}
           className="rounded border w-full border-slate-400 py-2 px-3 pr-14"
           // onSelect={onSelectLanguage}
-          defaultValue={"default"}
+          defaultValue={'default'}
         >
           <option disabled value="default">
             Select
@@ -166,18 +169,18 @@ export default function CreateResourceForm() {
       <div className="w-full flex flex-col">
         <label htmlFor="name">Note</label>
         <textarea
-          {...register("note")}
+          {...register('note')}
           placeholder="(optional)"
           rows={2}
           className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
-          onChange={onChangeNote}
+          // onChange={onChangeNote}
         ></textarea>
       </div>
-      <input className="hidden" {...register("type")} value="resource" />
-      <input className="hidden" {...register("content")} value=" " />
+      <input className="hidden" {...register('type')} value="resource" />
+      <input className="hidden" {...register('content')} value="" />
       <input
         className="hidden"
-        {...register("userId")}
+        {...register('userId')}
         value={session?.user?.id}
       />
       <div className="flex justify-end">
