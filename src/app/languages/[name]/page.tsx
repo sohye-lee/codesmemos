@@ -7,6 +7,7 @@ import { ExtendedPost } from "@/lib/types";
 import { notFound, useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
+import useStore from "@/app/store";
 
 export default function LanguageShoPage() {
   const params = useParams();
@@ -17,8 +18,10 @@ export default function LanguageShoPage() {
   const [filteredPosts, setFilteredPosts] = useState<ExtendedPost[]>([]);
   const searchParams = useSearchParams();
   const filter = searchParams.get("filter");
+  const { setBreadcrumb } = useStore();
 
   useEffect(() => {
+    setBreadcrumb("languages");
     data &&
       data?.language &&
       data?.language.posts &&
@@ -51,7 +54,7 @@ export default function LanguageShoPage() {
         )
       );
     }
-  }, [data, setFilteredPosts]);
+  }, [data, setFilteredPosts, setBreadcrumb, filter]);
 
   return (
     <>

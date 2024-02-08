@@ -1,29 +1,29 @@
-'use client';
+"use client";
 
-import Container from '@/components/ui/containers/container';
-import ContainerHeader from '@/components/ui/containers/containerHeader';
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import useSWR from 'swr';
+import Container from "@/components/ui/containers/container";
+import ContainerHeader from "@/components/ui/containers/containerHeader";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
 import {
   IconCode,
   IconPencilQuestion,
   IconPencil,
   IconBookmark,
   IconMessage,
-} from '@tabler/icons-react';
+} from "@tabler/icons-react";
 import {
   uniqueNamesGenerator,
   adjectives,
   animals,
-} from 'unique-names-generator';
-import { useForm } from 'react-hook-form';
-import Button from '@/components/ui/button';
-import PostListItem from '@/components/ui/postRelated/postLIstItem';
-import { ExtendedPost, ExtendedUser } from '@/lib/types';
-import Loading from '@/app/loading';
+} from "unique-names-generator";
+import { useForm } from "react-hook-form";
+import Button from "@/components/ui/button";
+import PostListItem from "@/components/ui/postRelated/postLIstItem";
+import { ExtendedPost, ExtendedUser } from "@/lib/types";
+import Loading from "@/app/loading";
 
 interface UsernameUpdateForm {
   username: string;
@@ -34,7 +34,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const { id } = useParams();
   const searchParams = useSearchParams();
-  const filter = searchParams.get('filter');
+  const filter = searchParams.get("filter");
   const [filteredPosts, setFilteredPosts] = useState<ExtendedPost[]>([]);
   const { data, error } = useSWR(`/api/users/${id}`);
   const { data: postsData, error: postsError } = useSWR(
@@ -51,15 +51,15 @@ export default function ProfilePage() {
   const uniqueName: string = uniqueNamesGenerator({
     dictionaries: [adjectives, animals],
     length: 2,
-    separator: '_',
+    separator: "_",
   });
   const [popupOpen, setPopupOpen] = useState(false);
 
   const onValid = (validForm: UsernameUpdateForm) => {
     fetch(`/api/users/${session?.user?.id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(validForm),
     }).then((res) => router.refresh());
@@ -78,46 +78,46 @@ export default function ProfilePage() {
     );
 
   useEffect(() => {
-    data ? setUser(data?.user) : console.log('no data');
+    data ? setUser(data?.user) : console.log("no data");
     postsData && setPosts(postsData?.posts);
     // setStoreState({...setStoreState, breadcrumb:'Home'});
-    if (filter == 'all') {
+    if (filter == "all") {
       setFilteredPosts(
         postsData?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
           a.createdAt < b.createdAt ? 1 : -1
         )
       );
-    } else if (filter == 'snippet') {
+    } else if (filter == "snippet") {
       setFilteredPosts(
         postsData?.posts
-          .filter((post: ExtendedPost) => post.type == 'snippet')
+          .filter((post: ExtendedPost) => post.type == "snippet")
           .sort((a: ExtendedPost, b: ExtendedPost) =>
             a.createdAt < b.createdAt ? 1 : -1
           )
       );
-    } else if (filter == 'question') {
+    } else if (filter == "question") {
       setFilteredPosts(
         postsData?.posts
-          .filter((post: ExtendedPost) => post.type == 'question')
+          .filter((post: ExtendedPost) => post.type == "question")
           .sort((a: ExtendedPost, b: ExtendedPost) =>
             a.createdAt < b.createdAt ? 1 : -1
           )
       );
-    } else if (filter == 'resource') {
+    } else if (filter == "resource") {
       setFilteredPosts(
         postsData?.posts
-          .filter((post: ExtendedPost) => post.type == 'resource')
+          .filter((post: ExtendedPost) => post.type == "resource")
           .sort((a: ExtendedPost, b: ExtendedPost) =>
             a.createdAt < b.createdAt ? 1 : -1
           )
       );
-    } else if (filter == 'hot') {
+    } else if (filter == "hot") {
       setFilteredPosts(
         postsData?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
           a.saves.length > b.saves.length ? 1 : -1
         )
       );
-    } else if (filter == 'new') {
+    } else if (filter == "new") {
       setFilteredPosts(
         postsData?.posts
           .sort((a: ExtendedPost, b: ExtendedPost) =>
@@ -137,51 +137,53 @@ export default function ProfilePage() {
   return (
     <Container width="medium">
       {popupOpen ? (
-        <div className="fixed z-100 top-0 left-0 w-screen h-screen bg-slate-600 bg-opacity-20  flex items-center justify-center">
-          <form
-            onSubmit={handleSubmit(onValid)}
-            className="bg-white px-4 py-5 flex flex-col gap-3 rounded-sm"
-          >
-            <div className="w-full flex flex-col">
-              <label htmlFor="name">Set your username</label>
-              <div className="p-0 m-0 relative w-full">
-                <input
-                  {...register('username', {
-                    minLength: {
-                      value: 3,
-                      message: 'Min. 3 characters',
-                    },
-                    maxLength: {
-                      value: 40,
-                      message: 'Max. 40 characters',
-                    },
-                  })}
-                  type="text"
-                  placeholder="Snippet's Title"
-                  className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
-                  defaultValue={user?.username || uniqueName}
-                />
+        <div className="fixed z-[100] top-0 left-0 w-screen h-screen bg-slate-600 bg-opacity-20 flex justify-center pt-[25vh]">
+          <div>
+            <form
+              onSubmit={handleSubmit(onValid)}
+              className="bg-white px-4 py-5 flex flex-col gap-3 rounded-sm "
+            >
+              <div className="w-full flex flex-col">
+                <label htmlFor="name">Set your username</label>
+                <div className="p-0 m-0 relative w-full">
+                  <input
+                    {...register("username", {
+                      minLength: {
+                        value: 3,
+                        message: "Min. 3 characters",
+                      },
+                      maxLength: {
+                        value: 40,
+                        message: "Max. 40 characters",
+                      },
+                    })}
+                    type="text"
+                    placeholder="Snippet's Title"
+                    className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
+                    defaultValue={user?.username || uniqueName}
+                  />
+                </div>
+                {errors.username ? (
+                  <span className="text-danger-400 text-[14px]">
+                    {errors.username.message}
+                  </span>
+                ) : null}
               </div>
-              {errors.username ? (
-                <span className="text-danger-400 text-[14px]">
-                  {errors.username.message}
-                </span>
-              ) : null}
-            </div>
-            <div className="flex justify-end gap-3">
-              <Button
-                size="small"
-                mode="neutral"
-                button={true}
-                onClick={() => setPopupOpen(false)}
-              >
-                cancel
-              </Button>
-              <Button size="small" mode="black" button={true}>
-                Update
-              </Button>
-            </div>
-          </form>
+              <div className="flex justify-end gap-3">
+                <Button
+                  size="small"
+                  mode="neutral"
+                  button={true}
+                  onClick={() => setPopupOpen(false)}
+                >
+                  cancel
+                </Button>
+                <Button size="small" mode="black" button={true}>
+                  Update
+                </Button>
+              </div>
+            </form>
+          </div>
         </div>
       ) : null}
       <div className="w-full flex flex-col items-center ">
@@ -197,7 +199,7 @@ export default function ProfilePage() {
                   {user?.image ? (
                     <>
                       <Image
-                        src={user?.image + ''}
+                        src={user?.image + ""}
                         alt="avatar"
                         className=" object-fill"
                         width="60"
@@ -230,7 +232,7 @@ export default function ProfilePage() {
                         <span className="text-white text-[12px]">Snippets</span>
                       </div>
                       <span className="text-blue-500 text-[11px] border border-blue-600 px-2 w-1/3 flex items-center rounded-r">
-                        {user?.posts.filter((p) => p.type === 'snippet').length}
+                        {user?.posts.filter((p) => p.type === "snippet").length}
                       </span>
                     </div>
                     <div className="flex items-stretch gap-0 w-full">
@@ -246,7 +248,7 @@ export default function ProfilePage() {
                       </div>
                       <span className="text-blue-500 text-[11px] border border-blue-600 px-2 w-1/3 flex items-center rounded-r">
                         {
-                          user?.posts.filter((p) => p.type === 'question')
+                          user?.posts.filter((p) => p.type === "question")
                             .length
                         }
                       </span>
@@ -264,7 +266,7 @@ export default function ProfilePage() {
                       </div>
                       <span className="text-blue-500 text-[11px] border border-blue-600 px-2 w-1/3 flex items-center rounded-r">
                         {
-                          user?.posts.filter((p) => p.type === 'resource')
+                          user?.posts.filter((p) => p.type === "resource")
                             .length
                         }
                       </span>
@@ -293,5 +295,5 @@ export default function ProfilePage() {
   );
 }
 function setStoreState(arg0: any) {
-  throw new Error('Function not implemented.');
+  throw new Error("Function not implemented.");
 }

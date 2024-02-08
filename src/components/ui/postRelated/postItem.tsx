@@ -1,5 +1,5 @@
-'use client';
-import { CommentWithNode, ExtendedPocket, ExtendedPost } from '@/lib/types';
+"use client";
+import { CommentWithNode, ExtendedPocket, ExtendedPost } from "@/lib/types";
 import {
   IconMessage,
   IconBookmark,
@@ -8,20 +8,20 @@ import {
   IconPlus,
   IconCheck,
   IconEdit,
-} from '@tabler/icons-react';
-import { useSession } from 'next-auth/react';
-import useSWR from 'swr';
-import { FormEvent, useEffect, useState } from 'react';
-import useCreate from '@/lib/useCreate';
-import { signIn } from '@/app/actions';
-import { getYoutubeVideo, organizeComments } from '@/lib/functions';
-import { useForm } from 'react-hook-form';
-import Button from '../button';
-import CommentItem from './commentItem';
-import { useRouter } from 'next/navigation';
-import PostInfo from './postInfo';
-import NoDataMessage from '../messages/noData';
-import Link from 'next/link';
+} from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
+import useSWR from "swr";
+import { FormEvent, useEffect, useState } from "react";
+import useCreate from "@/lib/useCreate";
+import { signIn } from "@/app/actions";
+import { getYoutubeVideo, organizeComments } from "@/lib/functions";
+import { useForm } from "react-hook-form";
+import Button from "../button";
+import CommentItem from "./commentItem";
+import { useRouter } from "next/navigation";
+import PostInfo from "./postInfo";
+import NoDataMessage from "../messages/noData";
+import Link from "next/link";
 
 interface PostItemProps {
   post: ExtendedPost;
@@ -78,9 +78,9 @@ export default function PostItem({ post }: PostItemProps) {
       updateSave({ userId: session?.user?.id });
     } else {
       fetch(`/api/saves/${post.id}/${session?.user?.id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       })
         .then((res) => res.json())
@@ -119,9 +119,9 @@ export default function PostItem({ post }: PostItemProps) {
 
   const addToPocketHandler = (pocketId: string) => {
     fetch(`/api/posts/${post.id}/pockets/${pocketId}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
     setPocketsOpen(false);
@@ -135,7 +135,7 @@ export default function PostItem({ post }: PostItemProps) {
           <div
             key={pocket.id}
             className={` p-2 border-b border-gray-400 last:border-none flex items-center gap-1 hover:bg-gray-100 min-w-[260px] group cursor-pointer ${
-              post.pocketId == pocket.id && 'bg-blue-100'
+              post.pocketId == pocket.id && "bg-blue-100"
             }`}
             onClick={() => addToPocketHandler(pocket.id)}
           >
@@ -149,7 +149,7 @@ export default function PostItem({ post }: PostItemProps) {
             )}
             <p
               className={`text-sm ${
-                post.pocketId == pocket.id && 'text-blue-600 font-medium'
+                post.pocketId == pocket.id && "text-blue-600 font-medium"
               }`}
             >
               {pocket.name}
@@ -204,7 +204,7 @@ export default function PostItem({ post }: PostItemProps) {
               size="small"
               mode="black"
               button={false}
-              link={`/posts/${post.id}/edit`}
+              link={`/posts/${post.id}/edit?type=${post.type}`}
               addClass="absolute top-2 right-2 "
               data-tooltip-target="tooltip-edit"
             >
@@ -226,29 +226,35 @@ export default function PostItem({ post }: PostItemProps) {
           <div className="text-sm p-2 bg-gray-200">
             <pre className=" text-wrap">
               {post.content.length > 300
-                ? post.content.slice(0, 300) + '...'
+                ? post.content.slice(0, 300) + "..."
                 : post.content}
             </pre>
           </div>
         )}
         {post.link && post.link.length > 0 && (
           <Link
-            href={post.link || '#'}
+            href={post.link || "#"}
             className="text-sm p-2 bg-blue-100 underline hover:text-blue-600"
           >
             <span className=" text-wrap">{post.link}</span>
           </Link>
         )}
-        {post.link && post.linkType == 'video' && (
+        {post.link && post.linkType == "video" && (
           <div className="aspect-video">
             <iframe
-              src={getYoutubeVideo(post.link || '')}
+              src={getYoutubeVideo(post.link || "")}
               className="w-full h-full"
             />
           </div>
         )}
         {post.note && post.note.length > 0 && (
-          <div className="w-full bg-gray-200 p-2">{post.note}</div>
+          <>
+            <hr className="bg-gray-700 my-2" />
+            <p className="text-sm font-medium">Note</p>
+            <div className="w-full bg-gray-100 p-2 text-sm text-gray-700">
+              {post.note}
+            </div>
+          </>
         )}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -286,7 +292,7 @@ export default function PostItem({ post }: PostItemProps) {
                 </div>
               ) : (
                 <>
-                  <NoDataMessage message={'Please login.'} />
+                  <NoDataMessage message={"Please login."} />
                 </>
               )
             ) : null}
@@ -300,15 +306,15 @@ export default function PostItem({ post }: PostItemProps) {
             {/* <label htmlFor="name">Title</label> */}
             <div className="p-0 m-0 relative w-full">
               <input
-                {...register('content', {
-                  required: 'This field is required',
+                {...register("content", {
+                  required: "This field is required",
                   minLength: {
                     value: 3,
-                    message: 'Min. 3 characters',
+                    message: "Min. 3 characters",
                   },
                   maxLength: {
                     value: 500,
-                    message: 'Max. 500 characters',
+                    message: "Max. 500 characters",
                   },
                 })}
                 type="text"
@@ -328,7 +334,7 @@ export default function PostItem({ post }: PostItemProps) {
           </div>
           {/* <input {...register('postId')} value={post?.id} className='hidden' /> */}
           <input
-            {...register('userId')}
+            {...register("userId")}
             value={session?.user?.id}
             className="hidden"
           />

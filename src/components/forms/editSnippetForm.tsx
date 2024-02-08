@@ -6,21 +6,22 @@ import Button from "../ui/button";
 import { useState, FormEvent, useEffect } from "react";
 import useSWR from "swr";
 import { Language } from "@prisma/client";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import useEdit from "@/lib/useEdit";
+import { Editor } from "@monaco-editor/react";
 
 type IModelContentChangedEvent = /*unresolved*/ any;
 
-export default function EditQuestionForm({ post }: EditPostFormProps) {
+export default function EditSnippetForm({ post }: EditPostFormProps) {
   const router = useRouter();
   const [titleLength, setTitleLength] = useState(0);
   const { data, error } = useSWR("/api/languages");
-  const [languages, setLanguages] = useState<Language[]>(data?.languages);
 
+  const [languages, setLanguages] = useState<Language[]>(data?.languages);
   const [title, setTitle] = useState(post?.title);
   const [content, setContent] = useState(post?.content);
   const [languageName, setLanguageName] = useState(post?.languageName);
+  const [note, setNote] = useState("");
 
   const {
     register,
@@ -31,7 +32,7 @@ export default function EditQuestionForm({ post }: EditPostFormProps) {
   });
 
   const [
-    editQuestion,
+    editSnippet,
     { data: editData, error: editError, loading: editLoading },
   ] = useEdit(`/api/posts/${post?.id}`);
 
@@ -41,21 +42,27 @@ export default function EditQuestionForm({ post }: EditPostFormProps) {
     setTitle(e.currentTarget.value);
   };
 
-  const onChangeLanguage = (e: FormEvent<HTMLSelectElement>): void => {
-    e.preventDefault();
+  const onChangeContent = (
+    value: string,
+    event: IModelContentChangedEvent
+  ): void => {
+    setContent(value);
+  };
+
+  const onSelectLanguage = (e: FormEvent<HTMLSelectElement>): void => {
     setLanguageName(e.currentTarget.value);
   };
 
-  const onChangeContent = (e: FormEvent<HTMLTextAreaElement>): void => {
-    e.preventDefault();
-    setContent(e.currentTarget.value);
+  const onChangeNote = (e: FormEvent<HTMLTextAreaElement>): void => {
+    setNote(e.currentTarget.value);
   };
 
   const onValid = () => {
-    editQuestion({
+    editSnippet({
       title,
       content,
       languageName,
+      note,
       userId: post?.user?.id,
     });
     router.push(`/posts/${post?.id}`);
@@ -124,7 +131,7 @@ export default function EditQuestionForm({ post }: EditPostFormProps) {
             required: "This field is required",
           })}
           className="rounded border w-full border-slate-400 py-2 px-3 pr-14"
-          onChange={onChangeLanguage}
+          onChange={onSelectLanguage}
         >
           <option disabled value="default">
             Select
@@ -140,7 +147,16 @@ export default function EditQuestionForm({ post }: EditPostFormProps) {
       <div className="w-full flex flex-col">
         <label htmlFor="name">Description</label>
         <div className="p-0 m-0 relative w-full">
-          <textarea
+          <Editor
+            height="30vh"
+            defaultLanguage={languageName}
+            // defaultValue=""
+            value={content}
+            className="w-full bg-[#1e1e1e] py-3 rounded"
+            theme="vs-dark"
+            onChange={(value, event) => onChangeContent(value + "", event)}
+          />
+          {/* <textarea
             {...register("content", {
               required: "This field is required.",
             })}
@@ -149,7 +165,7 @@ export default function EditQuestionForm({ post }: EditPostFormProps) {
             className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
             value={content}
             onChange={onChangeContent}
-          ></textarea>
+          ></textarea> */}
         </div>
         {errors.content ? (
           <span className="text-danger-400 text-[14px]">
@@ -157,7 +173,16 @@ export default function EditQuestionForm({ post }: EditPostFormProps) {
           </span>
         ) : null}
       </div>
-
+      <div className="w-full flex flex-col">
+        <label htmlFor="name">Note</label>
+        <textarea
+          {...register("note")}
+          placeholder="(optional)"
+          rows={2}
+          className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
+          onChange={onChangeNote}
+        ></textarea>
+      </div>
       {/* <input className="hidden" {...register("type")} value="question" />
       <input
         className="hidden"

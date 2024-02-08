@@ -12,14 +12,16 @@ import useEdit from "@/lib/useEdit";
 
 type IModelContentChangedEvent = /*unresolved*/ any;
 
-export default function EditQuestionForm({ post }: EditPostFormProps) {
+export default function EditResourceForm({ post }: EditPostFormProps) {
   const router = useRouter();
   const [titleLength, setTitleLength] = useState(0);
   const { data, error } = useSWR("/api/languages");
   const [languages, setLanguages] = useState<Language[]>(data?.languages);
 
   const [title, setTitle] = useState(post?.title);
-  const [content, setContent] = useState(post?.content);
+  const [link, setLink] = useState(post?.link);
+  const [linkType, setLinkType] = useState(post?.linkType);
+  const [note, setNote] = useState(post?.note);
   const [languageName, setLanguageName] = useState(post?.languageName);
 
   const {
@@ -31,7 +33,7 @@ export default function EditQuestionForm({ post }: EditPostFormProps) {
   });
 
   const [
-    editQuestion,
+    editResource,
     { data: editData, error: editError, loading: editLoading },
   ] = useEdit(`/api/posts/${post?.id}`);
 
@@ -40,25 +42,35 @@ export default function EditQuestionForm({ post }: EditPostFormProps) {
     setTitleLength(e.currentTarget.value.length);
     setTitle(e.currentTarget.value);
   };
-
   const onChangeLanguage = (e: FormEvent<HTMLSelectElement>): void => {
     e.preventDefault();
     setLanguageName(e.currentTarget.value);
   };
 
-  const onChangeContent = (e: FormEvent<HTMLTextAreaElement>): void => {
+  const onChangeLink = (e: FormEvent<HTMLInputElement>): void => {
     e.preventDefault();
-    setContent(e.currentTarget.value);
+    setLink(e.currentTarget.value);
+  };
+
+  const onChangeLinkType = (e: FormEvent<HTMLSelectElement>): void => {
+    e.preventDefault();
+    setLinkType(e.currentTarget.value);
+  };
+
+  const onChangeNote = (e: FormEvent<HTMLTextAreaElement>): void => {
+    e.preventDefault();
+    setNote(e.currentTarget.value);
   };
 
   const onValid = () => {
-    editQuestion({
+    editResource({
       title,
-      content,
+      link,
+      linkType,
       languageName,
       userId: post?.user?.id,
     });
-    router.push(`/posts/${post?.id}`);
+    router.push(`/posts/${editData?.post?.id}`);
   };
 
   const renderLanguages =
@@ -80,9 +92,24 @@ export default function EditQuestionForm({ post }: EditPostFormProps) {
     data && setLanguages(data.languages);
     setTitleLength(post?.title?.length || 0);
     setTitle(post?.title);
-    setContent(post?.content);
+    setLink(post?.link);
+    setLinkType(post?.linkType);
     setLanguageName(post?.languageName);
-  }, [setLanguages, setLanguageName, data, post]);
+    setNote(post?.note);
+  }, [
+    setLanguages,
+    setLanguageName,
+    setTitle,
+    setLink,
+    setLinkType,
+    setNote,
+    data,
+    post?.title,
+    post?.link,
+    post?.linkType,
+    post?.languageName,
+    post?.note,
+  ]);
 
   return (
     <form onSubmit={handleSubmit(onValid)} className="flex flex-col gap-3">
@@ -123,8 +150,9 @@ export default function EditQuestionForm({ post }: EditPostFormProps) {
           {...register("languageName", {
             required: "This field is required",
           })}
+          value={languageName}
           className="rounded border w-full border-slate-400 py-2 px-3 pr-14"
-          onChange={onChangeLanguage}
+          onSelect={onChangeLanguage}
         >
           <option disabled value="default">
             Select
@@ -138,31 +166,60 @@ export default function EditQuestionForm({ post }: EditPostFormProps) {
         ) : null}
       </div>
       <div className="w-full flex flex-col">
-        <label htmlFor="name">Description</label>
-        <div className="p-0 m-0 relative w-full">
-          <textarea
-            {...register("content", {
-              required: "This field is required.",
-            })}
-            placeholder="Write a description"
-            rows={12}
-            className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
-            value={content}
-            onChange={onChangeContent}
-          ></textarea>
-        </div>
-        {errors.content ? (
+        <label htmlFor="name">Link</label>
+        <input
+          {...register("link", { required: true })}
+          value={link || ""}
+          onChange={onChangeLink}
+          placeholder="Link"
+          className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
+        />
+        <p className="text-blue-400 text-xs font-medium mt-[4px]">
+          *For Youtube video, copy the general share url here. Do not use url
+          for embedding.
+        </p>
+        {errors.link ? (
           <span className="text-danger-400 text-[14px]">
-            {errors.content.message}
+            {errors.link.message}
           </span>
         ) : null}
       </div>
-
-      {/* <input className="hidden" {...register("type")} value="question" />
+      <div className="w-full flex flex-col">
+        <label htmlFor="name">Link Type</label>
+        <select
+          {...register("linkType")}
+          className="rounded border w-full border-slate-400 py-2 px-3 pr-14"
+          value={linkType || "url"}
+          onSelect={onChangeLinkType}
+        >
+          <option disabled value="default">
+            Select
+          </option>
+          <option value="url" selected={post?.linkType == "url"}>
+            Url
+          </option>
+          <option value="video" selected={post?.linkType == "video"}>
+            Youtube Video
+          </option>
+        </select>
+      </div>
+      <div className="w-full flex flex-col">
+        <label htmlFor="name">Note</label>
+        <textarea
+          {...register("note")}
+          placeholder="(optional)"
+          value={note || ""}
+          onChange={onChangeNote}
+          rows={2}
+          className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
+        ></textarea>
+      </div>
+      {/* <input className="hidden" {...register("type")} value="resource" />
+      <input className="hidden" {...register("content")} value="" />
       <input
         className="hidden"
         {...register("userId")}
-        value={session?.user?.id || post?.userId}
+        value={session?.user?.id}
       /> */}
       <div className="flex justify-end">
         <Button size="medium" button={true} mode="save">

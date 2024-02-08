@@ -33,20 +33,13 @@ export interface CreatePostForm {
   note?: string;
   link?: string;
   linkType?: string;
-  // topicSlug?: string;
   languageName?: string;
   userId: string;
 }
 
 export interface EditPostFormProps {
-  method: "create" | "edit";
   post?: ExtendedPost;
 }
-
-// export interface EditPostForm {
-//   method: "create" | "edit";
-//   post?: ExtendedPost;
-// }
 
 export interface ExtendedPost extends Post {
   user: User;

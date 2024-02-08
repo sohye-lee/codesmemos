@@ -13,7 +13,7 @@ export default function Profile({ nameShow }: ProfileProps) {
 
   return (
     <div className="flex items-center justify-center gap-2">
-      <div className="w-10 h-10 rounded-full border border-blue-600 bg-blue-200 overflow-hidden">
+      <div className="w-10 h-10 border border-blue-600 bg-blue-200 overflow-hidden">
         {session?.user?.image ? (
           <>
             <Image
