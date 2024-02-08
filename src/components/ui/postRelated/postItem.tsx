@@ -234,18 +234,19 @@ export default function PostItem({ post }: PostItemProps) {
         {post.link && post.link.length > 0 && (
           <Link
             href={post.link || '#'}
+            target="_blank"
             className="text-sm p-2 bg-blue-100 underline hover:text-blue-600"
           >
             <span className=" text-wrap">{post.link}</span>
           </Link>
         )}
         {post.link && post.linkType == 'video' && (
-          <div className="aspect-video">
+          <Link target="_blank" href={post.link} className="aspect-video">
             <iframe
               src={getYoutubeVideo(post.link || '')}
               className="w-full h-full"
             />
-          </div>
+          </Link>
         )}
         {post.note && post.note.length > 0 && (
           <div className="w-full bg-gray-200 p-2">{post.note}</div>
