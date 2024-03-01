@@ -34,9 +34,6 @@ export const paths = {
       languages() {
         return '/languages';
       },
-      css() {
-        return '/languages/css';
-      },
       snippets() {
         return '/?filter=snippet';
       },

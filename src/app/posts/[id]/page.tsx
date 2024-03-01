@@ -8,10 +8,8 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import Loading from '@/app/loading';
+import PostLoading from '@/components/ui/postRelated/postLoading';
 
-// interface PostProps {
-//   post: ExtendedPost;
-// }
 export default function PostIndividualPage() {
   const [post, setPost] = useState<ExtendedPost>();
   const router = useRouter();
@@ -25,10 +23,10 @@ export default function PostIndividualPage() {
   }, [setPost, data, router]);
   return (
     <SidebarContainer header={false}>
-      {!data && !error && <Loading />}
-      <Suspense fallback={<Loading />}>
-        {post && <PostItem post={post} />}
-      </Suspense>
+      {!data && !error && <PostLoading />}
+      {/* <Suspense fallback={<PostLoading />}> */}
+      {post && <PostItem post={post} />}
+      {/* </Suspense> */}
     </SidebarContainer>
   );
 }

@@ -2,7 +2,6 @@
 import useStore from '@/app/store';
 import { breadcrumbs } from '@/lib/constants';
 import { Language } from '@prisma/client';
-import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
 import useSWR from 'swr';

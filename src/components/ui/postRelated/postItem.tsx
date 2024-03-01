@@ -11,7 +11,7 @@ import {
 } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import useSWR from 'swr';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, Suspense, useEffect, useState } from 'react';
 import useCreate from '@/lib/useCreate';
 import { signIn } from '@/app/actions';
 import { getYoutubeVideo, organizeComments } from '@/lib/functions';
@@ -22,6 +22,7 @@ import { useRouter } from 'next/navigation';
 import PostInfo from './postInfo';
 import NoDataMessage from '../messages/noData';
 import Link from 'next/link';
+import PostLoading from './postLoading';
 
 interface PostItemProps {
   post: ExtendedPost;
