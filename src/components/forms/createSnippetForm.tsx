@@ -1,33 +1,32 @@
-'use client';
-
-import { CreatePostForm } from '@/lib/types';
-import { Editor, EditorProps } from '@monaco-editor/react';
-import { useForm } from 'react-hook-form';
-import Button from '../ui/button';
-import { useState, FormEvent, useEffect } from 'react';
-import useSWR from 'swr';
-import { Language } from '@prisma/client';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+"use client";
+import { CreatePostForm } from "@/lib/types";
+import { Editor, EditorProps } from "@monaco-editor/react";
+import { useForm } from "react-hook-form";
+import Button from "../ui/button";
+import { useState, FormEvent, useEffect } from "react";
+import useSWR from "swr";
+import { Language } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 type IModelContentChangedEvent = /*unresolved*/ any;
 
 export default function CreateSnippetForm() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [titleLength, setTitleLength] = useState(0);
-  const { data, error } = useSWR('/api/languages');
+  const { data, error } = useSWR("/api/languages");
   const [languages, setLanguages] = useState<Language[]>(data?.languages);
-  const [content, setContent] = useState('');
-  const [title, setTitle] = useState('');
-  const [note, setNote] = useState('');
-  const [languageName, setLanguageName] = useState('javascript');
+  const [content, setContent] = useState("");
+  const [title, setTitle] = useState("");
+  const [note, setNote] = useState("");
+  const [languageName, setLanguageName] = useState("javascript");
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<CreatePostForm>({
-    mode: 'onBlur',
+    mode: "onBlur",
   });
 
   const onChangeTitle = (e: FormEvent<HTMLInputElement>): void => {
@@ -52,10 +51,10 @@ export default function CreateSnippetForm() {
   };
 
   const onSubmit = () => {
-    fetch('/api/posts', {
-      method: 'POST',
+    fetch("/api/posts", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         userId: session?.user?.id!,
@@ -63,7 +62,7 @@ export default function CreateSnippetForm() {
         content,
         note,
         languageName,
-        type: 'snippet',
+        type: "snippet",
       }),
     })
       .then((res) => res.json())
@@ -92,15 +91,15 @@ export default function CreateSnippetForm() {
         <label htmlFor="name">Title</label>
         <div className="p-0 m-0 relative w-full">
           <input
-            {...register('title', {
-              required: 'This field is required',
+            {...register("title", {
+              required: "This field is required",
               minLength: {
                 value: 3,
-                message: 'Min. 3 characters',
+                message: "Min. 3 characters",
               },
               maxLength: {
                 value: 100,
-                message: 'Max. 100 characters',
+                message: "Max. 100 characters",
               },
             })}
             type="text"
@@ -121,12 +120,12 @@ export default function CreateSnippetForm() {
       <div className="w-full flex flex-col">
         <label htmlFor="name">Language</label>
         <select
-          {...register('languageName', {
-            required: 'This field is required',
+          {...register("languageName", {
+            required: "This field is required",
           })}
           className="rounded border w-full border-slate-400 py-2 px-3 pr-14"
           onSelect={onSelectLanguage}
-          defaultValue={'default'}
+          defaultValue={"default"}
         >
           <option disabled value="default">
             Select
@@ -149,14 +148,14 @@ export default function CreateSnippetForm() {
             value={content}
             className="w-full bg-[#1e1e1e] py-3 rounded"
             theme="vs-dark"
-            onChange={(value, event) => onChangeContent(value + '', event)}
+            onChange={(value, event) => onChangeContent(value + "", event)}
           />
         </div>
       </div>
       <div className="w-full flex flex-col">
         <label htmlFor="name">Note</label>
         <textarea
-          {...register('note')}
+          {...register("note")}
           placeholder="(optional)"
           rows={2}
           className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"

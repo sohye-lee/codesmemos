@@ -1,11 +1,11 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface BreadcrumbState {
-  breadcrumb: string;
+  breadcrumb: string | "home";
   setBreadcrumb: (bread: string) => void;
 }
 const useStore = create<BreadcrumbState>((set) => ({
-  breadcrumb: 'Home',
+  breadcrumb: "Home",
   setBreadcrumb: (bread: string) => set(() => ({ breadcrumb: bread })),
 }));
 

@@ -82,3 +82,8 @@ export interface ExtendedSave extends Save {
   post: ExtendedPost;
   user: User;
 }
+
+export interface BreadCrumb {
+  name: string;
+  url: string;
+}

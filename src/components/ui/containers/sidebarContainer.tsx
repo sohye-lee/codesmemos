@@ -1,20 +1,22 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import Sidebar from './sidebar';
-import ContainerHeader from './containerHeader';
-import LanguageHeader from './languageHeader';
+"use client";
+import React, { useEffect, useState } from "react";
+import Sidebar from "./sidebar";
+import ContainerHeader from "./containerHeader";
+import LanguageHeader from "./languageHeader";
 
 interface SidebarContainerProps {
   children: React.ReactNode;
   header: Boolean;
-  type?: 'default' | 'language';
+  sidebar?: Boolean;
+  type?: "default" | "language";
   languageName?: string;
 }
 
 export default function SidebarContainer({
   children,
   header,
-  type = 'default',
+  sidebar = true,
+  type = "default",
   languageName,
 }: SidebarContainerProps) {
   // const [sidebar, setSidebar] = useState<HTMLDivElement>();
@@ -38,29 +40,24 @@ export default function SidebarContainer({
 
   return (
     <div className="w-full flex flex-col items-center pt-24 pb-20">
-      <div className="flex gap-3 px-4 w-full sm:max-w-full md:max-w-[899px]">
+      <div className="flex justify-center gap-3 px-4 w-full sm:max-w-full md:max-w-[899px]">
         <div className="flex flex-col w-full lg:w-4/5 gap-3 mb-10">
-          {header && type == 'default' ? (
+          {header && type == "default" ? (
             <ContainerHeader type="default" />
           ) : null}
-          {header && type == 'language' ? (
-            <LanguageHeader languageName={languageName || ''} />
+          {header && type == "language" ? (
+            <LanguageHeader languageName={languageName || ""} />
           ) : null}
-          {/* <div className="border border-slate-500 border-r-2 border-b-2 p-3"> */}
           {children}
-          {/* </div> */}
         </div>
-        <div
-          className="  flex-col w-full lg:w-1/5 hidden lg:flex gap-3"
-          id="sidebar"
-          // style={{
-          //   right: style.right,
-          //   top: style.top,
-          //   position: style.position == 'fixed' ? 'fixed' : 'relative',
-          // }}
-        >
-          <Sidebar />
-        </div>
+        {sidebar && (
+          <div
+            className="  flex-col w-full lg:w-1/5 hidden lg:flex gap-3"
+            id="sidebar"
+          >
+            <Sidebar />
+          </div>
+        )}
       </div>
     </div>
   );
