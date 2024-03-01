@@ -1,15 +1,15 @@
 import { useState } from "react";
 
-interface UseCreateState<T> {
+interface UseEditState<T> {
   loading: Boolean;
   data?: T;
   error?: object;
 }
 
-type UseCreateResult<T> = [(data: any) => void, UseCreateState<T>];
+type UseEditResult<T> = [(data: any) => void, UseEditState<T>];
 
-export default function useCreate<T = any>(url: string): UseCreateResult<T> {
-  const [state, setState] = useState<UseCreateState<T>>({
+export default function useEdit<T = any>(url: string): UseEditResult<T> {
+  const [state, setState] = useState<UseEditState<T>>({
     data: undefined,
     error: undefined,
     loading: false,
@@ -17,7 +17,7 @@ export default function useCreate<T = any>(url: string): UseCreateResult<T> {
   const func = (data: any) => {
     setState((prev) => ({ ...prev, loading: true }));
     fetch(url, {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },

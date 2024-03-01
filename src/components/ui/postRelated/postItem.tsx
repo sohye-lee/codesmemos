@@ -204,7 +204,7 @@ export default function PostItem({ post }: PostItemProps) {
               size="small"
               mode="black"
               button={false}
-              link={`/posts/${post.id}/edit`}
+              link={`/posts/${post.id}/edit?type=${post.type}`}
               addClass="absolute top-2 right-2 "
               data-tooltip-target="tooltip-edit"
             >
@@ -240,6 +240,7 @@ export default function PostItem({ post }: PostItemProps) {
             <span className=" text-wrap">{post.link}</span>
           </Link>
         )}
+
         {post.link && post.linkType == 'video' && (
           <Link target="_blank" href={post.link} className="aspect-video">
             <iframe
@@ -249,7 +250,13 @@ export default function PostItem({ post }: PostItemProps) {
           </Link>
         )}
         {post.note && post.note.length > 0 && (
-          <div className="w-full bg-gray-200 p-2">{post.note}</div>
+          <>
+            <hr className="bg-gray-700 my-2" />
+            <p className="text-sm font-medium">Note</p>
+            <div className="w-full bg-gray-100 p-2 text-sm text-gray-700">
+              {post.note}
+            </div>
+          </>
         )}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

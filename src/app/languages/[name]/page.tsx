@@ -18,6 +18,7 @@ export default function LanguageShoPage() {
   const [posts, setPosts] = useState(data?.language?.posts);
   const [filteredPosts, setFilteredPosts] = useState<ExtendedPost[]>([]);
   const searchParams = useSearchParams();
+
   const filter = searchParams.get('filter');
 
   useEffect(() => {
@@ -54,7 +55,7 @@ export default function LanguageShoPage() {
         )
       );
     }
-  }, [data, setFilteredPosts]);
+  }, [data, setFilteredPosts, setBreadcrumb, filter]);
 
   return (
     <>

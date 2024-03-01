@@ -37,7 +37,11 @@ export default function PostListItem({ post }: PostItemProps) {
         </Link>
       )}
       {post.link && post.linkType == 'video' ? (
-        <div className="w-full relative aspect-video overflow-hidden flex flex-col items-center justify-center">
+        <div
+          // href={post.link || `/posts/${post.id}` || "#"}
+          // target="_blank"
+          className="w-full relative aspect-video overflow-hidden flex flex-col items-center justify-center"
+        >
           <Image
             src={getYoutubeThumbnail(post?.link + '')}
             alt="thumbnail"
@@ -46,6 +50,7 @@ export default function PostListItem({ post }: PostItemProps) {
             className="absolute top-[50%] left-0 -translate-y-[50%] w-full z-0"
           />
           <div className="absolute top-0 left-0 h-full w-full z-10 bg-black opacity-30"></div>
+
           <Link
             href={post.link}
             target="_blank"
@@ -57,12 +62,6 @@ export default function PostListItem({ post }: PostItemProps) {
               className="text-white "
             />
           </Link>
-          {/* <Image
-              src={videoThumbnail}
-              alt="thumbnail"
-              width={800}
-              height={(800 * 9) / 16}
-            /> */}
         </div>
       ) : null}
       <div className="flex items-center justify-between">

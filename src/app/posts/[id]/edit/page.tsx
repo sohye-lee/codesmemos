@@ -1,13 +1,18 @@
 "use client";
+
 import Container from "@/components/ui/containers/container";
-import { postType } from "@/lib/types";
+import { ExtendedPost, postType } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import CreateSnippetForm from "@/components/forms/createSnippetForm";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import CreateResourceForm from "@/components/forms/createResourceForm";
 import CreateQuestionForm from "@/components/forms/createQuestionForm";
-import useStore from "../store";
+import useStore from "@/app/store";
+import useSWR from "swr";
+import EditQuestionForm from "@/components/forms/editQuestionForm";
+import EditResourceForm from "@/components/forms/editResourceForm";
+import EditSnippetForm from "@/components/forms/editSnippetForm";
 
 type TabType = "snippet" | "question" | "resource";
 
@@ -22,26 +27,37 @@ interface CreatePostForm {
   languageName?: string;
 }
 
-export default function CreatePage(props: any) {
+export default function EditPage() {
   const { breadcrumb, setBreadcrumb } = useStore();
   const searchParams = useSearchParams();
   const type = searchParams.get("type")?.toString();
-  const [tab, setTab] = useState(type || "snippet");
 
-  const activeStyle = "border-b-none bg-white";
-  const inactiveStyle = "border-b border-slate-400 bg-gray-200 text-gray-600";
+  //   const [tab, setTab] = useState(type || "snippet");
+
+  const path = usePathname();
+  const [post, setPost] = useState<ExtendedPost>();
+  const { data } = useSWR(`/api/posts/${path.split("/")[2]}`);
+
+  //   const activeStyle = "border-b-none bg-white";
+  //   const inactiveStyle = "border-b border-slate-400 bg-gray-200 text-gray-600";
 
   useEffect(() => {
-    setBreadcrumb("create");
-    type && type != null && setTab(type);
-  }, [setBreadcrumb, type, searchParams]);
+    setBreadcrumb(type + "");
+    data && data?.post && setPost(data?.post);
+
+    // type && type != null && setTab(type);
+  }, [setBreadcrumb, type, searchParams, data?.post, data]);
 
   return (
     <Container width="small" bgColor="bg-blue-100 ">
       <div className="w-full flex flex-col gap-3 p-3">
-        <h1 className="text-xl font-medium">Create a New Post</h1>
+        <h1 className="text-lg font-medium">
+          Edit{" "}
+          {<span className="italic font-light">{post?.title}</span> ||
+            "your post"}
+        </h1>
         <div className="w-full border border-slate-500 border-r-2 border-b-2">
-          <div className="w-full flex items-stretch">
+          {/* <div className="w-full flex items-stretch">
             <div
               className={`w-1/3 py-2 px-3 text-md  ${
                 tab == "snippet" ? activeStyle : inactiveStyle
@@ -66,11 +82,11 @@ export default function CreatePage(props: any) {
             >
               Resource
             </div>
-          </div>
+          </div> */}
           <div className="p-4 bg-white">
-            {tab == "snippet" && <CreateSnippetForm />}
-            {tab == "question" && <CreateQuestionForm />}
-            {tab == "resource" && <CreateResourceForm />}
+            {type == "snippet" && <EditSnippetForm post={post} />}
+            {type == "question" && <EditQuestionForm post={post} />}
+            {type == "resource" && <EditResourceForm post={post} />}
           </div>
         </div>
       </div>
