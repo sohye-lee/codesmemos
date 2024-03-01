@@ -85,22 +85,6 @@ export default function Header() {
               <Breadcrumb />
             </div>
 
-            {/* <select
-              name="breadcrumb"
-              id="breadcrumb"
-              className="hidden lg:block rounded border border-slate-400 text-sm text-gray-600 py-2 px-3 "
-              onChange={onChange}
-            >
-              <option value={"home"}>Home</option>
-              <option value={"snippet"}>Snippets</option>
-              <option value={"question"}>Questions</option>
-              <option value={"resource"}>Resources</option>
-              <option value={"hot"}>Hot</option>
-              <option value={"new"}>New</option>
-              <option value={"languages"}>By Language</option>
-              <option value={"feedback"}>Feedback</option>
-            </select> */}
-
             <NavItem
               icon="search"
               link="#"

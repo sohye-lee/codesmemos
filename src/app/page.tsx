@@ -1,20 +1,20 @@
-"use client";
-import SidebarContainer from "@/components/ui/containers/sidebarContainer";
-import useStore from "./store";
-import { useEffect, useState } from "react";
-import useSWR from "swr";
-import PostListItem from "@/components/ui/postRelated/postLIstItem";
-import { ExtendedPost } from "@/lib/types";
-import Loading from "./loading";
-import { useSearchParams } from "next/navigation";
-import { set } from "react-hook-form";
+'use client';
+import SidebarContainer from '@/components/ui/containers/sidebarContainer';
+import useStore from './store';
+import { useEffect, useState } from 'react';
+import useSWR from 'swr';
+import PostListItem from '@/components/ui/postRelated/postLIstItem';
+import { ExtendedPost } from '@/lib/types';
+import Loading from './loading';
+import { useSearchParams } from 'next/navigation';
+import { set } from 'react-hook-form';
 
 export default function Home() {
   const searchParams = useSearchParams();
-  const filter = searchParams.get("filter");
+  const filter = searchParams.get('filter');
   const { breadcrumb, setBreadcrumb } = useStore();
   const [page, setPage] = useState(1);
-  const { data, error } = useSWR("/api/posts");
+  const { data, error } = useSWR('/api/posts');
   const [filteredPosts, setFilteredPosts] = useState<ExtendedPost[]>(
     data?.posts
   );
@@ -27,16 +27,17 @@ export default function Home() {
 
     if (!filter) {
       setFilteredPosts(data?.posts);
+      setBreadcrumb('home');
     } else {
-      if (filter == null || filter == "all") {
+      if (filter == null || filter == 'all') {
         setFilteredPosts(data?.posts);
-      } else if (filter == "hot") {
+      } else if (filter == 'hot') {
         setFilteredPosts(
           data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
             a.saves.length < b.saves.length ? 1 : -1
           )
         );
-      } else if (filter == "new") {
+      } else if (filter == 'new') {
         setFilteredPosts(
           data?.posts
             .sort((a: ExtendedPost, b: ExtendedPost) =>
@@ -50,61 +51,6 @@ export default function Home() {
         );
       }
     }
-    // if (filter == 'all') {
-    //   setFilteredPosts(
-    //     data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
-    //       a.createdAt < b.createdAt ? 1 : -1
-    //     )
-    //   );
-    // } else if (filter == 'snippet') {
-    //   setFilteredPosts(
-    //     data?.posts
-    //       .filter((post: ExtendedPost) => post.type == 'snippet')
-    //       .sort((a: ExtendedPost, b: ExtendedPost) =>
-    //         a.createdAt < b.createdAt ? 1 : -1
-    //       )
-    //   );
-    //   // setBreadcrumb('Snippet');
-    // } else if (filter == 'question') {
-    //   setFilteredPosts(
-    //     data?.posts
-    //       .filter((post: ExtendedPost) => post.type == 'question')
-    //       .sort((a: ExtendedPost, b: ExtendedPost) =>
-    //         a.createdAt < b.createdAt ? 1 : -1
-    //       )
-    //   );
-    //   // setBreadcrumb('Snippet');
-    // } else if (filter == 'resource') {
-    //   setFilteredPosts(
-    //     data?.posts
-    //       .filter((post: ExtendedPost) => post.type == 'resource')
-    //       .sort((a: ExtendedPost, b: ExtendedPost) =>
-    //         a.createdAt < b.createdAt ? 1 : -1
-    //       )
-    //   );
-    // } else if (filter == 'hot') {
-    //   setFilteredPosts(
-    //     data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
-    //       a.saves.length < b.saves.length ? 1 : -1
-    //     )
-    //   );
-    // } else if (filter == 'new') {
-    //   setFilteredPosts(
-    //     data?.posts
-    //       .sort((a: ExtendedPost, b: ExtendedPost) =>
-    //         a.createdAt < b.createdAt ? 1 : -1
-    //       )
-    //       .slice(0, 10)
-    //   );
-    // } else if (filter == null) {
-    //   setFilteredPosts(
-    //     data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
-    //       a.createdAt < b.createdAt ? 1 : -1
-    //     )
-    //   );
-    // }
-    // filteredPosts?.length > 0 &&
-    //   setPagedPosts(filteredPosts.slice(10 * (page - 1), 10 * page));
   }, [searchParams, filter, data?.posts]);
   return (
     <SidebarContainer header={true}>

@@ -103,6 +103,16 @@ export default function Sidebar() {
       <hr className="mt-3 border-gray-400" />
       <div className="flex flex-col ">
         <h3 className="text-md font-medium py-1">Languages</h3>
+        <Link
+          href={`/`}
+          className="text-sm group  hover:text-blue-600  py-1 flex items-center gap-2"
+        >
+          all
+          <IconArrowRight
+            width={14}
+            className="opacity-0 group-hover:opacity-100 p-0 y-0"
+          />
+        </Link>
         {renderLanguages}
       </div>
       {/* <hr className="mt-3 border-gray-400" />

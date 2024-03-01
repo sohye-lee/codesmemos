@@ -1,11 +1,13 @@
-"use client";
-import PostItem from "@/components/ui/postRelated/postItem";
-import SidebarContainer from "@/components/ui/containers/sidebarContainer";
-import { ExtendedPost } from "@/lib/types";
-import useCreate from "@/lib/useCreate";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import useSWR from "swr";
+'use client';
+import PostItem from '@/components/ui/postRelated/postItem';
+import { Suspense } from 'react';
+import SidebarContainer from '@/components/ui/containers/sidebarContainer';
+import { ExtendedPost } from '@/lib/types';
+import useCreate from '@/lib/useCreate';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import useSWR from 'swr';
+import Loading from '@/app/loading';
 
 // interface PostProps {
 //   post: ExtendedPost;
@@ -19,12 +21,14 @@ export default function PostIndividualPage() {
   useEffect(() => {
     if (data && data.post) {
       setPost(data.post);
-      console.log(data.post);
     }
   }, [setPost, data, router]);
   return (
     <SidebarContainer header={false}>
-      {post && <PostItem post={post} />}
+      {!data && !error && <Loading />}
+      <Suspense fallback={<Loading />}>
+        {post && <PostItem post={post} />}
+      </Suspense>
     </SidebarContainer>
   );
 }

@@ -1,4 +1,4 @@
-import { breadcrumbType } from './types';
+// 'use server';
 export const message = {
   success: {
     get: 'Successfully loaded!',
@@ -14,6 +14,11 @@ export const message = {
   },
 };
 
+// const getAllLanguages = async () => {
+//   const data = await fetch('/api/languages').then((res) => res.json());
+//   return data.languages;
+// };
+
 export const paths = {
   client: {
     get: {
@@ -28,6 +33,9 @@ export const paths = {
       },
       languages() {
         return '/languages';
+      },
+      css() {
+        return '/languages/css';
       },
       snippets() {
         return '/?filter=snippet';
@@ -133,13 +141,6 @@ export const breadcrumbs: {
     url: '/',
     name: 'Home',
   },
-  //   snippets: '/?filter=snippets',
-  //   questions: '/?filter=questions',
-  //   resources: '/?filter=resources',
-  //   new: '/?filter=new',
-  //   hot: '/?filter=hot',
-  //   languages: '/languages',
-  //   topics: '/topics',
   snippet: {
     url: '/?filter=snippet',
     name: 'Snippets',
