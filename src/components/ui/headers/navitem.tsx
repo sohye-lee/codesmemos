@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link';
 import {
   IconCode,
   IconMessage2Question,
@@ -11,22 +11,22 @@ import {
   IconSearch,
   IconHome2,
   IconMessage,
-} from "@tabler/icons-react";
+} from '@tabler/icons-react';
 
 interface NavItemProps {
   link: string;
   icon:
-    | "snippet"
-    | "question"
-    | "resource"
-    | "language"
-    | "new"
-    | "hot"
-    | "all"
-    | "like"
-    | "search"
-    | "home"
-    | "feedback";
+    | 'snippet'
+    | 'question'
+    | 'resource'
+    | 'language'
+    | 'new'
+    | 'hot'
+    | 'all'
+    | 'like'
+    | 'search'
+    | 'home'
+    | 'feedback';
   children: React.ReactNode;
   addClass?: string;
   [key: string]: any;
@@ -52,10 +52,12 @@ export default function NavItem({
   icon,
   children,
   addClass,
+  ...rest
 }: NavItemProps) {
   return (
     <Link
-      href={link || "/"}
+      {...rest}
+      href={link || '/'}
       className={`flex items-center gap-1 py-2 px-3 text-sm font-medium rounded-md hover:bg-blue-200 hover:text-blue-800 ${addClass} `}
     >
       {iconDict[icon]}

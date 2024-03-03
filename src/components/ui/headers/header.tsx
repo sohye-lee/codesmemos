@@ -1,15 +1,22 @@
 'use client';
 import Link from 'next/link';
 import Profile from './profile';
-import { IconPlus, IconDotsVertical } from '@tabler/icons-react';
+import {
+  IconPlus,
+  IconDotsVertical,
+  IconSun,
+  IconMoon,
+  IconMoonFilled,
+} from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import Logo from 'public/images/logo-black.svg';
+import WhiteLogo from 'public/images/logo-white.svg';
 import Image from 'next/image';
 import NavItem from './navitem';
 import Button from '../button';
 import { signIn, signOut } from '@/app/actions';
 import NavSubItem from './navSubitem';
-import { FormEvent, Key, useEffect, useRef, useState } from 'react';
+import { FormEvent, Key, Suspense, useEffect, useRef, useState } from 'react';
 import useStore from '@/app/store';
 import { breadcrumbs, paths } from '@/lib/constants';
 import { usePathname, useRouter } from 'next/navigation';
@@ -17,9 +24,11 @@ import Loading from '@/app/loading';
 import MobileHeader from './mobileHeader';
 import Breadcrumb from './breadcrumb';
 import SearchInput from './searchInput';
+import { useTheme } from 'next-themes';
 
 export default function Header() {
   const { data: session, status } = useSession();
+  const { theme, setTheme } = useTheme();
   const [openProfile, setOpenProfile] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
   const [openMobileNav, setOpenMobileNav] = useState(false);
@@ -29,7 +38,9 @@ export default function Header() {
   const buttonCreate = useRef<HTMLDivElement>(null);
   const buttonProfile = useRef<HTMLDivElement>(null);
   const [url, setUrl] = useState(breadcrumbs.home.url);
+  const [dark, setDark] = useState(false);
   const router = useRouter();
+  const [bgColor, setBgColor] = useState<string | null>();
 
   const onChange = (e: FormEvent<HTMLSelectElement>) => {
     // router.push(breadcrumbs[e.currentTarget.value])
@@ -45,10 +56,21 @@ export default function Header() {
 
   const handleMobileNav = () => {
     setOpenMobileNav((prev) => !prev);
-    console.log(openMobileNav);
+  };
+
+  const handleDarkMode = () => {
+    // setDark((prev) => !prev);
+    if (theme == 'dark') {
+      setTheme('light');
+      // setBgColor('bg-white');
+    } else {
+      setTheme('dark');
+      // setBgColor('bg-black');
+    }
   };
 
   useEffect(() => {
+    theme == 'light' ? setBgColor('bg-white') : setBgColor('bg-black');
     function handleClick(e: MouseEvent) {
       assertIsNode(e.target);
 
@@ -72,30 +94,54 @@ export default function Header() {
     if (typeof window !== 'undefined') {
       window.addEventListener('click', handleClick);
     }
-  }, [openProfile, openCreate, breadcrumb, setBreadcrumb, setUrl]);
+  }, [
+    openProfile,
+    openCreate,
+    breadcrumb,
+    setBreadcrumb,
+    setUrl,
+    theme,
+    setTheme,
+    setBgColor,
+  ]);
 
   return (
     <>
-      <div className=" fixed top-0 border-b  border-slate-400 left-0 w-full flex justify-center items-center bg-white z-50">
+      <div
+        className={`${bgColor} fixed top-0 border-b  border-slate-400 left-0 w-full flex justify-center items-center  z-50`}
+      >
         <div className="w-full max-w-[1600px] flex justify-between items-center   px-5 md:px-8">
           <div className="flex items-center gap-4 ">
             <Link href="/" id="logo" className="font-semibold text-sm ">
-              <Image src={Logo} alt="logo" width={160} />
+              {theme == 'dark' ? (
+                <Image src={WhiteLogo} alt="logo" width={160} />
+              ) : (
+                <Image src={Logo} alt="logo" width={160} />
+              )}
             </Link>
             <div className="hidden lg:block ">
               <Breadcrumb />
             </div>
-            <SearchInput />
-            {/* <NavItem
-              icon="search"
-              link="#"
-              addClass="hidden lg:flex bg-gray-100 border border-gray-200 py-2 text-sm text-gray-700 hover:ring-2 hover:ring-blue-400"
-            >
-              Search
-            </NavItem> */}
+            <div className="hidden lg:block">
+              {/* <Suspense> */}
+              <SearchInput />
+              {/* </Suspense> */}
+            </div>
           </div>
 
           <div className="flex justify-end items-center gap-3 py-2">
+            <div
+              className={`p-1 border border-gray-300 rounded-sm w-10 h-10 flex items-center justify-center ${
+                theme == 'dark' ? 'bg-slate-700' : 'bg-slate-100 '
+              }`}
+              onClick={handleDarkMode}
+            >
+              {theme == 'dark' ? (
+                <IconMoonFilled width={20} className="text-white" />
+              ) : (
+                <IconSun width={26} className="text-yellow-600" />
+              )}
+            </div>
             <div className="relative">
               <div
                 ref={buttonCreate}
@@ -110,7 +156,7 @@ export default function Header() {
               {openCreate ? (
                 <div
                   ref={dropdownCreate}
-                  className="absolute right-0 top-[120%] bg-white border border-slate-300 rounded-sm flex flex-col min-w-32"
+                  className="absolute right-0 top-[120%] bg-background border border-slate-300 rounded-sm flex flex-col min-w-32"
                 >
                   <NavSubItem link="/create?type=snippet">Snippet</NavSubItem>
                   <NavSubItem link="/create?type=question">Question</NavSubItem>
@@ -133,8 +179,11 @@ export default function Header() {
                 {openProfile ? (
                   <div
                     ref={dropdownProfile}
-                    className="absolute right-0 top-[120%] bg-white border border-slate-300 rounded-sm flex flex-col min-w-28"
+                    className="absolute right-0 top-[120%] bg-background border border-slate-300 rounded-sm flex flex-col min-w-28"
                   >
+                    {session?.user?.role == 'admin' && (
+                      <NavSubItem link="/admin">Admin</NavSubItem>
+                    )}
                     <NavSubItem link={`/users/${session?.user?.id}`}>
                       Profile
                     </NavSubItem>

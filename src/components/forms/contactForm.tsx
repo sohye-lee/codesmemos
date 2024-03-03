@@ -16,20 +16,7 @@ export interface SendContactForm {
 export default function ContactForm() {
   const router = useRouter();
 
-  // async function sendEmail(data: SendContactForm) {
-  //   const apiEndpoint = '/api/email';
-  //   await fetch(apiEndpoint, {
-  //     method: 'POST',
-  //     body: JSON.stringify(data),
-  //   })
-  //     .then(async (res) => await res.json())
-  //     .then((data) => {
-  //       alert(data.message);
-  //     })
-  //     .catch((err) => {
-  //       alert((err as any).message);
-  //     });
-  // }
+ 
 
   const [sendEmail, { data, error, loading }] = useCreate('/api/email');
 

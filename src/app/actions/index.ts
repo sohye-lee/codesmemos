@@ -11,5 +11,5 @@ export async function signOut() {
 }
 
 export async function signUp() {
-    return auth
-  }
+  return auth;
+}

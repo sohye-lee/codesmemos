@@ -1,6 +1,7 @@
 'use client';
 
 import { NextUIProvider } from '@nextui-org/react';
+import { ThemeProvider as NextThemeProvider } from 'next-themes';
 import { SWRConfig } from 'swr';
 import { SessionProvider } from 'next-auth/react';
 
@@ -17,7 +18,11 @@ export default function Providers({ children }: Providers) {
             fetch(resource, init).then((res) => res.json()),
         }}
       >
-        <NextUIProvider>{children}</NextUIProvider>
+        <NextUIProvider>
+          <NextThemeProvider attribute="class" defaultTheme="light">
+            {children}
+          </NextThemeProvider>
+        </NextUIProvider>
       </SWRConfig>
     </SessionProvider>
   );

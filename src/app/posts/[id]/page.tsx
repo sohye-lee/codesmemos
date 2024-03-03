@@ -23,10 +23,7 @@ export default function PostIndividualPage() {
   }, [setPost, data, router]);
   return (
     <SidebarContainer header={false}>
-      {!data && !error && <PostLoading />}
-      {/* <Suspense fallback={<PostLoading />}> */}
       {post && <PostItem post={post} />}
-      {/* </Suspense> */}
     </SidebarContainer>
   );
 }

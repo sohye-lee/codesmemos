@@ -23,6 +23,7 @@ import PostInfo from './postInfo';
 import NoDataMessage from '../messages/noData';
 import Link from 'next/link';
 import PostLoading from './postLoading';
+import { useTheme } from 'next-themes';
 
 interface PostItemProps {
   post: ExtendedPost;
@@ -34,6 +35,8 @@ interface CommentForm {
 }
 
 export default function PostItem({ post }: PostItemProps) {
+  const { theme, setTheme } = useTheme();
+  const [bgColor, setBgColor] = useState<string>();
   const router = useRouter();
   const { data: session } = useSession();
   const { data: savesData } = useSWR(`/api/saves/${post.id}`);
@@ -178,6 +181,8 @@ export default function PostItem({ post }: PostItemProps) {
   };
 
   useEffect(() => {
+    theme == 'light' ? setBgColor('bg-gray-200') : setBgColor('bg-gray-800');
+
     if (savesData) {
       setSaves(savesData.saveCount);
     }
@@ -194,6 +199,8 @@ export default function PostItem({ post }: PostItemProps) {
     reset,
     createCommentData,
     createCommentLoading,
+    theme,
+    setBgColor,
   ]);
 
   return (
@@ -224,7 +231,7 @@ export default function PostItem({ post }: PostItemProps) {
         <PostInfo post={post} />
         <h2 className="text-lg font-medium">{post.title}</h2>
         {post.content && post.content.length > 0 && (
-          <div className="text-sm p-2 bg-gray-200">
+          <div className={`text-sm p-2  ${bgColor}`}>
             <pre className=" text-wrap">
               {post.content.length > 300
                 ? post.content.slice(0, 300) + '...'

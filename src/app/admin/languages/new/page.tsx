@@ -1,29 +1,38 @@
-"use client";
-import Loading from "@/app/loading";
-import Button from "@/components/ui/button";
-import Container from "@/components/ui/containers/container";
-import useCreate from "@/lib/useCreate";
-import { Language, Topic } from "@prisma/client";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import useSWR from "swr";
-import { IconPencil, IconTrash } from "@tabler/icons-react";
-import useDelete from "@/lib/useDelete";
-import DeleteButton from "@/components/forms/deleteTopicButton";
-import EditTopicInput from "@/components/forms/editTopicInput";
-import EditLanguageInput from "@/components/forms/editLanugageInput";
+'use client';
+import Loading from '@/app/loading';
+import Button from '@/components/ui/button';
+import Container from '@/components/ui/containers/container';
+import useCreate from '@/lib/useCreate';
+import { Language } from '@prisma/client';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import useSWR from 'swr';
+import EditLanguageInput from '@/components/forms/editLanugageInput';
+import { signIn, useSession } from 'next-auth/react';
+import { signUp } from '@/app/actions';
 
 interface LanguageCreateForm {
   name: string;
 }
+
 export default function LanguageCreatePage() {
   const router = useRouter();
+  const { data: session } = useSession();
+
+  if (!session) {
+    signIn('github');
+  }
+
+  if (session && session?.user?.role != 'admin') {
+    router.push('/');
+  }
+
   const { data: languagesData, error: languagesError } =
-    useSWR("/api/languages");
+    useSWR('/api/languages');
   const [languages, setLanguages] = useState<Language[]>([]);
   const [createLanguage, { data, error, loading }] =
-    useCreate("/api/languages");
+    useCreate('/api/languages');
 
   const {
     register,
@@ -76,8 +85,8 @@ export default function LanguageCreatePage() {
               <div className="w-full flex flex-col">
                 <label htmlFor="name">Name</label>
                 <input
-                  {...register("name", {
-                    required: "This field is required",
+                  {...register('name', {
+                    required: 'This field is required',
                   })}
                   type="text"
                   placeholder="*Type here"

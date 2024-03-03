@@ -4,14 +4,19 @@ import { IconBookmark, IconMessage, IconPlayerPlay } from '@tabler/icons-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import PostInfo from './postInfo';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 
 interface PostItemProps {
   post: ExtendedPost;
 }
 export default function PostListItem({ post }: PostItemProps) {
-  const link = post.linkType == 'video' ? post.content : '';
-  // const videoId = link.split("watch?v=")[1];
-  // const videoThumbnail = `https://img.youtube.com/vi/${videoId}/0.jpg`;
+  const { theme, setTheme } = useTheme();
+  const [bgColor, setBgColor] = useState<string>();
+
+  useEffect(() => {
+    theme == 'light' ? setBgColor('bg-gray-200') : setBgColor('bg-gray-800');
+  }, [theme, setBgColor]);
   return (
     <div className="border   border-slate-500 border-r-2 border-b-2 p-3 flex flex-col gap-3">
       <PostInfo post={post} />
@@ -20,7 +25,7 @@ export default function PostListItem({ post }: PostItemProps) {
         {post.title}
       </Link>
       {post.content && post.content.length > 0 && (
-        <div className="text-sm p-2 bg-gray-200">
+        <div className={`text-sm p-2 bg-gray-200 ${bgColor}`}>
           <pre className=" text-wrap">
             {post.content.length > 300
               ? post.content.slice(0, 300) + '...'

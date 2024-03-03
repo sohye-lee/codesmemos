@@ -68,7 +68,7 @@ export default function Button({
       {button ? (
         <button
           type="submit"
-          className={`rounded-md  border border-slate-800 border-r-2  border-b-2 hover:border gap-1 flex items-center justify-center ${btnMode} ${btnSize} ${addClass}`}
+          className={`rounded-md  border border-slate-800 border-r-2  border-b-2 hover:border gap-1 flex items-center justify-center text-gray-900 ${btnMode} ${btnSize} ${addClass}`}
           {...rest}
         >
           {loading ? (
@@ -80,7 +80,7 @@ export default function Button({
       ) : (
         <Link
           href={link || '/'}
-          className={`rounded-md  border border-slate-800 border-r-2  border-b-2 hover:border gap-1 flex items-center justify-center ${btnMode} ${btnSize} ${addClass}`}
+          className={`rounded-md  border border-slate-800 border-r-2  border-b-2 hover:border gap-1 flex items-center justify-center text-gray-900 ${btnMode} ${btnSize} ${addClass}`}
           {...rest}
         >
           {loading ? (

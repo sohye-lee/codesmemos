@@ -46,11 +46,9 @@ model User {
   accounts      Account[]
   sessions      Session[]
   posts         Post[]
-  questions     Question[]
   comments      Comment[]
-  answers       Answer[]
   saves         Save[]
-  votes         Vote[]
+  // votes         Like[]
   pockets       Pocket[]
 }
 
@@ -60,16 +58,6 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-}
-
-model Topic {
-  id          String @id @default(cuid())
-  slug        String @unique
-  description String?
-  questions   Question[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model Language {
@@ -102,6 +90,7 @@ model Post {
   note      String?
   link      String?
   linkType  String?
+  topic     String?
   userId    String
   languageName String
   pocketId  String?
@@ -144,53 +133,17 @@ model Save {
   post        Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
-
-// Questions - Answers - Votes
-model Question {
-  id        String @id @default(cuid())
-  title     String
-  content   String
-  type      String
-  note      String?
-  link      String?
-  linkType  String?
-  userId    String
-  topicSlug String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  topic Topic  @relation(fields: [topicSlug], references: [slug])
-  answers Answer[]
-  votes    Vote[]
-}
-
-model Answer {
-  id       String  @id @default(cuid())
-  content  String
-  questionId   String
-  userId   String
-  parentId String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  parent   Answer?  @relation("Answers", fields: [parentId], references: [id], onDelete: Cascade)
-  question     Question      @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  children Answer[] @relation("Answers")
-}
-
-model Vote {
+model Like {
   id          String @id @default(cuid())
-  questionId  String 
-  userId      String 
+  likedTime   DateTime
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
-  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 
+model Rating {
+  id        String @id @default(cuid())
+  stars     Int 
+  note      String?
+  createdAt DateTime @default(now())
+}

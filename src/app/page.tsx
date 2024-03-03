@@ -8,6 +8,7 @@ import { ExtendedPost } from '@/lib/types';
 import Loading from './loading';
 import { useSearchParams } from 'next/navigation';
 import PageCounter from '@/components/ui/postRelated/pageCounter';
+import PostLoading from '@/components/ui/postRelated/postLoading';
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -27,35 +28,6 @@ export default function Home() {
 
   useEffect(() => {
     filter && setBreadcrumb(filter);
-
-    // <<<<<<< HEAD
-    //     if (!filter) {
-    //       setFilteredPosts(data?.posts);
-    //       setBreadcrumb('home');
-    //     } else {
-    //       if (filter == null || filter == 'all') {
-    //         setFilteredPosts(data?.posts);
-    //       } else if (filter == 'hot') {
-    //         setFilteredPosts(
-    //           data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
-    //             a.saves.length < b.saves.length ? 1 : -1
-    //           )
-    //         );
-    //       } else if (filter == 'new') {
-    //         setFilteredPosts(
-    //           data?.posts
-    //             .sort((a: ExtendedPost, b: ExtendedPost) =>
-    //               a.createdAt < b.createdAt ? 1 : -1
-    //             )
-    //             .slice(0, 10)
-    //         );
-    //       } else {
-    //         setFilteredPosts(
-    //           data?.posts.filter((post: ExtendedPost) => post.type == filter)
-    //         );
-    //       }
-    //     }
-    //   }, [searchParams, filter, data?.posts]);
 
     if (filteredPosts?.length > 0) {
       setPageCount(Math.ceil(filteredPosts?.length / 10));
@@ -106,19 +78,22 @@ export default function Home() {
 
   return (
     <SidebarContainer header={true}>
-      {filteredPosts
-        ? filteredPosts
-            .slice(10 * (currentPage - 1), 10 * currentPage)
-            .map((post: ExtendedPost) => (
-              <PostListItem post={post} key={post.id} />
-            ))
-        : null}
-      {!data?.posts && !error ? <Loading /> : null}
-      <PageCounter
-        setCurrentPage={setCurrentPage}
-        currentPage={currentPage}
-        maxPage={pageCount}
-      />
+      {!data?.posts && !error ? (
+        <PostLoading />
+      ) : filteredPosts ? (
+        filteredPosts
+          .slice(10 * (currentPage - 1), 10 * currentPage)
+          .map((post: ExtendedPost) => (
+            <PostListItem post={post} key={post.id} />
+          ))
+      ) : null}
+      {filteredPosts?.length > 10 && (
+        <PageCounter
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+          maxPage={pageCount}
+        />
+      )}
     </SidebarContainer>
   );
 }
