@@ -14,7 +14,7 @@ import WhiteLogo from 'public/images/logo-white.svg';
 import Image from 'next/image';
 import NavItem from './navitem';
 import Button from '../button';
-import { signIn, signOut } from '@/app/actions';
+import { signIn, signOut } from '@/lib/actions';
 import NavSubItem from './navSubitem';
 import { FormEvent, Key, Suspense, useEffect, useRef, useState } from 'react';
 import useStore from '@/app/store';

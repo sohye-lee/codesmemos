@@ -13,7 +13,7 @@ import { useSession } from 'next-auth/react';
 import useSWR from 'swr';
 import { FormEvent, Suspense, useEffect, useState } from 'react';
 import useCreate from '@/lib/useCreate';
-import { signIn } from '@/app/actions';
+import { signIn } from '@/lib/actions';
 import { getYoutubeVideo, organizeComments } from '@/lib/functions';
 import { useForm } from 'react-hook-form';
 import Button from '../button';

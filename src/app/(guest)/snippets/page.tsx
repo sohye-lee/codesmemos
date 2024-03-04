@@ -1,11 +1,11 @@
 "use client";
 import SidebarContainer from "@/components/ui/containers/sidebarContainer";
-import useStore from "../store";
+import useStore from "../../store";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import PostListItem from "@/components/ui/postRelated/postLIstItem";
 import { ExtendedPost } from "@/lib/types";
-import Loading from "../loading";
+import Loading from "../../loading";
 import { useSearchParams } from "next/navigation";
 
 export default function SnippetsPage() {

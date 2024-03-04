@@ -7,7 +7,7 @@ import CreateSnippetForm from '@/components/forms/createSnippetForm';
 import { useSearchParams } from 'next/navigation';
 import CreateResourceForm from '@/components/forms/createResourceForm';
 import CreateQuestionForm from '@/components/forms/createQuestionForm';
-import useStore from '../store';
+import useStore from '../../store';
 import { useTheme } from 'next-themes';
 
 type TabType = 'snippet' | 'question' | 'resource';

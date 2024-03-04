@@ -1,14 +1,12 @@
 'use client';
-import { search } from '@/app/search/action';
+import { search } from '@/app/(guest)/search/action';
 import { IconSearch } from '@tabler/icons-react';
 import { useTheme } from 'next-themes';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import React, { Suspense, useEffect, useState } from 'react';
 export default function SearchInput() {
   const { theme, setTheme } = useTheme();
-  const router = useRouter();
   const searchParams = useSearchParams();
-  //   const term = searchParams.get('term');
   const [term, setTerm] = useState<string | null>('');
 
   const [bgColor, setBgColor] = useState<string | null>();

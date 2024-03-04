@@ -8,7 +8,7 @@ import { useState, FormEvent, useEffect } from 'react';
 import useSWR from 'swr';
 import { Language } from '@prisma/client';
 import { useSession } from 'next-auth/react';
-import { signIn, signOut } from '@/app/actions';
+import { signIn, signOut } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
 import useCreate from '@/lib/useCreate';
 type IModelContentChangedEvent = /*unresolved*/ any;

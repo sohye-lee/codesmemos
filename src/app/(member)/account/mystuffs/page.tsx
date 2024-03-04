@@ -1,28 +1,28 @@
-"use client";
-import { signIn } from "@/app/actions";
-import PocketItem from "@/components/ui/accountRelated/pocketItem";
-import SimplePostItem from "@/components/ui/accountRelated/simplePostItem";
-import Button from "@/components/ui/button";
-import Container from "@/components/ui/containers/container";
-import NoDataMessage from "@/components/ui/messages/noData";
-import { boxClassName } from "@/lib/constants";
-import { ExtendedPocket, ExtendedSave } from "@/lib/types";
-import useCreate from "@/lib/useCreate";
-import { Save } from "@prisma/client";
+'use client';
+import { signIn } from '@/lib/actions';
+import PocketItem from '@/components/ui/accountRelated/pocketItem';
+import SimplePostItem from '@/components/ui/accountRelated/simplePostItem';
+import Button from '@/components/ui/button';
+import Container from '@/components/ui/containers/container';
+import NoDataMessage from '@/components/ui/messages/noData';
+import { boxClassName } from '@/lib/constants';
+import { ExtendedPocket, ExtendedSave } from '@/lib/types';
+import useCreate from '@/lib/useCreate';
+import { Save } from '@prisma/client';
 import {
   IconFolder,
   IconFolderCheck,
   IconPlus,
   IconChevronUp,
   IconCheck,
-} from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import useSWR from "swr";
+} from '@tabler/icons-react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import useSWR from 'swr';
 
-type MyStuffsTab = "pockets" | "saves";
+type MyStuffsTab = 'pockets' | 'saves';
 
 interface CreatePocketForm {
   name: string;
@@ -36,14 +36,14 @@ export default function MyStuffsPage() {
   const [pockets, setPockets] = useState<ExtendedPocket[]>();
   const [saves, setSaves] = useState<ExtendedSave[]>();
   const { data: savesData } = useSWR(`/api/users/${session?.user?.id}/saves`);
-  const [tab, setTab] = useState<MyStuffsTab>("pockets");
+  const [tab, setTab] = useState<MyStuffsTab>('pockets');
   const [popupOpen, setPopupOpen] = useState<boolean>(false);
-  const activeStyle = "border-b-none bg-white";
-  const inactiveStyle = "border-b border-slate-400 bg-gray-200 text-gray-600";
+  const activeStyle = 'border-b-none bg-white';
+  const inactiveStyle = 'border-b border-slate-400 bg-gray-200 text-gray-600';
   const [
     createPocket,
     { data: createPocketData, error: createPocketError, loading },
-  ] = useCreate("/api/pockets");
+  ] = useCreate('/api/pockets');
   const {
     register,
     handleSubmit,
@@ -57,10 +57,10 @@ export default function MyStuffsPage() {
     <form className="py-4 px-5 bg-gray-200" onSubmit={handleSubmit(onValid)}>
       <div className="flex items-stretch gap-3">
         <input
-          {...register("name", { required: "Name is required." })}
+          {...register('name', { required: 'Name is required.' })}
           className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
         />
-        <input hidden {...register("userId")} value={session?.user?.id} />
+        <input hidden {...register('userId')} value={session?.user?.id} />
         <Button size="small" button={true} mode="success">
           <IconCheck width={16} />
           Create
@@ -115,23 +115,23 @@ export default function MyStuffsPage() {
         <div className="flex items-stretch w-full p-0">
           <div
             className={`w-1/2 flex items-center justify-center font-md border-r border-gray-400 py-2 ${
-              tab === "pockets" ? activeStyle : inactiveStyle
+              tab === 'pockets' ? activeStyle : inactiveStyle
             }`}
-            onClick={() => setTab("pockets")}
+            onClick={() => setTab('pockets')}
           >
             Pockets
           </div>
           <div
             className={`w-1/2 flex items-center justify-center font-md py-3 ${
-              tab === "saves" ? activeStyle : inactiveStyle
+              tab === 'saves' ? activeStyle : inactiveStyle
             }`}
-            onClick={() => setTab("saves")}
+            onClick={() => setTab('saves')}
           >
             Saves
           </div>
         </div>
         <div className="p-3">
-          {tab == "pockets" && (
+          {tab == 'pockets' && (
             <div className="w-full">
               <div className="flex justify-end py-2">
                 {popupOpen ? (
@@ -167,7 +167,7 @@ export default function MyStuffsPage() {
             </div>
           )}
 
-          {tab == "saves" && (
+          {tab == 'saves' && (
             <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 py-8 items-stretch">
               {renderSaves}
             </div>

@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
 import EditLanguageInput from '@/components/forms/editLanugageInput';
 import { signIn, useSession } from 'next-auth/react';
-import { signUp } from '@/app/actions';
+import { signUp } from '@/lib/actions';
 
 interface LanguageCreateForm {
   name: string;
