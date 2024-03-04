@@ -1,5 +1,5 @@
-import { db } from '@/db';
-import { NextRequest, NextResponse } from 'next/server';
+import { db } from "@/db";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const ratings = await db.rating.findMany();
@@ -12,30 +12,31 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({
     ok: true,
-    message: 'All ratings',
+    message: "All ratings",
     ratings,
     average,
   });
 }
 
 export async function POST(req: NextRequest) {
-  const { stars } = await req.json();
+  const { stars, note } = await req.json();
   const rating = await db.rating.create({
     data: {
       stars: Number(stars),
+      note,
     },
   });
   console.log(rating);
   if (!rating) {
     return NextResponse.json({
       ok: false,
-      message: 'Something went wrong',
+      message: "Something went wrong",
     });
   }
 
   return NextResponse.json({
     ok: true,
-    message: 'Thank you for rating us!',
+    message: "Thank you for rating us!",
     rating,
   });
 }

@@ -13,6 +13,7 @@ import useEdit from "@/lib/useEdit";
 type IModelContentChangedEvent = /*unresolved*/ any;
 
 export default function EditQuestionForm({ post }: EditPostFormProps) {
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [titleLength, setTitleLength] = useState(0);
   const { data, error } = useSWR("/api/languages");
@@ -20,7 +21,11 @@ export default function EditQuestionForm({ post }: EditPostFormProps) {
 
   const [title, setTitle] = useState(post?.title);
   const [content, setContent] = useState(post?.content);
+  const [note, setNote] = useState("");
   const [languageName, setLanguageName] = useState(post?.languageName);
+  const onChangeNote = (e: FormEvent<HTMLTextAreaElement>): void => {
+    setNote(e.currentTarget.value);
+  };
 
   const {
     register,
@@ -57,6 +62,7 @@ export default function EditQuestionForm({ post }: EditPostFormProps) {
       content,
       languageName,
       userId: post?.user?.id,
+      note,
     });
     router.push(`/posts/${post?.id}`);
   };
@@ -157,7 +163,16 @@ export default function EditQuestionForm({ post }: EditPostFormProps) {
           </span>
         ) : null}
       </div>
-
+      <div className="w-full flex flex-col">
+        <label htmlFor="name">Note</label>
+        <textarea
+          {...register("note")}
+          placeholder="(optional)"
+          rows={2}
+          className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
+          onChange={onChangeNote}
+        ></textarea>
+      </div>
       {/* <input className="hidden" {...register("type")} value="question" />
       <input
         className="hidden"

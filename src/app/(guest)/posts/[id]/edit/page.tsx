@@ -49,12 +49,15 @@ export default function EditPage() {
   }, [setBreadcrumb, type, searchParams, data?.post, data]);
 
   return (
-    <Container width="small" bgColor="bg-blue-100 ">
+    <Container width="small" bgColor="bg-background">
       <div className="w-full flex flex-col gap-3 p-3">
-        <h1 className="text-lg font-medium">
+        <h1 className="text-xl font-medium">
           Edit{" "}
-          {<span className="italic font-light">{post?.title}</span> ||
-            "your post"}
+          {post?.title ? (
+            <span className="italic font-light">{post?.title}</span>
+          ) : (
+            "your post"
+          )}
         </h1>
         <div className="w-full border border-slate-500 border-r-2 border-b-2">
           {/* <div className="w-full flex items-stretch">
@@ -83,7 +86,7 @@ export default function EditPage() {
               Resource
             </div>
           </div> */}
-          <div className="p-4 bg-white">
+          <div className="p-4 bg-background">
             {type == "snippet" && <EditSnippetForm post={post} />}
             {type == "question" && <EditQuestionForm post={post} />}
             {type == "resource" && <EditResourceForm post={post} />}

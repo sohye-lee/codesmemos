@@ -1,13 +1,14 @@
-'use client';
-import Loading from '@/app/loading';
-import PostListItem from '@/components/ui/postRelated/postLIstItem';
-import SidebarContainer from '@/components/ui/containers/sidebarContainer';
-import { boxClassName } from '@/lib/constants';
-import { ExtendedPost } from '@/lib/types';
-import { notFound, useParams, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import useSWR from 'swr';
-import useStore from '@/app/store';
+"use client";
+import Loading from "@/app/loading";
+import PostListItem from "@/components/ui/postRelated/postLIstItem";
+import SidebarContainer from "@/components/ui/containers/sidebarContainer";
+import { boxClassName } from "@/lib/constants";
+import { ExtendedPost } from "@/lib/types";
+import { notFound, useParams, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
+import useStore from "@/app/store";
+import PostLoading from "@/components/ui/postRelated/postLoading";
 
 export default function LanguageShoPage() {
   const { breadcrumb, setBreadcrumb } = useStore();
@@ -19,28 +20,28 @@ export default function LanguageShoPage() {
   const [filteredPosts, setFilteredPosts] = useState<ExtendedPost[]>([]);
   const searchParams = useSearchParams();
 
-  const filter = searchParams.get('filter');
+  const filter = searchParams.get("filter");
 
   useEffect(() => {
-    setBreadcrumb('languages/' + name);
+    setBreadcrumb("languages/" + name);
     data &&
       data?.language &&
       data?.language.posts &&
       setPosts(data.language.posts);
 
-    if (filter == 'all' || filter == null) {
+    if (filter == "all" || filter == null) {
       setFilteredPosts(
         data?.language.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
           a.createdAt < b.createdAt ? 1 : -1
         )
       );
-    } else if (filter == 'hot') {
+    } else if (filter == "hot") {
       setFilteredPosts(
         data?.language.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
           a.saves.length < b.saves.length ? 1 : -1
         )
       );
-    } else if (filter == 'new') {
+    } else if (filter == "new") {
       setFilteredPosts(
         data?.language.posts
           .sort((a: ExtendedPost, b: ExtendedPost) =>
@@ -65,10 +66,12 @@ export default function LanguageShoPage() {
         type="language"
         languageName={name
           .toString()
-          .replace('%20', ' ')
-          .replace('specialpound', '#')}
+          .replace("%20", " ")
+          .replace("specialpound", "#")}
       >
-        {posts && posts.length > 0 ? (
+        {!data && !error ? (
+          <PostLoading />
+        ) : posts && posts.length > 0 ? (
           posts.map((post: ExtendedPost) => {
             return <PostListItem post={post} key={post.id} />;
           })
@@ -76,12 +79,11 @@ export default function LanguageShoPage() {
           <div className={`${boxClassName} py-12`}>
             <p className="text-gray-600 text-sm text-center">
               {!data?.language
-                ? 'That language does not exist'
-                : 'No post yet.'}
+                ? "That language does not exist"
+                : "No post yet."}
             </p>
           </div>
         )}
-        {!data && !error ? <Loading /> : null}
       </SidebarContainer>
     </>
   );

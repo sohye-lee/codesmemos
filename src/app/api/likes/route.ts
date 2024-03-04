@@ -1,7 +1,7 @@
-import { db } from '@/db';
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
-import { message } from '@/lib/constants';
+import { db } from "@/db";
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
+import { message } from "@/lib/constants";
 
 export async function GET(req: NextRequest, context: any) {
   const likes = await db.like.findMany({});

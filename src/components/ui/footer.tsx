@@ -1,20 +1,20 @@
-'use client';
-import useCreate from '@/lib/useCreate';
+"use client";
+import useCreate from "@/lib/useCreate";
 import {
   IconArrowUp,
   IconSend,
   IconHeart,
   IconHeartFilled,
-} from '@tabler/icons-react';
-import { useTheme } from 'next-themes';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import useSWR from 'swr';
+} from "@tabler/icons-react";
+import { useTheme } from "next-themes";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
 
 export default function Footer() {
   const [visible, setVisible] = useState(false);
-  const [like, { data, error, loading }] = useCreate('/api/likes');
-  const { data: likesData } = useSWR('/api/likes');
+  const [like, { data, error, loading }] = useCreate("/api/likes");
+  const { data: likesData } = useSWR("/api/likes");
   const [likesCount, setLikesCount] = useState(likesData?.count);
 
   const [heartShow, setHeartShow] = useState(false);
@@ -29,7 +29,7 @@ export default function Footer() {
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   };
   useEffect(() => {
@@ -40,9 +40,9 @@ export default function Footer() {
       window.scrollY > 300 ? setVisible(true) : setVisible(false);
     };
 
-    window.addEventListener('scroll', handleVisible);
+    window.addEventListener("scroll", handleVisible);
     return () => {
-      window.removeEventListener('scroll', handleVisible);
+      window.removeEventListener("scroll", handleVisible);
     };
   }, [like, likesData?.ok, data?.ok]);
   return (

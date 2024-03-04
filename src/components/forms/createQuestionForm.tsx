@@ -10,6 +10,7 @@ import { Language } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import useCreate from "@/lib/useCreate";
+
 type IModelContentChangedEvent = /*unresolved*/ any;
 
 export default function CreateQuestionForm() {
@@ -169,16 +170,16 @@ export default function CreateQuestionForm() {
           </span>
         ) : null}
       </div>
-      {/* <div className="w-full flex flex-col">
+      <div className="w-full flex flex-col">
         <label htmlFor="name">Note</label>
         <textarea
-          {...register('note')}
+          {...register("note")}
           placeholder="(optional)"
           rows={2}
           className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
           onChange={onChangeNote}
         ></textarea>
-      </div> */}
+      </div>
       <input className="hidden" {...register("type")} value="question" />
       <input
         className="hidden"

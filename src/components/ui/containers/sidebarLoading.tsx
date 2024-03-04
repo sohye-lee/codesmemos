@@ -1,10 +1,10 @@
-import React from 'react';
-import { Skeleton } from '@nextui-org/react';
+import React from "react";
+import { Skeleton } from "@nextui-org/react";
 
 export default function SidebarLoading() {
   return (
     <div className="border border-slate-500 border-r-2 border-b-2 p-3 flex flex-col gap-3 z-0">
-      <div className="border border-gray-300 p-4  flex flex-col gap-5">
+      <div className=" flex flex-col gap-5">
         <div className="w-full">
           <Skeleton className="h-8 w-full" />
         </div>
