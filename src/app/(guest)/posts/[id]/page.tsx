@@ -23,7 +23,11 @@ export default function PostIndividualPage() {
   }, [setPost, data, router]);
   return (
     <SidebarContainer header={false}>
-      {post && <PostItem post={post} />}
+      {!data && !error ? (
+        <PostLoading />
+      ) : post ? (
+        <PostItem post={post} />
+      ) : null}
     </SidebarContainer>
   );
 }
