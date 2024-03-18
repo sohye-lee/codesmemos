@@ -19,6 +19,17 @@ export default function SidebarContainer({
   type = "default",
   languageName,
 }: SidebarContainerProps) {
+  const [width, setWidth] = useState(window.innerWidth); // check width size of the window
+  const handleWindowSizeChange = () => {
+    setWidth(window.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleWindowSizeChange);
+    return () => {
+      window.removeEventListener("resize", handleWindowSizeChange);
+    };
+  }, []);
   return (
     <div className="w-full flex flex-col items-center pt-24 pb-20">
       <div className="flex justify-center gap-3 px-4 w-full sm:max-w-full md:max-w-[899px]">
