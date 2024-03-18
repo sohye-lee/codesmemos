@@ -1,12 +1,4 @@
-import {
-  Comment,
-  Language,
-  Pocket,
-  Post,
-  Save,
-  Topic,
-  User,
-} from "@prisma/client";
+import { Comment, Language, Pocket, Post, Save, User } from "@prisma/client";
 
 export type accountType = "member" | "admin";
 export type postType = "snippet" | "question" | "resource";
@@ -43,7 +35,6 @@ export interface EditPostFormProps {
 
 export interface ExtendedPost extends Post {
   user: User;
-  topic?: Topic;
   language?: Language;
   saves: Save[];
   comments: ExtendedComment[];

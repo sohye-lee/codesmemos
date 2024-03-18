@@ -1,21 +1,19 @@
-import { useStore } from 'zustand';
-import NavItem from '../headers/navitem';
-import { usePathname, useSearchParams } from 'next/navigation';
-import Breadcrumb from '../headers/breadcrumb';
+import { useStore } from "zustand";
+import NavItem from "../headers/navitem";
+import { usePathname, useSearchParams } from "next/navigation";
+import Breadcrumb from "../headers/breadcrumb";
 
 interface ContainerHeaderProps {
-  type: 'default' | 'languages' | 'topics';
+  type: "default" | "languages" | "topics";
 }
 export default function ContainerHeader({
-  type = 'default',
+  type = "default",
 }: ContainerHeaderProps) {
-  // const {filter, setFilter} = useStore();
   const searchParams = useSearchParams();
-  const filter = searchParams.get('filter');
   const currentPath = usePathname();
   return (
     <>
-      {type == 'default' ? (
+      {type == "default" ? (
         <>
           <div className="border hidden lg:flex items-center justify-between   border-slate-500 border-r-2 border-b-2 p-3">
             <div className="flex items-center">

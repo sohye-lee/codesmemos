@@ -1,11 +1,11 @@
-'use client';
-import { useForm } from 'react-hook-form';
-import Button from '../ui/button';
-import { IconSend } from '@tabler/icons-react';
-import { boxClassName } from '@/lib/constants';
-import { useRouter } from 'next/navigation';
-import useCreate from '@/lib/useCreate';
-import { useEffect } from 'react';
+"use client";
+import { useForm } from "react-hook-form";
+import Button from "../ui/button";
+import { IconSend } from "@tabler/icons-react";
+import { boxClassName } from "@/lib/constants";
+import { useRouter } from "next/navigation";
+import useCreate from "@/lib/useCreate";
+import { useEffect } from "react";
 
 export interface SendContactForm {
   name: string;
@@ -16,16 +16,14 @@ export interface SendContactForm {
 export default function ContactForm() {
   const router = useRouter();
 
- 
-
-  const [sendEmail, { data, error, loading }] = useCreate('/api/email');
+  const [sendEmail, { data, error, loading }] = useCreate("/api/email");
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<SendContactForm>({
-    mode: 'onBlur',
+    mode: "onBlur",
   });
   const onValid = (validForm: SendContactForm) => {
     sendEmail(validForm);
@@ -33,28 +31,28 @@ export default function ContactForm() {
 
   useEffect(() => {
     data?.ok && alert(data?.message);
-    data?.ok && router.push('/feedback/thankyou');
+    data?.ok && router.push("/feedback/thankyou");
   }, [data?.ok]);
 
   return (
     <form
       onSubmit={handleSubmit(onValid)}
-      className={`${boxClassName} bg-white px-4 py-5 w-full flex flex-col gap-3`}
+      className={`${boxClassName} bg-background  px-4 py-5 w-full flex flex-col gap-3`}
     >
       <h1 className="text-xl font-medium mb-4">Your Feedback Matters</h1>
       <div className="w-full flex flex-col">
         <label htmlFor="name">Full Name</label>
         <div className="p-0 m-0 relative w-full">
           <input
-            {...register('name', {
-              required: 'This field is required',
+            {...register("name", {
+              required: "This field is required",
               minLength: {
                 value: 3,
-                message: 'Min. 3 characters',
+                message: "Min. 3 characters",
               },
               maxLength: {
                 value: 100,
-                message: 'Max. 100 characters',
+                message: "Max. 100 characters",
               },
             })}
             type="text"
@@ -72,15 +70,15 @@ export default function ContactForm() {
         <label htmlFor="email">Email</label>
         <div className="p-0 m-0 relative w-full">
           <input
-            {...register('email', {
-              required: 'This field is required',
+            {...register("email", {
+              required: "This field is required",
               minLength: {
                 value: 3,
-                message: 'Min. 3 characters',
+                message: "Min. 3 characters",
               },
               maxLength: {
                 value: 100,
-                message: 'Max. 100 characters',
+                message: "Max. 100 characters",
               },
             })}
             type="email"
@@ -98,15 +96,15 @@ export default function ContactForm() {
         <label htmlFor="email">Message</label>
         <div className="p-0 m-0 relative w-full">
           <textarea
-            {...register('message', {
-              required: 'This field is required',
+            {...register("message", {
+              required: "This field is required",
               minLength: {
                 value: 3,
-                message: 'Min. 3 characters',
+                message: "Min. 3 characters",
               },
               maxLength: {
                 value: 3000,
-                message: 'Max. 3000 characters',
+                message: "Max. 3000 characters",
               },
             })}
             rows={6}

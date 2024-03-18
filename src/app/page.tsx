@@ -1,22 +1,22 @@
-'use client';
-import SidebarContainer from '@/components/ui/containers/sidebarContainer';
-import useStore from './store';
-import { useEffect, useState } from 'react';
-import useSWR from 'swr';
-import PostListItem from '@/components/ui/postRelated/postLIstItem';
-import { ExtendedPost } from '@/lib/types';
-import Loading from './loading';
-import { useSearchParams } from 'next/navigation';
-import PageCounter from '@/components/ui/postRelated/pageCounter';
-import PostLoading from '@/components/ui/postRelated/postLoading';
+"use client";
+import SidebarContainer from "@/components/ui/containers/sidebarContainer";
+import useStore from "./store";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
+import PostListItem from "@/components/ui/postRelated/postLIstItem";
+import { ExtendedPost } from "@/lib/types";
+import Loading from "./loading";
+import { useSearchParams } from "next/navigation";
+import PageCounter from "@/components/ui/postRelated/pageCounter";
+import PostLoading from "@/components/ui/postRelated/postLoading";
 
 export default function Home() {
   const searchParams = useSearchParams();
-  const filter = searchParams.get('filter');
+  const filter = searchParams.get("filter");
   const { breadcrumb, setBreadcrumb } = useStore();
 
   const [page, setPage] = useState(1);
-  const { data, error } = useSWR('/api/posts');
+  const { data, error } = useSWR("/api/posts");
 
   const [filteredPosts, setFilteredPosts] = useState<ExtendedPost[]>(
     data?.posts
@@ -33,30 +33,30 @@ export default function Home() {
       setPageCount(Math.ceil(filteredPosts?.length / 10));
     }
 
-    if (!filter || filter == null || filter == 'all') {
+    if (!filter || filter == null || filter == "all") {
       setFilteredPosts(
         data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
           a.createdAt < b.createdAt ? 1 : -1
         )
       );
-      setBreadcrumb('home');
+      setBreadcrumb("home");
     }
 
-    if (filter == 'hot') {
+    if (filter == "hot") {
       setFilteredPosts(
         data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
           a.saves.length < b.saves.length ? 1 : -1
         )
       );
     }
-    if (filter == 'new') {
+    if (filter == "new") {
       setFilteredPosts(
         data?.posts.sort((a: ExtendedPost, b: ExtendedPost) =>
           a.createdAt < b.createdAt ? 1 : -1
         )
       );
     }
-    if (filter == 'snippet' || filter == 'resource' || filter == 'question') {
+    if (filter == "snippet" || filter == "resource" || filter == "question") {
       setFilteredPosts(
         data?.posts
           .filter((post: ExtendedPost) => post.type == filter)

@@ -1,16 +1,14 @@
-'use client';
+"use client";
 
-import { CreatePostForm, postType } from '@/lib/types';
-import { Editor, EditorProps } from '@monaco-editor/react';
-import { useForm } from 'react-hook-form';
-import Button from '../ui/button';
-import { useState, FormEvent, useEffect } from 'react';
-import useSWR from 'swr';
-import { Language } from '@prisma/client';
-import { useSession } from 'next-auth/react';
-import { signIn, signOut } from '@/lib/actions';
-import { useRouter } from 'next/navigation';
-import useCreate from '@/lib/useCreate';
+import { CreatePostForm } from "@/lib/types";
+import { useForm } from "react-hook-form";
+import Button from "../ui/button";
+import { useState, FormEvent, useEffect } from "react";
+import useSWR from "swr";
+import { Language } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import useCreate from "@/lib/useCreate";
 type IModelContentChangedEvent = /*unresolved*/ any;
 
 export default function CreateResourceForm() {
@@ -18,23 +16,23 @@ export default function CreateResourceForm() {
 
   const router = useRouter();
   const [titleLength, setTitleLength] = useState(0);
-  const { data, error } = useSWR('/api/languages');
+  const { data, error } = useSWR("/api/languages");
   const [
     createResource,
     { data: createData, error: createError, loading: createLoading },
-  ] = useCreate('/api/posts');
+  ] = useCreate("/api/posts");
   const [languages, setLanguages] = useState<Language[]>(data?.languages);
-  const [content, setContent] = useState('');
-  const [title, setTitle] = useState('');
-  const [note, setNote] = useState('');
-  const [languageName, setLanguageName] = useState('javascript');
+  const [content, setContent] = useState("");
+  const [title, setTitle] = useState("");
+  const [note, setNote] = useState("");
+  const [languageName, setLanguageName] = useState("javascript");
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<CreatePostForm>({
-    mode: 'onBlur',
+    mode: "onBlur",
   });
 
   const onChangeTitle = (e: FormEvent<HTMLInputElement>): void => {
@@ -74,7 +72,6 @@ export default function CreateResourceForm() {
         })
       : null;
 
-  console.log(data);
   useEffect(() => {
     data && setLanguages(data.languages);
 
@@ -87,15 +84,15 @@ export default function CreateResourceForm() {
         <label htmlFor="name">Title</label>
         <div className="p-0 m-0 relative w-full">
           <input
-            {...register('title', {
-              required: 'This field is required',
+            {...register("title", {
+              required: "This field is required",
               minLength: {
                 value: 3,
-                message: 'Min. 3 characters',
+                message: "Min. 3 characters",
               },
               maxLength: {
                 value: 100,
-                message: 'Max. 100 characters',
+                message: "Max. 100 characters",
               },
             })}
             type="text"
@@ -116,12 +113,12 @@ export default function CreateResourceForm() {
       <div className="w-full flex flex-col">
         <label htmlFor="name">Language</label>
         <select
-          {...register('languageName', {
-            required: 'This field is required',
+          {...register("languageName", {
+            required: "This field is required",
           })}
           className="rounded border w-full border-slate-400 py-2 px-3 pr-14"
           // onSelect={onSelectLanguage}
-          defaultValue={'default'}
+          defaultValue={"default"}
         >
           <option disabled value="default">
             Select
@@ -137,7 +134,7 @@ export default function CreateResourceForm() {
       <div className="w-full flex flex-col">
         <label htmlFor="name">Useful Resource</label>
         <input
-          {...register('link', { required: true })}
+          {...register("link", { required: true })}
           placeholder="Link"
           className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
           // onChange={onChangeNote}
@@ -154,10 +151,10 @@ export default function CreateResourceForm() {
       <div className="w-full flex flex-col">
         <label htmlFor="name">Link Type</label>
         <select
-          {...register('linkType')}
+          {...register("linkType")}
           className="rounded border w-full border-slate-400 py-2 px-3 pr-14"
           // onSelect={onSelectLanguage}
-          defaultValue={'default'}
+          defaultValue={"default"}
         >
           <option disabled value="default">
             Select
@@ -169,18 +166,18 @@ export default function CreateResourceForm() {
       <div className="w-full flex flex-col">
         <label htmlFor="name">Note</label>
         <textarea
-          {...register('note')}
+          {...register("note")}
           placeholder="(optional)"
           rows={2}
           className="rounded border w-full border-slate-400 py-2 px-3 pr-14 placeholder:text-sm"
           // onChange={onChangeNote}
         ></textarea>
       </div>
-      <input className="hidden" {...register('type')} value="resource" />
-      <input className="hidden" {...register('content')} value="" />
+      <input className="hidden" {...register("type")} value="resource" />
+      <input className="hidden" {...register("content")} value="" />
       <input
         className="hidden"
-        {...register('userId')}
+        {...register("userId")}
         value={session?.user?.id}
       />
       <div className="flex justify-end">

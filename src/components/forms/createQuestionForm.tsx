@@ -1,7 +1,6 @@
 "use client";
 
 import { CreatePostForm } from "@/lib/types";
-import { Editor, EditorProps } from "@monaco-editor/react";
 import { useForm } from "react-hook-form";
 import Button from "../ui/button";
 import { useState, FormEvent, useEffect } from "react";

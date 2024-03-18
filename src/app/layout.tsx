@@ -1,16 +1,16 @@
-// 'use client';
-import type { Metadata } from 'next';
-import { Space_Grotesk } from 'next/font/google';
-import './globals.css';
-import Providers from './providers';
-import Header from '@/components/ui/headers/header';
-import Footer from '@/components/ui/footer';
+import type { Metadata } from "next";
+import { Space_Grotesk } from "next/font/google";
+import "./globals.css";
+import Providers from "./providers";
+import Header from "@/components/ui/headers/header";
+import Footer from "@/components/ui/footer";
+import { useEffect, useState } from "react";
 
-const spaceGrotesk = Space_Grotesk({ subsets: ['latin'] });
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Pockets for Your Codes',
-  description: 'Developed by Sohye',
+  title: "Pockets for Your Codes",
+  description: "Developed by Sohye",
 };
 
 export default function RootLayout({

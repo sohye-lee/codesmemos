@@ -1,8 +1,8 @@
-import useDelete from '@/lib/useDelete';
-import { IconTrash, IconLoader } from '@tabler/icons-react';
-import Button from '../ui/button';
-import { Language, Topic } from '@prisma/client';
-import { useEffect } from 'react';
+import useDelete from "@/lib/useDelete";
+import { IconTrash, IconLoader } from "@tabler/icons-react";
+import Button from "../ui/button";
+import { Language } from "@prisma/client";
+import { useEffect } from "react";
 
 interface DeleteButtonProps {
   language: Language;

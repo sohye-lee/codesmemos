@@ -6,7 +6,6 @@ import Button from "../ui/button";
 import { useState, FormEvent, useEffect } from "react";
 import useSWR from "swr";
 import { Language } from "@prisma/client";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import useEdit from "@/lib/useEdit";
 

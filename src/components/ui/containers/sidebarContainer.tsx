@@ -19,25 +19,6 @@ export default function SidebarContainer({
   type = "default",
   languageName,
 }: SidebarContainerProps) {
-  // const [sidebar, setSidebar] = useState<HTMLDivElement>();
-  // const [style, setStyle] = useState({
-  //   position: 'relative',
-  //   right: sidebar?.getBoundingClientRect().right,
-  //   top: 0,
-  // });
-  // useEffect(() => {
-  //   setSidebar(document.getElementById('sidebar') as HTMLDivElement);
-
-  //   const fixSidebar = () => {
-  //     if (window.scrollY > 60) {
-  //       setStyle({ ...style, position: 'fixed', top: 60 });
-  //     } else {
-  //       setStyle({ ...style, position: 'retlative', top: 0 });
-  //     }
-  //   };
-  //   window.addEventListener('scroll', fixSidebar);
-  // }, [style]);
-
   return (
     <div className="w-full flex flex-col items-center pt-24 pb-20">
       <div className="flex justify-center gap-3 px-4 w-full sm:max-w-full md:max-w-[899px]">

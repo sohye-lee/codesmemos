@@ -74,7 +74,7 @@ export default function RatingForm() {
 
   return (
     <div
-      className={`${boxClassName} bg-white px-4 py-5 w-full flex flex-col gap-3`}
+      className={`${boxClassName} bg-background px-4 py-5 w-full flex flex-col gap-3`}
     >
       <div className="flex justify-between">
         <h1 className="text-xl font-medium">Rate Us!</h1>

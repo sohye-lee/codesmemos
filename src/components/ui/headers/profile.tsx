@@ -25,13 +25,13 @@ export default function Profile({ nameShow }: ProfileProps) {
           </>
         ) : (
           <p className="text-white text-lg uppercase">
-            {session?.user?.name![0]}
+            {session?.user?.username![0]}
           </p>
         )}
       </div>
       {nameShow && (
         <span className="inline-block text-[10px] text-gray-700">
-          {data?.user?.username || session?.user?.name}
+          {data?.user?.username || session?.user?.username}
         </span>
       )}
     </div>
