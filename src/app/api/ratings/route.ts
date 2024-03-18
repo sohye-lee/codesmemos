@@ -26,7 +26,6 @@ export async function POST(req: NextRequest) {
       note,
     },
   });
-  console.log(rating);
   if (!rating) {
     return NextResponse.json({
       ok: false,

@@ -78,7 +78,6 @@ export default function ProfilePage() {
     );
 
   useEffect(() => {
-    data ? setUser(data?.user) : console.log("no data");
     postsData && setPosts(postsData?.posts);
     // setStoreState({...setStoreState, breadcrumb:'Home'});
     if (filter == "all") {

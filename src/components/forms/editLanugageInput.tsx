@@ -1,9 +1,9 @@
-import { Language } from '@prisma/client';
-import { IconPencil, IconCheck, IconArrowBackUp } from '@tabler/icons-react';
-import Button from '../ui/button';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import DeleteLanguageButton from './deleteLanguageButton';
+import { Language } from "@prisma/client";
+import { IconPencil, IconCheck, IconArrowBackUp } from "@tabler/icons-react";
+import Button from "../ui/button";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import DeleteLanguageButton from "./deleteLanguageButton";
 
 interface EditLanguageInputProps {
   language: Language;
@@ -26,21 +26,20 @@ export default function EditLanguageInput({
   const [error, setError] = useState(null);
   const onValid = () => {
     fetch(`/api/languages/${language.name}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ name }),
     })
       .then((res) => res.json())
       .then((data) => setOpenEdit(false))
       .catch((err) => {
-        console.log(err);
         setError(err.message);
       });
   };
   const cancelEdit = () => {
-    resetField('name');
+    resetField("name");
     setOpenEdit(false);
   };
 
@@ -59,8 +58,8 @@ export default function EditLanguageInput({
           >
             <input
               className="border-none p-0 outline-none"
-              {...register('name', {
-                required: 'Language name cannot be empty.',
+              {...register("name", {
+                required: "Language name cannot be empty.",
               })}
               onChange={(e) => setName(e.currentTarget.value)}
               defaultValue={language.name}

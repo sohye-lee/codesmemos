@@ -19,7 +19,6 @@ export default function ProfilePage() {
     length: 2,
     separator: "_",
   });
-  const [popupOpen, setPopupOpen] = useState(false);
   const [username, setUsername] = useState(uniqueName);
 
   const onValid = () => {
@@ -32,9 +31,7 @@ export default function ProfilePage() {
     });
   };
 
-  useEffect(() => {
-    data ? console.log(data) : console.log("no data");
-  }, [data]);
+  useEffect(() => {}, [data]);
   return (
     <Container width="small">
       <div className="fixed z-100 top-0 left-0 w-screen h-screen bg-slate-600 opacity-20 flex items-center justify-center">

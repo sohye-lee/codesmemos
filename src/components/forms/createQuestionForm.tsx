@@ -92,7 +92,6 @@ export default function CreateQuestionForm() {
         })
       : null;
 
-  console.log(data);
   useEffect(() => {
     data && setLanguages(data.languages);
   }, [setLanguages, setLanguageName, data]);

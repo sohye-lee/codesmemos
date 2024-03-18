@@ -80,7 +80,6 @@ export default function CreateSnippetForm() {
         })
       : null;
 
-  console.log(data);
   useEffect(() => {
     data && setLanguages(data.languages);
   }, [setLanguages, setLanguageName]);

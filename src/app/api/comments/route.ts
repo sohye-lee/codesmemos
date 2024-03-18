@@ -11,7 +11,6 @@ export async function GET(req: NextRequest) {
       comments,
     });
   } catch (error) {
-    console.log(error);
     return NextResponse.json({
       ok: false,
       message: (error as any).message,

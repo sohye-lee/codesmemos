@@ -1,14 +1,13 @@
-import { useRouter } from 'next/router';
-import { type NextRequest, NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
-import Mail from 'nodemailer/lib/mailer';
+import { useRouter } from "next/router";
+import { type NextRequest, NextResponse } from "next/server";
+import nodemailer from "nodemailer";
+import Mail from "nodemailer/lib/mailer";
 
 export async function POST(request: NextRequest) {
   const { email, name, message } = await request.json();
-  console.log(email, name, message);
 
   const transport = nodemailer.createTransport({
-    service: 'gmail',
+    service: "gmail",
     /* 
       setting service as 'gmail' is same as providing these setings:
       host: "smtp.gmail.com",
@@ -36,7 +35,7 @@ export async function POST(request: NextRequest) {
     new Promise<string>((resolve, reject) => {
       transport.sendMail(mailOptions, function (err) {
         if (!err) {
-          resolve('Thank you! Your message has been successfully delivered!');
+          resolve("Thank you! Your message has been successfully delivered!");
         } else {
           reject(err.message);
         }
@@ -47,7 +46,7 @@ export async function POST(request: NextRequest) {
     await sendMailPromise();
     return NextResponse.json({
       ok: true,
-      message: 'Thank you! Your message has been successfully delivered!',
+      message: "Thank you! Your message has been successfully delivered!",
     });
   } catch (err) {
     return NextResponse.json(
