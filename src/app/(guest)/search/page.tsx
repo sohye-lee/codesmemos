@@ -15,7 +15,7 @@ interface SearchPageProps {
 export default function SearchPage({
   searchParams: { term },
 }: SearchPageProps) {
-  if (!term) redirect('/');
+  // if (!term) redirect('/');
   const [searchPosts, { data, loading }] = useCreate(`/api/posts/search`);
 
   const [searchedPosts, setSearchedPosts] = useState([]);
