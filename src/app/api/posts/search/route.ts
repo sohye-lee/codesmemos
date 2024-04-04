@@ -1,11 +1,11 @@
-import { db } from "@/db";
-import { NextRequest, NextResponse } from "next/server";
+import { db } from '@/db';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest, context: any) {
   try {
     const { term } = await req.json();
 
-    const words = term.trim().split(" ");
+    // const words = term.trim().split(" ");
 
     const posts = await db.post.findMany({
       include: {
@@ -19,25 +19,25 @@ export async function POST(req: NextRequest, context: any) {
           {
             title: {
               contains: term,
-              mode: "insensitive",
+              mode: 'insensitive',
             },
           },
           {
             content: {
               contains: term,
-              mode: "insensitive",
+              mode: 'insensitive',
             },
           },
           {
             note: {
               contains: term,
-              mode: "insensitive",
+              mode: 'insensitive',
             },
           },
           {
             languageName: {
               contains: term,
-              mode: "insensitive",
+              mode: 'insensitive',
             },
           },
         ],
@@ -45,14 +45,16 @@ export async function POST(req: NextRequest, context: any) {
     });
     return NextResponse.json({
       ok: true,
-      posts,
+      posts: posts.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)),
       message: `Found ${posts?.length} posts containing the term '${term}'`,
     });
   } catch (error) {
-    console.log("SEARCH ERROR", error);
+    console.log('SEARCH ERROR', error);
     return NextResponse.json({
       ok: false,
-      message: "Something went wrong with your search.",
+      message: `Something went wrong with your search: ${
+        (error as any).message
+      }`,
     });
   }
 }
